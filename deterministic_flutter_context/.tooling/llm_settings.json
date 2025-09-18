@@ -1,0 +1,7 @@
+{
+  "temperature": 0.0,
+  "top_p": 0.1,
+  "frequency_penalty": 0,
+  "presence_penalty": 0,
+  "web_access": false
+}

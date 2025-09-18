@@ -1,0 +1,101 @@
+{
+    "meta": {
+      "version": "1.0",
+      "screenName": "Démarrage rapide",
+      "snapshotRef": "cd9bfab1-b6df-4615-b587-96bde087875f.png"
+    },
+    "tokens": {
+      "colors": {
+        "background": "#FFFFFF",
+        "headerBackground": "#455A64",
+        "textPrimary": "#000000",
+        "textSecondary": "#666666",
+        "buttonPrimary": "#455A64",
+        "buttonAccent": "#FFD600",
+        "divider": "#CCCCCC",
+        "cardBackground": "#F9F9F9",
+        "iconDefault": "#000000"
+      }
+    },
+    "screen": {
+      "size": { "width": 560, "height": 1202 },
+      "layout": { "orientation": "portrait", "scrollable": true }
+    },
+    "components": [
+      { "id": "icon-1", "type": "IconButton", "bbox": [16,16,24,24], "sourceRect": [16,16,24,24], "a11y": { "ariaLabel": "Volume" }, "style": { "color": "#000000" } },
+      { "id": "slider-1", "type": "Slider", "bbox": [48,20,300,16], "sourceRect": [48,20,300,16], "a11y": { "ariaLabel": "Volume slider" } },
+      { "id": "icon-2", "type": "IconButton", "bbox": [520,16,24,24], "sourceRect": [520,16,24,24], "a11y": { "ariaLabel": "Menu" }, "style": { "color": "#000000" } },
+      { "id": "text-1", "type": "Text", "bbox": [24,72,200,24], "sourceRect": [24,72,200,24], "text": "Démarrage rapide", "style": { "fontSize": 18, "color": "#000000" } },
+      { "id": "text-2", "type": "Text", "bbox": [24,120,120,18], "sourceRect": [24,120,120,18], "text": "RÉPÉTITIONS", "style": { "fontSize": 14, "color": "#000000" } },
+      { "id": "button-1", "type": "IconButton", "bbox": [24,150,24,24], "sourceRect": [24,150,24,24], "a11y": { "ariaLabel": "Réduire répétitions" }, "style": { "color": "#000000" } },
+      { "id": "text-3", "type": "Text", "bbox": [64,150,40,24], "sourceRect": [64,150,40,24], "text": "16", "style": { "fontSize": 18, "color": "#000000" } },
+      { "id": "button-2", "type": "IconButton", "bbox": [120,150,24,24], "sourceRect": [120,150,24,24], "a11y": { "ariaLabel": "Augmenter répétitions" }, "style": { "color": "#000000" } },
+      { "id": "text-4", "type": "Text", "bbox": [24,200,80,18], "sourceRect": [24,200,80,18], "text": "TRAVAIL", "style": { "fontSize": 14, "color": "#000000" } },
+      { "id": "button-3", "type": "IconButton", "bbox": [24,230,24,24], "sourceRect": [24,230,24,24], "a11y": { "ariaLabel": "Réduire temps travail" }, "style": { "color": "#000000" } },
+      { "id": "text-5", "type": "Text", "bbox": [64,230,80,24], "sourceRect": [64,230,80,24], "text": "00 : 44", "style": { "fontSize": 18, "color": "#000000" } },
+      { "id": "button-4", "type": "IconButton", "bbox": [160,230,24,24], "sourceRect": [160,230,24,24], "a11y": { "ariaLabel": "Augmenter temps travail" }, "style": { "color": "#000000" } },
+      { "id": "text-6", "type": "Text", "bbox": [24,280,80,18], "sourceRect": [24,280,80,18], "text": "REPOS", "style": { "fontSize": 14, "color": "#000000" } },
+      { "id": "button-5", "type": "IconButton", "bbox": [24,310,24,24], "sourceRect": [24,310,24,24], "a11y": { "ariaLabel": "Réduire temps repos" }, "style": { "color": "#000000" } },
+      { "id": "text-7", "type": "Text", "bbox": [64,310,80,24], "sourceRect": [64,310,80,24], "text": "00 : 15", "style": { "fontSize": 18, "color": "#000000" } },
+      { "id": "button-6", "type": "IconButton", "bbox": [160,310,24,24], "sourceRect": [160,310,24,24], "a11y": { "ariaLabel": "Augmenter temps repos" }, "style": { "color": "#000000" } },
+      { "id": "icon-3", "type": "IconButton", "bbox": [24,360,24,24], "sourceRect": [24,360,24,24], "a11y": { "ariaLabel": "Sauvegarder" }, "style": { "color": "#000000" } },
+      { "id": "text-8", "type": "Text", "bbox": [56,362,120,20], "sourceRect": [56,362,120,20], "text": "SAUVEGARDER", "style": { "fontSize": 14, "color": "#000000" } },
+      { "id": "button-7", "type": "Button", "bbox": [0,400,560,60], "sourceRect": [0,400,560,60], "text": "⚡ COMMENCER", "a11y": { "ariaLabel": "Commencer démarrage rapide" }, "style": { "backgroundColor": "#FFD600", "textColor": "#000000", "fontSize": 16 } },
+      { "id": "text-9", "type": "Text", "bbox": [24,480,200,24], "sourceRect": [24,480,200,24], "text": "VOS PRÉRÉGLAGES", "style": { "fontSize": 18, "color": "#000000" } },
+      { "id": "icon-4", "type": "IconButton", "bbox": [240,482,20,20], "sourceRect": [240,482,20,20], "a11y": { "ariaLabel": "Modifier vos préréglages" }, "style": { "color": "#000000" } },
+      { "id": "button-8", "type": "Button", "bbox": [280,470,120,32], "sourceRect": [280,470,120,32], "text": "+ AJOUTER", "a11y": { "ariaLabel": "Ajouter un préréglage" }, "style": { "backgroundColor": "#FFFFFF", "borderColor": "#000000", "textColor": "#000000" } },
+      { "id": "card-1", "type": "Card", "bbox": [16,520,528,120], "sourceRect": [16,520,528,120], "style": { "backgroundColor": "#F9F9F9", "borderColor": "#CCCCCC" } },
+      { "id": "text-10", "type": "Text", "bbox": [32,536,80,20], "sourceRect": [32,536,80,20], "text": "gainage", "style": { "fontSize": 16, "color": "#000000" } },
+      { "id": "text-11", "type": "Text", "bbox": [460,536,60,20], "sourceRect": [460,536,60,20], "text": "14:22", "style": { "fontSize": 14, "color": "#666666" } },
+      { "id": "text-12", "type": "Text", "bbox": [32,566,120,20], "sourceRect": [32,566,120,20], "text": "RÉPÉTITIONS 20x", "style": { "fontSize": 14, "color": "#000000" } },
+      { "id": "text-13", "type": "Text", "bbox": [32,590,120,20], "sourceRect": [32,590,120,20], "text": "TRAVAIL 00:40", "style": { "fontSize": 14, "color": "#000000" } },
+      { "id": "text-14", "type": "Text", "bbox": [32,614,120,20], "sourceRect": [32,614,120,20], "text": "REPOS 00:03", "style": { "fontSize": 14, "color": "#000000" } }
+    ],
+    "qa": {
+      "inventory": [
+        { "idx": 1, "roughType": "Icon", "roughText": "" },
+        { "idx": 2, "roughType": "Slider", "roughText": "" },
+        { "idx": 3, "roughType": "Icon", "roughText": "" },
+        { "idx": 4, "roughType": "Text", "roughText": "Démarrage rapide" },
+        { "idx": 5, "roughType": "Text", "roughText": "RÉPÉTITIONS" },
+        { "idx": 6, "roughType": "Button", "roughText": "-" },
+        { "idx": 7, "roughType": "Text", "roughText": "16" },
+        { "idx": 8, "roughType": "Button", "roughText": "+" },
+        { "idx": 9, "roughType": "Text", "roughText": "TRAVAIL" },
+        { "idx": 10, "roughType": "Button", "roughText": "-" },
+        { "idx": 11, "roughType": "Text", "roughText": "00 : 44" },
+        { "idx": 12, "roughType": "Button", "roughText": "+" },
+        { "idx": 13, "roughType": "Text", "roughText": "REPOS" },
+        { "idx": 14, "roughType": "Button", "roughText": "-" },
+        { "idx": 15, "roughType": "Text", "roughText": "00 : 15" },
+        { "idx": 16, "roughType": "Button", "roughText": "+" },
+        { "idx": 17, "roughType": "Icon", "roughText": "Sauvegarder" },
+        { "idx": 18, "roughType": "Button", "roughText": "COMMENCER" },
+        { "idx": 19, "roughType": "Text", "roughText": "VOS PRÉRÉGLAGES" },
+        { "idx": 20, "roughType": "Icon", "roughText": "" },
+        { "idx": 21, "roughType": "Button", "roughText": "+ AJOUTER" },
+        { "idx": 22, "roughType": "Card", "roughText": "" },
+        { "idx": 23, "roughType": "Text", "roughText": "gainage" },
+        { "idx": 24, "roughType": "Text", "roughText": "14:22" },
+        { "idx": 25, "roughType": "Text", "roughText": "RÉPÉTITIONS 20x" },
+        { "idx": 26, "roughType": "Text", "roughText": "TRAVAIL 00:40" },
+        { "idx": 27, "roughType": "Text", "roughText": "REPOS 00:03" }
+      ],
+      "coverageRatio": 1.0,
+      "checklist": [
+        "every visual element in snapshot has a component with bbox",
+        "all texts copied verbatim",
+        "colors extracted as hex",
+        "interactive elements have a11y.ariaLabel",
+        "no invented components",
+        "units are px integers"
+      ],
+      "assumptions": [
+        "Bbox values estimated proportionally from screenshot size",
+        "Colors approximated by visual inspection"
+      ],
+      "openQuestions": [],
+      "confidenceGlobal": 0.9
+    }
+  }
+  
