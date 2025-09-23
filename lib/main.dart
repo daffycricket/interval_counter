@@ -1,29 +1,21 @@
 import 'package:flutter/material.dart';
+import 'screens/quick_start_timer_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const IntervalCounterApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class IntervalCounterApp extends StatelessWidget {
+  const IntervalCounterApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('home'),
-      ),
+      title: 'Interval Counter',
+      theme: AppTheme.theme,
+      home: const QuickStartTimerScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

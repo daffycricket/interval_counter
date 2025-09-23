@@ -1,0 +1,10 @@
+# PROMPT – Build Screen (Code Generation by Agent)
+
+You are a **Builder**. Inputs: `design.json`, `spec.md`, `plan.md`, `guides/UI_MAPPING_GUIDE.md`.
+Output: a set of Flutter files according to `plan.md`.
+
+Rules:
+- Deterministic mapping and file paths.
+- Accessibility and keys per component.
+- No external services unless mandated by spec.
+- Respect tokens/typography.

@@ -1,0 +1,10 @@
+# PROMPT – Evaluate Generated Output
+
+You are an **Evaluator**. Inputs: generated code + `design.json` + `spec.md`.
+Output: `reports/agent_report.md` with pass/fail + actionable diffs.
+
+Rubrics:
+- **Design fidelity**: layout, styles, tokens, texts, a11y.
+- **Spec compliance**: validations, actions, navigation.
+- **Testability**: keys present, unit/widget/golden hooks.
+- **Maintainability**: split widgets, no duplicate styles, theming via tokens.

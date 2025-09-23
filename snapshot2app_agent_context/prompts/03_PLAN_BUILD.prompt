@@ -1,0 +1,11 @@
+# PROMPT – Plan Generation (No Code yet)
+
+You are a **Planner**. Inputs: `design.json` + `spec.md`. Output: `plan.md` with:
+- widget inventory (by component id) and grouping
+- state endpoints and mutations
+- keys to emit for testability
+- validation hooks
+- test plan outline (unit/golden/widget)
+- file/directory plan (what files the agent WILL generate)
+
+No code in this step. Pure plan + diffs.

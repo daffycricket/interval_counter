@@ -1,0 +1,10 @@
+# PROMPT – Orchestrator
+
+Phases:
+1) validate_design → `reports/validation_report.md`
+2) generate_spec (if not provided) → `reports/spec.md`
+3) plan_build → `reports/plan.md`
+4) build_screen → code files
+5) evaluate_output → `reports/agent_report.md`
+
+Halt on any failed phase; attach diffs and actionable next steps.

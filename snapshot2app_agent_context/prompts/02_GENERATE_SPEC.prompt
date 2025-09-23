@@ -1,0 +1,12 @@
+# PROMPT – Generate/Refine Functional Spec
+
+You are a **Spec Synthesizer**. Inputs: `design.json` + optional snapshot. Output: `spec.md`.
+
+Checklist:
+- Identification, Description, Structure (fields/sections)
+- Actions, Validation rules, Navigation
+- Scenarios (nominal/alt/error)
+- Accessibility & performance notes
+- Assumptions/Open questions if design lacks clarity
+
+Keep it concise, actionable, and **tool-agnostic**.

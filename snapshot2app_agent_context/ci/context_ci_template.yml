@@ -1,0 +1,13 @@
+# CI Template (context-only)
+
+name: snapshot2app-screen-pipeline
+on: [workflow_dispatch]
+jobs:
+  check-context:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate design
+        run: echo "Run design validator against schema"
+      - name: Lint prompts & contracts
+        run: echo "Check for broken references and required sections"

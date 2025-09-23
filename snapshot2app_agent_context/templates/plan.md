@@ -1,0 +1,16 @@
+# Plan (template)
+
+## Widget Inventory
+- ...
+
+## State & Actions
+- ...
+
+## Keys
+- ...
+
+## Tests
+- ...
+
+## Files to Generate
+- ...
