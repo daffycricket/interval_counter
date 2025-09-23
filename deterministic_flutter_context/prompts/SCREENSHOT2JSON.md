@@ -1,9 +1,6 @@
 # Prompt d'extraction d'un screenshot vers Json Mini Figma
 # Ce prompt n'est pas à utiliser, il est présent uniquement pour information.
 
-# Prompt d'extraction d'un screenshot vers Json Mini Figma
-# Ce prompt n'est pas à utiliser, il est présent uniquement pour information.
-
 Tu es un extracteur UI strict. À partir du snapshot fourni, produis **UN SEUL** fichier JSON `design.json` au format **mini-Figma enrichi**.
 
 ---
