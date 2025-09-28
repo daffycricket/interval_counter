@@ -1,79 +1,85 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-/// Styles de texte de l'application basés sur les design tokens
 class AppTextStyles {
-  // Tailles de police
+  static const String fontFamily = 'Roboto';
+
+  // Font sizes from tokens
   static const double fontSizeXs = 12;
   static const double fontSizeSm = 14;
   static const double fontSizeMd = 16;
   static const double fontSizeLg = 20;
   static const double fontSizeXl = 24;
 
-  // Hauteurs de ligne
+  // Font weights from tokens
+  static const FontWeight fontWeightRegular = FontWeight.w400;
+  static const FontWeight fontWeightMedium = FontWeight.w500;
+  static const FontWeight fontWeightBold = FontWeight.w700;
+
+  // Line heights from tokens
   static const double lineHeightSm = 16;
   static const double lineHeightMd = 20;
   static const double lineHeightLg = 28;
 
-  // Styles principaux
+  // Typography styles based on typographyRef
   static const TextStyle titleLarge = TextStyle(
+    fontFamily: fontFamily,
     fontSize: fontSizeLg,
-    fontWeight: FontWeight.bold,
+    fontWeight: fontWeightBold,
     height: lineHeightLg / fontSizeLg,
     color: AppColors.textPrimary,
-    fontFamily: 'Roboto',
   );
 
   static const TextStyle title = TextStyle(
+    fontFamily: fontFamily,
     fontSize: fontSizeMd,
-    fontWeight: FontWeight.bold,
+    fontWeight: fontWeightBold,
     height: lineHeightMd / fontSizeMd,
     color: AppColors.textPrimary,
-    fontFamily: 'Roboto',
   );
 
   static const TextStyle subtitle = TextStyle(
+    fontFamily: fontFamily,
     fontSize: fontSizeSm,
-    fontWeight: FontWeight.w500,
+    fontWeight: fontWeightMedium,
     height: lineHeightMd / fontSizeSm,
     color: AppColors.textPrimary,
-    fontFamily: 'Roboto',
   );
 
   static const TextStyle label = TextStyle(
+    fontFamily: fontFamily,
     fontSize: fontSizeXs,
-    fontWeight: FontWeight.w500,
+    fontWeight: fontWeightMedium,
     height: lineHeightSm / fontSizeXs,
     color: AppColors.textSecondary,
-    fontFamily: 'Roboto',
   );
 
   static const TextStyle body = TextStyle(
+    fontFamily: fontFamily,
     fontSize: fontSizeSm,
-    fontWeight: FontWeight.normal,
+    fontWeight: fontWeightRegular,
     height: lineHeightMd / fontSizeSm,
     color: AppColors.textSecondary,
-    fontFamily: 'Roboto',
   );
 
   static const TextStyle muted = TextStyle(
+    fontFamily: fontFamily,
     fontSize: fontSizeXs,
-    fontWeight: FontWeight.normal,
+    fontWeight: fontWeightRegular,
     height: lineHeightSm / fontSizeXs,
     color: AppColors.textSecondary,
-    fontFamily: 'Roboto',
   );
 
   static const TextStyle value = TextStyle(
+    fontFamily: fontFamily,
     fontSize: fontSizeXl,
-    fontWeight: FontWeight.bold,
+    fontWeight: fontWeightBold,
     height: lineHeightLg / fontSizeXl,
     color: AppColors.textPrimary,
-    fontFamily: 'Roboto',
   );
 
-  /// Récupère un style par référence typographique
-  static TextStyle getStyle(String typographyRef) {
+  // Helper method to get text style by typographyRef
+  static TextStyle getTextStyle(String typographyRef) {
     switch (typographyRef) {
       case 'titleLarge':
         return titleLarge;
@@ -90,11 +96,11 @@ class AppTextStyles {
       case 'value':
         return value;
       default:
-        return body; // Fallback
+        return body; // fallback
     }
   }
 
-  /// Applique une transformation de texte
+  // Apply text transform
   static String applyTransform(String text, String? transform) {
     if (transform == null) return text;
     switch (transform) {
@@ -102,7 +108,6 @@ class AppTextStyles {
         return text.toUpperCase();
       case 'lowercase':
         return text.toLowerCase();
-      case 'none':
       default:
         return text;
     }

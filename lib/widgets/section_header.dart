@@ -1,77 +1,113 @@
 import 'package:flutter/material.dart';
-import '../theme/app_text_styles.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
 
-/// Widget d'en-tête de section avec titre et actions optionnelles
 class SectionHeader extends StatelessWidget {
   final String title;
-  final Widget? trailingAction;
-  final Widget? leadingAction;
-  final bool uppercase;
+  final Widget? action;
+  final VoidCallback? onToggle;
+  final bool isExpanded;
+  final String? toggleKey;
 
   const SectionHeader({
     super.key,
     required this.title,
-    this.trailingAction,
-    this.leadingAction,
-    this.uppercase = false,
+    this.action,
+    this.onToggle,
+    this.isExpanded = true,
+    this.toggleKey,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // Action de début (optionnelle)
-        if (leadingAction != null) ...[
-          leadingAction!,
-          const SizedBox(width: 8),
-        ],
-        
-        // Titre
-        Expanded(
-          child: Text(
-            uppercase ? title.toUpperCase() : title,
-            style: uppercase ? AppTextStyles.title : AppTextStyles.titleLarge,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: AppTheme.getSpacing('xxs')),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
-        ),
-        
-        // Action de fin (optionnelle)
-        if (trailingAction != null) ...[
-          const SizedBox(width: 8),
-          trailingAction!,
+          if (action != null) action!,
+          if (onToggle != null)
+            IconButton(
+              key: toggleKey != null ? Key(toggleKey!) : null,
+              onPressed: onToggle,
+              icon: Icon(
+                isExpanded ? Icons.expand_less : Icons.expand_more,
+                color: AppColors.textSecondary,
+              ),
+              padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
+              splashRadius: 12,
+            ),
         ],
-      ],
+      ),
     );
   }
 }
 
-/// Widget d'en-tête de section avec bouton de repli/dépli
-class CollapsibleSectionHeader extends StatelessWidget {
-  final String title;
-  final bool isExpanded;
-  final VoidCallback onToggle;
-  final String toggleAriaLabel;
+class PresetsSectionHeader extends StatelessWidget {
+  final VoidCallback? onAdd;
+  final VoidCallback? onEdit;
 
-  const CollapsibleSectionHeader({
+  const PresetsSectionHeader({
     super.key,
-    required this.title,
-    required this.isExpanded,
-    required this.onToggle,
-    required this.toggleAriaLabel,
+    this.onAdd,
+    this.onEdit,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SectionHeader(
-      title: title,
-      trailingAction: IconButton(
-        onPressed: onToggle,
-        icon: Icon(
-          isExpanded ? Icons.expand_less : Icons.expand_more,
-          color: AppColors.textSecondary,
-        ),
-        tooltip: toggleAriaLabel,
-        splashRadius: 12,
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppTheme.getSpacing('xxs'),
+        vertical: AppTheme.getSpacing('xxs'),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                'VOS PRÉRÉGLAGES',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: AppTheme.getSpacing('md')),
+              if (onEdit != null)
+                IconButton(
+                  key: const Key('interval_timer_home__edit_presets'),
+                  onPressed: onEdit,
+                  icon: const Icon(Icons.edit),
+                  color: AppColors.textSecondary,
+                  padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
+                  splashRadius: 12,
+                ),
+            ],
+          ),
+          if (onAdd != null)
+            OutlinedButton.icon(
+              key: const Key('interval_timer_home__add_preset_button'),
+              onPressed: onAdd,
+              icon: const Icon(Icons.add),
+              label: const Text('AJOUTER'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                side: const BorderSide(color: AppColors.border, width: 1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppTheme.getRadius('xl')),
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppTheme.getSpacing('sm'),
+                  vertical: AppTheme.getSpacing('xs'),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

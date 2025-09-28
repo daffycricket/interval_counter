@@ -1,0 +1,40 @@
+FLUTTER TEST REPORT
+==================
+
+Exit Code: 1 (FAILED)
+
+Test Results Summary:
+- Total tests: 24
+- Passed: 23
+- Failed: 1
+
+Failed Test:
+- Test: "should show snackbar when save button is tapped"
+- File: test/widget/interval_timer_home_screen_test.dart
+- Line: 197
+- Error: Expected exactly one SnackBar widget, but found 0
+
+Error Details:
+The test expects a SnackBar to appear after tapping the save button, but no SnackBar was found. This suggests that the SnackBar might need more time to appear or the async operation isn't completing properly in the test environment.
+
+Stack Trace:
+Expected: exactly one matching candidate
+  Actual: _TypeWidgetFinder:<Found 0 widgets with type "SnackBar": []>
+   Which: means none were found but one was expected
+
+The test was checking for a SnackBar after:
+1. Tapping the save button
+2. Calling pump() to trigger a frame
+3. Calling pump() again to wait for animations
+
+Possible Issues:
+1. The async operation (saving preset) might not complete in test environment
+2. The SnackBar might need pumpAndSettle() instead of pump()
+3. The SharedPreferences mock might not be set up properly
+
+All other tests passed successfully, including:
+- Unit tests for TimerConfiguration (7 tests)
+- Unit tests for TimerPreset (6 tests)
+- Widget tests for IntervalTimerHomeScreen (10 other tests)
+
+Status: tests_failed - requires autofix

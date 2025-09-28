@@ -1,0 +1,61 @@
+# PROMPT – Evaluate Generated Output
+
+You are an **Evaluator**.  
+Inputs: plan.md, spec.md, validation_report.md, build output, test results, coverage/lcov.info.  
+Output: `reports/evaluation_report.md` with final PASS/FAIL status and rationale.
+
+---
+
+## Steps
+
+### 1. Validate Contracts & Build
+- Confirm that generated Flutter code respects:
+  - design.json semantics (variants, placement, widthMode, group alignment, tokens, typography, a11y, keys).
+  - contracts/DESIGN_CONTRACT.md and contracts/SPEC_CONTRACT.md.
+
+### 2. Check Tests
+- Parse test results from `flutter test`.
+- If tests all pass → mark status = **PASSED**.
+- If tests failed but were corrected by Step 6 (Auto-fix):
+  - Ensure final run of `flutter test` exit code == 0.
+  - Mark status = **PASSED (after auto-fix)**.
+  - Attach patch summary (autofix_attempts/<n>/patch.diff) in evaluation_report.md.
+- If tests still failing after auto-fix attempts:
+  - Mark status = **FAILED (tests_failed_after_autofix)**.
+  - Attach last failing test names and last patch diff.
+
+### 3. Coverage (if available)
+- If `coverage/lcov.info` exists:
+  - Extract global coverage %.
+  - If coverage < 60% → status = **FAILED (low coverage)**.
+  - Otherwise include coverage % in the evaluation report.
+
+### 4. Accessibility
+- Verify that all interactive components (`Button`, `IconButton`, `Slider`, inputs) have `a11y.ariaLabel`.
+
+### 5. Determinism
+- Verify that all widgets include deterministic keys: `Key('<screenName>__<id>')`.
+
+### 6. Maintainability
+- Veryfy split widgets, no duplicate styles, theming via tokens.
+
+---
+
+## Output: evaluation_report.md
+
+Must include:
+- Final Status: PASSED / PASSED (after auto-fix) / FAILED (tests_failed_after_autofix|low coverage|contract violation).
+- Summary of:
+  - Validation status
+  - Build status
+  - Test results (pass/fail count)
+  - Coverage % (if available)
+  - Auto-fix patches applied (if any)
+- Rationale: explain why the status was assigned.
+
+---
+
+## Guardrails
+- Do not accept partial coverage of design.json (qa.coverageRatio < 1.0).
+- Do not accept unreferenced colors (style hex not in tokens.colors).
+- Stop if qa.confidenceGlobal < threshold AND contracts require hard stop.

@@ -6,10 +6,9 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../utils/duration_formatter.dart';
 import '../widgets/value_control.dart';
-import '../widgets/section_header.dart';
 import '../widgets/preset_card.dart';
+import '../widgets/section_header.dart';
 
-/// Écran principal de l'application Interval Timer
 class IntervalTimerHomeScreen extends StatefulWidget {
   const IntervalTimerHomeScreen({super.key});
 
@@ -18,20 +17,11 @@ class IntervalTimerHomeScreen extends StatefulWidget {
 }
 
 class _IntervalTimerHomeScreenState extends State<IntervalTimerHomeScreen> {
-  // Configuration actuelle
-  int _repetitions = 16;
-  Duration _workDuration = const Duration(seconds: 44);
-  Duration _restDuration = const Duration(seconds: 15);
-  
-  // État UI
   double _volumeLevel = 0.62;
-  bool _quickStartExpanded = true;
-  
-  // Données
+  TimerConfiguration _currentConfig = TimerConfiguration.defaultConfig;
   List<TimerPreset> _presets = [];
-  bool _presetsLoading = true;
-  
-  final PresetStorageService _presetService = PresetStorageService.instance;
+  bool _isQuickStartExpanded = true;
+  final PresetStorageService _storageService = PresetStorageService();
 
   @override
   void initState() {
@@ -40,372 +30,350 @@ class _IntervalTimerHomeScreenState extends State<IntervalTimerHomeScreen> {
   }
 
   Future<void> _loadPresets() async {
-    setState(() => _presetsLoading = true);
-    final presets = await _presetService.loadPresets();
+    final presets = await _storageService.loadPresets();
     setState(() {
       _presets = presets;
-      _presetsLoading = false;
     });
   }
 
-  TimerConfiguration get _currentConfiguration => TimerConfiguration(
-    repetitions: _repetitions,
-    workDuration: _workDuration,
-    restDuration: _restDuration,
-  );
+  void _updateRepetitions(int delta) {
+    final newValue = _currentConfig.repetitions + delta;
+    if (newValue >= 1) {
+      setState(() {
+        _currentConfig = _currentConfig.copyWith(repetitions: newValue);
+      });
+    }
+  }
+
+  void _updateWorkDuration(int deltaSeconds) {
+    final newDuration = deltaSeconds > 0
+        ? DurationFormatter.incrementDuration(_currentConfig.workDuration, deltaSeconds)
+        : DurationFormatter.decrementDuration(_currentConfig.workDuration, -deltaSeconds);
+    
+    setState(() {
+      _currentConfig = _currentConfig.copyWith(workDuration: newDuration);
+    });
+  }
+
+  void _updateRestDuration(int deltaSeconds) {
+    final newDuration = deltaSeconds > 0
+        ? DurationFormatter.incrementDuration(_currentConfig.restDuration, deltaSeconds)
+        : DurationFormatter.decrementDuration(_currentConfig.restDuration, -deltaSeconds);
+    
+    setState(() {
+      _currentConfig = _currentConfig.copyWith(restDuration: newDuration);
+    });
+  }
+
+  void _updateVolume(double value) {
+    setState(() {
+      _volumeLevel = value;
+    });
+  }
+
+  Future<void> _saveCurrentAsPreset() async {
+    if (!_currentConfig.isValid) return;
+
+    final preset = TimerPreset(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: 'Préréglage ${_presets.length + 1}',
+      configuration: _currentConfig,
+      createdAt: DateTime.now(),
+    );
+
+    await _storageService.addPreset(preset);
+    await _loadPresets();
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Préréglage sauvegardé')),
+      );
+    }
+  }
+
+  void _startTimer() {
+    if (!_currentConfig.isValid) return;
+    
+    // TODO: Navigate to timer screen
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Démarrage de l\'entraînement: ${_currentConfig.repetitions} répétitions, '
+          '${DurationFormatter.formatDuration(_currentConfig.workDuration)} travail, '
+          '${DurationFormatter.formatDuration(_currentConfig.restDuration)} repos',
+        ),
+      ),
+    );
+  }
+
+  void _loadPreset(TimerPreset preset) {
+    setState(() {
+      _currentConfig = preset.configuration;
+    });
+  }
+
+  void _addNewPreset() {
+    // TODO: Navigate to preset creation screen
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Création de nouveau préréglage')),
+    );
+  }
+
+  void _editPresets() {
+    // TODO: Navigate to presets management screen
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Édition des préréglages')),
+    );
+  }
+
+  void _openSettings() {
+    // TODO: Navigate to settings screen
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Ouverture des paramètres')),
+    );
+  }
+
+  void _toggleQuickStart() {
+    setState(() {
+      _isQuickStartExpanded = !_isQuickStartExpanded;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Column(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildHeader(),
+              SizedBox(height: AppTheme.getSpacing('xs')),
+              _buildQuickStartSection(),
+              SizedBox(height: AppTheme.getSpacing('sm')),
+              _buildPresetsSection(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      key: const Key('interval_timer_home__Container-1'),
+      color: AppColors.headerBackgroundDark,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppTheme.getSpacing('md'),
+        vertical: AppTheme.getSpacing('sm'),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildAppBar(),
+          IconButton(
+            key: const Key('interval_timer_home__IconButton-2'),
+            onPressed: () {}, // Volume control
+            icon: const Icon(Icons.volume_up),
+            color: AppColors.onPrimary,
+            padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
+          ),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppTheme.spacingSm),
-              child: Column(
-                children: [
-                  _buildQuickStartCard(),
-                  const SizedBox(height: AppTheme.spacingMd),
-                  _buildPresetsSection(),
-                ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppTheme.getSpacing('md')),
+              child: SliderTheme(
+                data: Theme.of(context).sliderTheme,
+                child: Slider(
+                  key: const Key('interval_timer_home__Slider-3'),
+                  value: _volumeLevel,
+                  onChanged: _updateVolume,
+                ),
               ),
             ),
+          ),
+          const Icon(
+            key: Key('interval_timer_home__Icon-4'),
+            Icons.circle,
+            color: AppColors.onPrimary,
+            size: 16,
+          ),
+          SizedBox(width: AppTheme.getSpacing('md')),
+          IconButton(
+            key: const Key('interval_timer_home__IconButton-5'),
+            onPressed: _openSettings,
+            icon: const Icon(Icons.more_vert),
+            color: AppColors.onPrimary,
+            padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildAppBar() {
-    return Container(
-      height: 88,
-      color: AppColors.headerBackgroundDark,
-      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd),
-      child: SafeArea(
-        child: Row(
-          children: [
-            // Icône volume
-            IconButton(
-              onPressed: _onVolumeToggle,
-              icon: const Icon(Icons.volume_up),
-              color: AppColors.onPrimary,
-              tooltip: 'Régler le volume',
-            ),
-            
-            // Slider volume
-            Expanded(
-              child: Slider(
-                value: _volumeLevel,
-                onChanged: _onVolumeChanged,
-                activeColor: AppColors.sliderActive,
-                inactiveColor: AppColors.sliderInactive,
+  Widget _buildQuickStartSection() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppTheme.getSpacing('sm')),
+      child: Card(
+        key: const Key('interval_timer_home__Card-6'),
+        child: Padding(
+          padding: EdgeInsets.all(AppTheme.getSpacing('md')),
+          child: Column(
+            children: [
+              SectionHeader(
+                title: 'Démarrage rapide',
+                isExpanded: _isQuickStartExpanded,
+                onToggle: _toggleQuickStart,
+                toggleKey: 'interval_timer_home__IconButton-9',
               ),
-            ),
-            
-            // Indicateur volume
-            Container(
-              width: 16,
-              height: 16,
-              decoration: const BoxDecoration(
-                color: AppColors.onPrimary,
-                shape: BoxShape.circle,
-              ),
-            ),
-            
-            const SizedBox(width: AppTheme.spacingMd),
-            
-            // Menu
-            IconButton(
-              onPressed: _onMenuPressed,
-              icon: const Icon(Icons.more_vert),
-              color: AppColors.onPrimary,
-              tooltip: 'Plus d\'options',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuickStartCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppTheme.spacingMd),
-        child: Column(
-          children: [
-            // En-tête
-            CollapsibleSectionHeader(
-              title: 'Démarrage rapide',
-              isExpanded: _quickStartExpanded,
-              onToggle: _onToggleQuickStart,
-              toggleAriaLabel: _quickStartExpanded 
-                ? 'Replier la section Démarrage rapide'
-                : 'Déplier la section Démarrage rapide',
-            ),
-            
-            if (_quickStartExpanded) ...[
-              const SizedBox(height: AppTheme.spacingMd),
-              
-              // Contrôles de valeurs
-              ValueControl(
-                label: 'Répétitions',
-                value: _repetitions.toString(),
-                onDecrement: _onDecrementRepetitions,
-                onIncrement: _onIncrementRepetitions,
-                decrementAriaLabel: 'Diminuer les répétitions',
-                incrementAriaLabel: 'Augmenter les répétitions',
-              ),
-              
-              const SizedBox(height: AppTheme.spacingLg),
-              
-              ValueControl(
-                label: 'Travail',
-                value: DurationFormatter.formatDuration(_workDuration),
-                onDecrement: _onDecrementWork,
-                onIncrement: _onIncrementWork,
-                decrementAriaLabel: 'Diminuer le temps de travail',
-                incrementAriaLabel: 'Augmenter le temps de travail',
-              ),
-              
-              const SizedBox(height: AppTheme.spacingLg),
-              
-              ValueControl(
-                label: 'Repos',
-                value: DurationFormatter.formatDuration(_restDuration),
-                onDecrement: _onDecrementRest,
-                onIncrement: _onIncrementRest,
-                decrementAriaLabel: 'Diminuer le temps de repos',
-                incrementAriaLabel: 'Augmenter le temps de repos',
-              ),
-              
-              const SizedBox(height: AppTheme.spacingLg),
-              
-              // Actions
-              Row(
-                children: [
-                  const Spacer(),
-                  
-                  // Bouton sauvegarder
-                  TextButton.icon(
-                    onPressed: _onSavePreset,
-                    icon: const Icon(Icons.save),
-                    label: const Text('SAUVEGARDER'),
-                    style: TextButton.styleFrom(
-                      foregroundColor: AppColors.primary,
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: AppTheme.spacingMd),
-              
-              // Bouton commencer
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _onStartTimer,
-                  icon: const Icon(Icons.bolt, color: AppColors.accent),
-                  label: const Text('COMMENCER'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.cta,
-                    foregroundColor: AppColors.onPrimary,
-                    padding: const EdgeInsets.all(AppTheme.spacingMd),
-                  ),
-                ),
-              ),
+              if (_isQuickStartExpanded) ...[
+                SizedBox(height: AppTheme.getSpacing('md')),
+                _buildValueControls(),
+                SizedBox(height: AppTheme.getSpacing('lg')),
+                _buildQuickStartActions(),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildPresetsSection() {
+  Widget _buildValueControls() {
     return Column(
       children: [
-        // En-tête section préréglages
-        SectionHeader(
-          title: 'Vos préréglages',
-          uppercase: true,
-          leadingAction: IconButton(
-            onPressed: _onEditPresets,
-            icon: const Icon(Icons.edit),
-            color: AppColors.textSecondary,
-            tooltip: 'Éditer les préréglages',
-            splashRadius: 12,
-          ),
-          trailingAction: OutlinedButton.icon(
-            onPressed: _onAddPreset,
-            icon: const Icon(Icons.add),
-            label: const Text('AJOUTER'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.primary,
-            ),
-          ),
+        ValueControl(
+          label: 'Répétitions',
+          value: _currentConfig.repetitions.toString(),
+          onDecrease: () => _updateRepetitions(-1),
+          onIncrease: () => _updateRepetitions(1),
+          decreaseKey: 'interval_timer_home__repetitions_decrease',
+          valueKey: 'interval_timer_home__repetitions_value',
+          increaseKey: 'interval_timer_home__repetitions_increase',
         ),
-        
-        const SizedBox(height: AppTheme.spacingMd),
-        
-        // Liste des préréglages
-        _buildPresetsList(),
+        SizedBox(height: AppTheme.getSpacing('lg')),
+        ValueControl(
+          label: 'Travail',
+          value: DurationFormatter.formatDuration(_currentConfig.workDuration),
+          onDecrease: () => _updateWorkDuration(-1),
+          onIncrease: () => _updateWorkDuration(1),
+          decreaseKey: 'interval_timer_home__work_decrease',
+          valueKey: 'interval_timer_home__work_value',
+          increaseKey: 'interval_timer_home__work_increase',
+        ),
+        SizedBox(height: AppTheme.getSpacing('lg')),
+        ValueControl(
+          label: 'Repos',
+          value: DurationFormatter.formatDuration(_currentConfig.restDuration),
+          onDecrease: () => _updateRestDuration(-1),
+          onIncrease: () => _updateRestDuration(1),
+          decreaseKey: 'interval_timer_home__rest_decrease',
+          valueKey: 'interval_timer_home__rest_value',
+          increaseKey: 'interval_timer_home__rest_increase',
+        ),
       ],
     );
   }
 
-  Widget _buildPresetsList() {
-    if (_presetsLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    
-    if (_presets.isEmpty) {
-      return EmptyPresetCard(
-        onAddPreset: _onAddPreset,
-      );
-    }
-    
+  Widget _buildQuickStartActions() {
     return Column(
-      children: _presets.map((preset) => Padding(
-        padding: const EdgeInsets.only(bottom: AppTheme.spacingMd),
-        child: PresetCard(
-          preset: preset,
-          onTap: () => _onSelectPreset(preset),
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton.icon(
+              key: const Key('interval_timer_home__save_button'),
+              onPressed: _currentConfig.isValid ? _saveCurrentAsPreset : null,
+              icon: const Icon(Icons.save),
+              label: const Text('SAUVEGARDER'),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
+              ),
+            ),
+          ],
         ),
-      )).toList(),
+        SizedBox(height: AppTheme.getSpacing('sm')),
+        SizedBox(
+          width: double.infinity,
+          height: 64,
+          child: ElevatedButton.icon(
+            key: const Key('interval_timer_home__start_button'),
+            onPressed: _currentConfig.isValid ? _startTimer : null,
+            icon: const Icon(Icons.bolt, color: AppColors.accent),
+            label: const Text('COMMENCER'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.cta,
+              foregroundColor: AppColors.onPrimary,
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppTheme.getRadius('md')),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  // Actions volume
-  void _onVolumeChanged(double value) {
-    setState(() => _volumeLevel = value);
-  }
-
-  void _onVolumeToggle() {
-    setState(() => _volumeLevel = _volumeLevel > 0 ? 0 : 0.62);
-  }
-
-  void _onMenuPressed() {
-    // TODO: Implémenter navigation vers paramètres
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Menu - À implémenter')),
+  Widget _buildPresetsSection() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppTheme.getSpacing('sm')),
+      child: Column(
+        children: [
+          PresetsSectionHeader(
+            onAdd: _addNewPreset,
+            onEdit: _editPresets,
+          ),
+          SizedBox(height: AppTheme.getSpacing('sm')),
+          if (_presets.isEmpty)
+            _buildEmptyPresets()
+          else
+            _buildPresetsList(),
+        ],
+      ),
     );
   }
 
-  // Actions démarrage rapide
-  void _onToggleQuickStart() {
-    setState(() => _quickStartExpanded = !_quickStartExpanded);
-  }
-
-  void _onDecrementRepetitions() {
-    if (_repetitions > 1) {
-      setState(() => _repetitions--);
-    }
-  }
-
-  void _onIncrementRepetitions() {
-    setState(() => _repetitions++);
-  }
-
-  void _onDecrementWork() {
-    setState(() {
-      _workDuration = DurationFormatter.smartDecrement(_workDuration);
-    });
-  }
-
-  void _onIncrementWork() {
-    setState(() {
-      _workDuration = DurationFormatter.smartIncrement(_workDuration);
-    });
-  }
-
-  void _onDecrementRest() {
-    setState(() {
-      _restDuration = DurationFormatter.smartDecrement(_restDuration);
-    });
-  }
-
-  void _onIncrementRest() {
-    setState(() {
-      _restDuration = DurationFormatter.smartIncrement(_restDuration);
-    });
-  }
-
-  Future<void> _onSavePreset() async {
-    if (!_currentConfiguration.isValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Configuration invalide')),
-      );
-      return;
-    }
-
-    // Générer un nom unique
-    final baseName = 'Configuration ${DateTime.now().day}/${DateTime.now().month}';
-    final uniqueName = await _presetService.generateUniqueName(baseName);
-    
-    final preset = _presetService.createPreset(
-      name: uniqueName,
-      configuration: _currentConfiguration,
-    );
-    
-    final success = await _presetService.addPreset(preset);
-    
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Préréglage sauvegardé')),
-      );
-      _loadPresets();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur lors de la sauvegarde')),
-      );
-    }
-  }
-
-  void _onStartTimer() {
-    if (!_currentConfiguration.isValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Configuration invalide')),
-      );
-      return;
-    }
-
-    // TODO: Implémenter navigation vers écran timer
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Démarrage timer: ${_repetitions}x ${DurationFormatter.formatDuration(_workDuration)}/${DurationFormatter.formatDuration(_restDuration)}',
+  Widget _buildEmptyPresets() {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(AppTheme.getSpacing('xl')),
+        child: Column(
+          children: [
+            Icon(
+              Icons.timer,
+              size: 48,
+              color: AppColors.textSecondary,
+            ),
+            SizedBox(height: AppTheme.getSpacing('md')),
+            Text(
+              'Aucun préréglage',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            SizedBox(height: AppTheme.getSpacing('xs')),
+            Text(
+              'Créez votre premier préréglage en sauvegardant une configuration',
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // Actions préréglages
-  void _onEditPresets() {
-    // TODO: Implémenter mode édition
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Édition préréglages - À implémenter')),
-    );
-  }
-
-  void _onAddPreset() {
-    // TODO: Implémenter navigation vers éditeur préréglage
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ajout préréglage - À implémenter')),
-    );
-  }
-
-  void _onSelectPreset(TimerPreset preset) {
-    setState(() {
-      _repetitions = preset.configuration.repetitions;
-      _workDuration = preset.configuration.workDuration;
-      _restDuration = preset.configuration.restDuration;
-    });
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Préréglage "${preset.name}" chargé')),
+  Widget _buildPresetsList() {
+    return Column(
+      children: _presets.map((preset) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: AppTheme.getSpacing('sm')),
+          child: PresetCard(
+            preset: preset,
+            onTap: () => _loadPreset(preset),
+          ),
+        );
+      }).toList(),
     );
   }
 }

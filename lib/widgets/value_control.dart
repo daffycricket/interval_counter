@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 
-/// Widget de contrôle de valeur avec boutons +/-
 class ValueControl extends StatelessWidget {
   final String label;
   final String value;
-  final VoidCallback onDecrement;
-  final VoidCallback onIncrement;
-  final String decrementAriaLabel;
-  final String incrementAriaLabel;
+  final VoidCallback onDecrease;
+  final VoidCallback onIncrease;
+  final String decreaseKey;
+  final String valueKey;
+  final String increaseKey;
 
   const ValueControl({
     super.key,
     required this.label,
     required this.value,
-    required this.onDecrement,
-    required this.onIncrement,
-    required this.decrementAriaLabel,
-    required this.incrementAriaLabel,
+    required this.onDecrease,
+    required this.onIncrease,
+    required this.decreaseKey,
+    required this.valueKey,
+    required this.increaseKey,
   });
 
   @override
@@ -28,67 +28,67 @@ class ValueControl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Label
-        Text(
-          AppTextStyles.applyTransform(label, 'uppercase'),
-          style: AppTextStyles.label,
+        Padding(
+          padding: EdgeInsets.only(bottom: AppTheme.getSpacing('xs')),
+          child: Text(
+            label.toUpperCase(),
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
         ),
-        const SizedBox(height: AppTheme.spacingSm),
-        
         // Contrôles
-        Row(
-          children: [
-            // Bouton décrément
-            _buildControlButton(
-              icon: Icons.remove,
-              onPressed: onDecrement,
-              ariaLabel: decrementAriaLabel,
-            ),
-            
-            // Valeur centrée
-            Expanded(
-              child: Center(
-                child: Text(
-                  value,
-                  style: AppTextStyles.value,
+        SizedBox(
+          height: 36,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Bouton diminuer
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.border, width: 1),
+                  borderRadius: BorderRadius.circular(AppTheme.getRadius('md')),
+                ),
+                child: IconButton(
+                  key: Key(decreaseKey),
+                  onPressed: onDecrease,
+                  icon: const Icon(Icons.remove),
+                  color: AppColors.primary,
+                  padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
+                  splashRadius: 18,
                 ),
               ),
-            ),
-            
-            // Bouton incrément
-            _buildControlButton(
-              icon: Icons.add,
-              onPressed: onIncrement,
-              ariaLabel: incrementAriaLabel,
-            ),
-          ],
+              // Valeur
+              Expanded(
+                child: Center(
+                  child: Text(
+                    value,
+                    key: Key(valueKey),
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                ),
+              ),
+              // Bouton augmenter
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.border, width: 1),
+                  borderRadius: BorderRadius.circular(AppTheme.getRadius('md')),
+                ),
+                child: IconButton(
+                  key: Key(increaseKey),
+                  onPressed: onIncrease,
+                  icon: const Icon(Icons.add),
+                  color: AppColors.primary,
+                  padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
+                  splashRadius: 18,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
-    );
-  }
-
-  Widget _buildControlButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-    required String ariaLabel,
-  }) {
-    return Container(
-      width: 36,
-      height: 36,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.border),
-        borderRadius: BorderRadius.circular(AppTheme.radiusMd),
-      ),
-      child: IconButton(
-        onPressed: onPressed,
-        icon: Icon(
-          icon,
-          color: AppColors.primary,
-          size: 20,
-        ),
-        splashRadius: 18,
-        tooltip: ariaLabel,
-        padding: EdgeInsets.zero,
-      ),
     );
   }
 }

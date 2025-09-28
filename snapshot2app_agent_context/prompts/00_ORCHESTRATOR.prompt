@@ -1,10 +1,51 @@
-# PROMPT – Orchestrator
+# 00_ORCHESTRATOR.prompt — Orchestrator (delegated prompts)
 
-Phases:
-1) validate_design → `reports/validation_report.md`
-2) generate_spec (if not provided) → `reports/spec.md`
-3) plan_build → `reports/plan.md`
-4) build_screen → code files
-5) evaluate_output → `reports/agent_report.md`
+You are an **Orchestrator**.  
+Inputs: snapshot design.json, spec.md, plan.md, guides, contracts.  
+Output: validated, built, tested, and evaluated Flutter application files.
 
-Halt on any failed phase; attach diffs and actionable next steps.
+---
+
+## Steps
+
+### Step 1 — Validate Design
+- Input: design.json, contracts/DESIGN_CONTRACT.md
+- Action: run 01_VALIDATE_DESIGN.prompt
+- Output: validation_report.md
+- If validation fails → stop pipeline.
+
+### Step 2 — Generate Specification
+- Input: design.json, prompts/02_GENERATE_SPEC.prompt, contracts/SPEC_CONTRACT.md
+- Output: spec.md
+
+### Step 3 — Plan Build
+- Input: design.json, spec.md, prompts/03_PLAN_BUILD.prompt, templates/plan.md
+- Output: plan.md
+
+### Step 4 — Build Screen (Flutter code)
+- Input: design.json, spec.md, plan.md, guides/UI_MAPPING_GUIDE.md, prompts/04_BUILD_SCREEN.prompt
+- Output: Flutter files under lib/, test/, integration_test/
+- Must respect: variants, placement, widthMode, group alignment, tokens, typography, a11y, keys.
+
+### Step 5 — Run Tests
+- Action: run 05_RUN_TESTS.prompt
+- If status == tests_passed → proceed to Step 7 (Evaluation).
+- Else → proceed to Step 6 (Auto-fix).
+
+### Step 6 — Auto-fix Failing Tests
+- Action: run 06_AUTOFIX_TESTS.prompt
+- If status == tests_fixed → proceed to Step 7 (Evaluation).
+- Else → stop with status = tests_failed_after_autofix.
+
+### Step 7 — Evaluate Output
+- Action: run 07_EVALUATE_OUTPUT.prompt 
+- Input: plan.md, spec.md, validation_report.md, build output, test results, coverage/lcov.info
+- Output: evaluation_report.md
+
+---
+
+## Guardrails
+- Stateless orchestration
+- Fail fast if contracts not respected.
+- Stop if coverage ratio < 1.0 in design.json validation.
+- Warnings if qa.confidenceGlobal < threshold, but pipeline continues unless configured otherwise.

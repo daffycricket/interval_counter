@@ -1,4 +1,3 @@
-/// Configuration d'un timer d'intervalles
 class TimerConfiguration {
   final int repetitions;
   final Duration workDuration;
@@ -10,21 +9,13 @@ class TimerConfiguration {
     required this.restDuration,
   });
 
-  /// Durée totale de la séance
-  Duration get totalDuration {
-    return Duration(
-      seconds: (workDuration.inSeconds + restDuration.inSeconds) * repetitions,
-    );
-  }
+  Duration get totalDuration => (workDuration + restDuration) * repetitions;
 
-  /// Validation de la configuration
-  bool get isValid {
-    return repetitions >= 1 &&
-        workDuration.inSeconds >= 1 &&
-        restDuration.inSeconds >= 1;
-  }
+  bool get isValid =>
+      repetitions >= 1 &&
+      workDuration >= const Duration(seconds: 1) &&
+      restDuration >= const Duration(seconds: 1);
 
-  /// Copie avec modifications
   TimerConfiguration copyWith({
     int? repetitions,
     Duration? workDuration,
@@ -37,7 +28,6 @@ class TimerConfiguration {
     );
   }
 
-  /// Sérialisation JSON
   Map<String, dynamic> toJson() {
     return {
       'repetitions': repetitions,
@@ -46,7 +36,6 @@ class TimerConfiguration {
     };
   }
 
-  /// Désérialisation JSON
   factory TimerConfiguration.fromJson(Map<String, dynamic> json) {
     return TimerConfiguration(
       repetitions: json['repetitions'] as int,
@@ -66,11 +55,19 @@ class TimerConfiguration {
 
   @override
   int get hashCode {
-    return Object.hash(repetitions, workDuration, restDuration);
+    return repetitions.hashCode ^
+        workDuration.hashCode ^
+        restDuration.hashCode;
   }
 
   @override
   String toString() {
-    return 'TimerConfiguration(repetitions: $repetitions, work: $workDuration, rest: $restDuration)';
+    return 'TimerConfiguration(repetitions: $repetitions, workDuration: $workDuration, restDuration: $restDuration)';
   }
+
+  static const TimerConfiguration defaultConfig = TimerConfiguration(
+    repetitions: 16,
+    workDuration: Duration(seconds: 44),
+    restDuration: Duration(seconds: 15),
+  );
 }

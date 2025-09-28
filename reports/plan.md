@@ -1,177 +1,236 @@
-# Plan de construction - Interval Timer Home
+# Plan de construction - IntervalTimerHome
 
 ## Widget Inventory
 
-### Widgets Flutter nécessaires
-1. **Scaffold** - Structure principale de l'écran
-2. **AppBar** - Barre supérieure avec contrôles volume et menu
-3. **Column** - Layout vertical principal
-4. **Card** - Conteneurs pour sections (démarrage rapide, préréglages)
-5. **Row** - Layouts horizontaux (en-têtes, contrôles de valeurs)
-6. **IconButton** - Boutons d'icônes (volume, menu, +/-, édition)
-7. **ElevatedButton** - Bouton principal COMMENCER (variant cta)
-8. **OutlinedButton** - Bouton + AJOUTER (variant secondary)
-9. **TextButton** - Bouton SAUVEGARDER (variant ghost)
-10. **Text** - Tous les libellés et valeurs
-11. **Slider** - Contrôle de volume
-12. **Container** - Groupes et espacements
-13. **Expanded/Flexible** - Gestion des largeurs
-14. **Align** - Placement des éléments
-15. **ConstrainedBox** - Contraintes de largeur maximale
+### Composants principaux par ID
 
-### Composants custom nécessaires
-1. **ValueControl** - Widget réutilisable pour répétitions/travail/repos
-2. **PresetCard** - Widget pour afficher un préréglage
-3. **SectionHeader** - Widget pour les en-têtes de sections
+#### Barre supérieure (Container-1)
+- **Container-1** → `Container` avec layout flex row, backgroundColor headerBackgroundDark
+- **IconButton-2** → `IconButton` volume (material.volume_up), variant ghost
+- **Slider-3** → `Slider` avec style personnalisé (activeTrack, inactiveTrack, thumbColor)
+- **Icon-4** → `Icon` material.circle (indicateur de position)
+- **IconButton-5** → `IconButton` menu (material.more_vert), variant ghost
+
+#### Section Démarrage rapide (Card-6)
+- **Card-6** → `Card` avec elevation et padding
+- **Container-7** → `Container` header avec layout flex row
+- **Text-8** → `Text` "Démarrage rapide" (titleLarge, bold)
+- **IconButton-9** → `IconButton` expand/collapse (material.expand_less)
+
+#### Contrôles de valeurs
+- **Text-10** → `Text` "RÉPÉTITIONS" (label, uppercase)
+- **IconButton-11** → `IconButton` decrease (material.remove)
+- **Text-12** → `Text` valeur "16" (value, bold, 24px)
+- **IconButton-13** → `IconButton` increase (material.add)
+- **Text-14** → `Text` "TRAVAIL" (label, uppercase)
+- **IconButton-15** → `IconButton` decrease (material.remove)
+- **Text-16** → `Text` valeur "00:44" (value, bold, 24px)
+- **IconButton-17** → `IconButton` increase (material.add)
+- **Text-18** → `Text` "REPOS" (label, uppercase)
+- **IconButton-19** → `IconButton` decrease (material.remove)
+- **Text-20** → `Text` valeur "00:15" (value, bold, 24px)
+- **IconButton-21** → `IconButton` increase (material.add)
+
+#### Actions principales
+- **Button-22** → `ElevatedButton` "SAUVEGARDER" avec leadingIcon (material.save), variant ghost
+- **Button-23** → `ElevatedButton` "COMMENCER" avec leadingIcon (material.bolt), variant cta
+
+#### Section Préréglages (Container-24)
+- **Container-24** → `Container` header section avec layout flex row
+- **Text-25** → `Text` "VOS PRÉRÉGLAGES" (title, uppercase, bold)
+- **IconButton-26** → `IconButton` edit (material.edit), variant ghost
+- **Button-27** → `OutlinedButton` "+ AJOUTER" avec leadingIcon (material.add), variant secondary
+
+#### Carte préréglage (Card-28)
+- **Card-28** → `Card` avec backgroundColor presetCardBg
+- **Container-29** → `Container` header préréglage
+- **Text-30** → `Text` nom "gainage" (title, bold)
+- **Text-31** → `Text` durée "14:22" (value, medium)
+- **Text-32** → `Text` "RÉPÉTITIONS 20x" (body, regular)
+- **Text-33** → `Text` "TRAVAIL 00:40" (body, regular)
+- **Text-34** → `Text` "REPOS 00:03" (body, regular)
+
+### Groupement des widgets
+
+#### ValueControl (widget réutilisable)
+Composant pour les contrôles -/valeur/+ :
+- `IconButton` decrease
+- `Text` valeur centrée
+- `IconButton` increase
+- Layout : Row avec MainAxisAlignment.spaceBetween
+
+#### PresetCard (widget réutilisable)
+Composant pour afficher un préréglage :
+- Header avec nom et durée totale
+- Détails des paramètres (répétitions, travail, repos)
+- Actions contextuelles
 
 ## State & Actions
 
-### État de l'écran (StatefulWidget)
+### Modèle de données
+
+#### TimerConfiguration
 ```dart
-class IntervalTimerHomeState extends State<IntervalTimerHome> {
-  // Configuration actuelle
-  int repetitions = 16;
-  Duration workDuration = Duration(seconds: 44);
-  Duration restDuration = Duration(seconds: 15);
+class TimerConfiguration {
+  final int repetitions;
+  final Duration workDuration;
+  final Duration restDuration;
   
-  // État UI
-  double volumeLevel = 0.62;
-  bool quickStartExpanded = true;
-  
-  // Données
-  List<TimerPreset> presets = [];
+  Duration get totalDuration => (workDuration + restDuration) * repetitions;
 }
 ```
 
-### Actions utilisateur
-1. **Volume**
-   - `onVolumeChanged(double value)` - Mise à jour du volume
-   - `onVolumeToggle()` - Basculer muet/son
+#### TimerPreset
+```dart
+class TimerPreset {
+  final String id;
+  final String name;
+  final TimerConfiguration configuration;
+  final DateTime createdAt;
+}
+```
 
-2. **Menu**
-   - `onMenuPressed()` - Ouvrir menu contextuel
+### État de l'écran
 
-3. **Démarrage rapide**
-   - `onToggleQuickStart()` - Replier/déplier section
-   - `onRepetitionsChanged(int delta)` - Modifier répétitions (+/-)
-   - `onWorkDurationChanged(Duration delta)` - Modifier temps travail
-   - `onRestDurationChanged(Duration delta)` - Modifier temps repos
-   - `onSavePreset()` - Sauvegarder configuration actuelle
-   - `onStartTimer()` - Démarrer le timer
+#### IntervalTimerHomeState
+- `double volumeLevel` (0.0 - 1.0, défaut: 0.62)
+- `TimerConfiguration currentConfig` (défaut: 16 reps, 44s work, 15s rest)
+- `List<TimerPreset> presets` (chargés depuis le stockage local)
+- `bool isQuickStartExpanded` (défaut: true)
 
-4. **Préréglages**
-   - `onEditPresets()` - Mode édition des préréglages
-   - `onAddPreset()` - Créer nouveau préréglage
-   - `onSelectPreset(TimerPreset preset)` - Charger préréglage
-   - `onDeletePreset(TimerPreset preset)` - Supprimer préréglage
+### Actions/Mutations
 
-### Navigation
-- `Navigator.pushNamed(context, '/timer')` - Vers écran timer
-- `Navigator.pushNamed(context, '/preset-editor')` - Vers éditeur préréglage
-- `Navigator.pushNamed(context, '/settings')` - Vers paramètres
+#### Actions de configuration
+- `updateRepetitions(int value)` : Met à jour le nombre de répétitions
+- `updateWorkDuration(Duration value)` : Met à jour le temps de travail
+- `updateRestDuration(Duration value)` : Met à jour le temps de repos
+- `updateVolume(double value)` : Met à jour le niveau de volume
+
+#### Actions de préréglages
+- `saveCurrentAsPreset(String name)` : Sauvegarde la config actuelle
+- `loadPreset(TimerPreset preset)` : Charge un préréglage
+- `deletePreset(String id)` : Supprime un préréglage
+- `addNewPreset()` : Navigue vers l'écran de création
+
+#### Actions de navigation
+- `startTimer()` : Lance l'entraînement avec la config actuelle
+- `openSettings()` : Ouvre les paramètres généraux
+- `toggleQuickStart()` : Expand/collapse la section démarrage rapide
 
 ## Keys
 
-### Keys pour tests
+### Keys pour testability
+
+#### Identifiants de composants
+- `Key('interval_timer_home__volume_slider')`
+- `Key('interval_timer_home__repetitions_decrease')`
+- `Key('interval_timer_home__repetitions_value')`
+- `Key('interval_timer_home__repetitions_increase')`
+- `Key('interval_timer_home__work_decrease')`
+- `Key('interval_timer_home__work_value')`
+- `Key('interval_timer_home__work_increase')`
+- `Key('interval_timer_home__rest_decrease')`
+- `Key('interval_timer_home__rest_value')`
+- `Key('interval_timer_home__rest_increase')`
+- `Key('interval_timer_home__save_button')`
+- `Key('interval_timer_home__start_button')`
+- `Key('interval_timer_home__add_preset_button')`
+
+#### Keys dynamiques pour préréglages
+- `Key('preset_card_${preset.id}')`
+- `Key('preset_start_${preset.id}')`
+- `Key('preset_edit_${preset.id}')`
+
+## Validation Hooks
+
+### Validation des valeurs
+- **Répétitions** : `>= 1`, entier uniquement
+- **Durées** : `>= Duration(seconds: 1)`, format mm:ss
+- **Volume** : `>= 0.0 && <= 1.0`
+
+### Validation de l'état
+- **Configuration complète** : Tous les champs requis renseignés
+- **Nom de préréglage** : Non vide, longueur max 50 caractères
+- **Unicité des noms** : Pas de doublons dans les préréglages
+
+### Hooks de validation
 ```dart
-// Écran principal
-static const Key homeScreenKey = Key('interval_timer_home');
+bool get isConfigurationValid => 
+  currentConfig.repetitions >= 1 &&
+  currentConfig.workDuration >= Duration(seconds: 1) &&
+  currentConfig.restDuration >= Duration(seconds: 1);
 
-// Contrôles volume
-static const Key volumeIconKey = Key('volume_icon_button');
-static const Key volumeSliderKey = Key('volume_slider');
-static const Key menuButtonKey = Key('menu_button');
-
-// Section démarrage rapide
-static const Key quickStartCardKey = Key('quick_start_card');
-static const Key quickStartToggleKey = Key('quick_start_toggle');
-static const Key repetitionsControlKey = Key('repetitions_control');
-static const Key workControlKey = Key('work_control');
-static const Key restControlKey = Key('rest_control');
-static const Key savePresetButtonKey = Key('save_preset_button');
-static const Key startTimerButtonKey = Key('start_timer_button');
-
-// Section préréglages
-static const Key presetsHeaderKey = Key('presets_header');
-static const Key editPresetsButtonKey = Key('edit_presets_button');
-static const Key addPresetButtonKey = Key('add_preset_button');
-
-// Préréglages individuels
-static Key presetCardKey(String presetId) => Key('preset_card_$presetId');
+bool get canStartTimer => isConfigurationValid;
+bool get canSavePreset => isConfigurationValid;
 ```
 
 ## Tests
 
 ### Tests unitaires
-1. **State management**
-   ```dart
-   test('should update repetitions correctly', () {
-     // Test incrémentation/décrémentation répétitions
-   });
-   
-   test('should format duration correctly', () {
-     // Test formatage mm:ss
-   });
-   
-   test('should calculate total duration', () {
-     // Test calcul durée totale
-   });
-   ```
+#### Modèles
+- `test/unit/timer_configuration_test.dart`
+  - Calcul de durée totale
+  - Validation des valeurs
+  - Sérialisation/désérialisation
 
-2. **Validation**
-   ```dart
-   test('should validate minimum values', () {
-     // Test valeurs minimales (répétitions ≥ 1, durées ≥ 00:01)
-   });
-   ```
+- `test/unit/timer_preset_test.dart`
+  - Création de préréglage
+  - Comparaison et égalité
+  - Tri par date
+
+#### Services
+- `test/unit/preset_storage_service_test.dart`
+  - Sauvegarde/chargement des préréglages
+  - Gestion des erreurs de stockage
+  - Migration de données
 
 ### Tests de widgets
-1. **Composants individuels**
-   ```dart
-   testWidgets('ValueControl should increment/decrement', (tester) async {
-     // Test widget ValueControl
-   });
-   
-   testWidgets('PresetCard should display correctly', (tester) async {
-     // Test affichage carte préréglage
-   });
-   ```
+#### Composants réutilisables
+- `test/widget/value_control_test.dart`
+  - Affichage des valeurs
+  - Interactions +/-
+  - Validation des limites
 
-2. **Intégration écran**
-   ```dart
-   testWidgets('should start timer with correct values', (tester) async {
-     // Test lancement timer avec valeurs configurées
-   });
-   
-   testWidgets('should save preset correctly', (tester) async {
-     // Test sauvegarde préréglage
-   });
-   ```
+- `test/widget/preset_card_test.dart`
+  - Affichage des informations
+  - Actions contextuelles
+  - États de sélection
 
-### Tests d'accessibilité
-```dart
-testWidgets('should have correct semantics', (tester) async {
-  // Vérifier ariaLabel sur tous les boutons
-  // Vérifier contraste des couleurs
-  // Vérifier taille minimale des cibles (44px)
-});
-```
+#### Écran principal
+- `test/widget/interval_timer_home_screen_test.dart`
+  - Rendu initial
+  - Interactions avec les contrôles
+  - Navigation vers d'autres écrans
+  - Gestion des états d'erreur
+
+### Tests d'intégration
+- `integration_test/interval_timer_flow_test.dart`
+  - Flux complet : configuration → sauvegarde → lancement
+  - Gestion des préréglages
+  - Persistance des données
+
+### Tests golden
+- `test/golden/interval_timer_home_test.dart`
+  - État initial
+  - État avec préréglages
+  - État d'erreur
+  - Différentes tailles d'écran
 
 ## Files to Generate
 
-### Structure des fichiers
+### Structure des dossiers
 ```
 lib/
 ├── main.dart (mise à jour)
+├── models/
+│   ├── timer_configuration.dart
+│   └── timer_preset.dart
 ├── screens/
 │   └── interval_timer_home_screen.dart
 ├── widgets/
 │   ├── value_control.dart
 │   ├── preset_card.dart
 │   └── section_header.dart
-├── models/
-│   ├── timer_configuration.dart
-│   └── timer_preset.dart
 ├── services/
 │   └── preset_storage_service.dart
 ├── theme/
@@ -185,61 +244,42 @@ test/
 ├── unit/
 │   ├── timer_configuration_test.dart
 │   └── timer_preset_test.dart
-└── widget/
-    ├── interval_timer_home_screen_test.dart
-    ├── value_control_test.dart
-    └── preset_card_test.dart
+├── widget/
+│   ├── value_control_test.dart
+│   ├── preset_card_test.dart
+│   └── interval_timer_home_screen_test.dart
+└── golden/
+    └── interval_timer_home_test.dart
+
+integration_test/
+└── interval_timer_flow_test.dart
+```
+
+### Dépendances à ajouter
+```yaml
+dependencies:
+  shared_preferences: ^2.2.2  # Stockage local des préréglages
+  
+dev_dependencies:
+  golden_toolkit: ^0.15.0     # Tests golden
+  mockito: ^5.4.2             # Mocking pour les tests
 ```
 
 ### Ordre de génération
-1. **Models** - Structures de données de base
-2. **Theme** - Système de thème basé sur design tokens
-3. **Utils** - Utilitaires de formatage
-4. **Services** - Persistance des préréglages
-5. **Widgets** - Composants réutilisables
-6. **Screen** - Écran principal
-7. **Tests** - Tests unitaires et widgets
-8. **Main** - Mise à jour point d'entrée
+1. **Modèles** : TimerConfiguration, TimerPreset
+2. **Services** : PresetStorageService
+3. **Thème** : AppTheme, AppColors, AppTextStyles
+4. **Utils** : DurationFormatter
+5. **Widgets réutilisables** : ValueControl, PresetCard, SectionHeader
+6. **Écran principal** : IntervalTimerHomeScreen
+7. **Tests unitaires** : Modèles et services
+8. **Tests de widgets** : Composants et écran
+9. **Tests d'intégration** : Flux complets
+10. **Mise à jour** : main.dart pour intégrer le nouvel écran
 
-### Dépendances externes
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  shared_preferences: ^2.2.2  # Stockage préréglages
-  
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
-```
-
-### Configuration pubspec.yaml
-```yaml
-flutter:
-  uses-material-design: true
-  assets:
-    - assets/icons/  # Si icônes custom nécessaires
-```
-
-## Considérations techniques
-
-### Performance
-- Utiliser `const` constructors où possible
-- Éviter rebuilds inutiles avec `ValueListenableBuilder`
-- Lazy loading pour liste préréglages si nombreux
-
-### Accessibilité
-- Implémenter `Semantics` widgets pour screen readers
-- Respecter tailles minimales des cibles tactiles
-- Contraste couleurs conforme WCAG 2.1 AA
-
-### Responsive
-- Utiliser `MediaQuery` pour adaptations écran
-- Contraintes `maxWidth` pour grands écrans
-- Gestion orientation portrait/paysage
-
-### Localisation
-- Préparer structure pour i18n future
-- Externaliser tous les textes utilisateur
-- Format durée selon locale système
+### Points d'attention
+- **Responsive design** : Adaptation aux différentes tailles d'écran
+- **Accessibilité** : Implémentation complète des ariaLabel
+- **Performance** : Optimisation du rendu des listes de préréglages
+- **Persistance** : Gestion robuste du stockage local
+- **Validation** : Feedback utilisateur en temps réel

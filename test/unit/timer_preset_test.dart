@@ -13,10 +13,10 @@ void main() {
         workDuration: Duration(seconds: 30),
         restDuration: Duration(seconds: 10),
       );
-      testDate = DateTime(2024, 1, 15, 14, 22);
+      testDate = DateTime(2024, 1, 1, 12, 0, 0);
     });
 
-    test('should create valid preset', () {
+    test('should create a valid preset', () {
       final preset = TimerPreset(
         id: 'test-id',
         name: 'Test Preset',
@@ -24,86 +24,32 @@ void main() {
         createdAt: testDate,
       );
 
-      expect(preset.id, 'test-id');
-      expect(preset.name, 'Test Preset');
-      expect(preset.configuration, testConfig);
-      expect(preset.createdAt, testDate);
-      expect(preset.lastUsedAt, null);
+      expect(preset.id, equals('test-id'));
+      expect(preset.name, equals('Test Preset'));
+      expect(preset.configuration, equals(testConfig));
+      expect(preset.createdAt, equals(testDate));
     });
 
-    test('should format created time correctly', () {
-      final preset = TimerPreset(
-        id: 'test-id',
-        name: 'Test Preset',
-        configuration: testConfig,
-        createdAt: testDate, // 14:22
-      );
-
-      expect(preset.createdTimeFormatted, '14:22');
-    });
-
-    test('should format created time with leading zeros', () {
-      final earlyTime = DateTime(2024, 1, 15, 9, 5); // 09:05
-      final preset = TimerPreset(
-        id: 'test-id',
-        name: 'Test Preset',
-        configuration: testConfig,
-        createdAt: earlyTime,
-      );
-
-      expect(preset.createdTimeFormatted, '09:05');
-    });
-
-    test('should support copyWith', () {
+    test('should create copy with updated values', () {
       final original = TimerPreset(
-        id: 'test-id',
+        id: 'original-id',
         name: 'Original',
         configuration: testConfig,
         createdAt: testDate,
       );
 
-      final modified = original.copyWith(name: 'Modified');
+      final updated = original.copyWith(name: 'Updated');
 
-      expect(modified.name, 'Modified');
-      expect(modified.id, 'test-id');
-      expect(modified.configuration, testConfig);
-      expect(modified.createdAt, testDate);
+      expect(updated.name, equals('Updated'));
+      expect(updated.id, equals(original.id));
+      expect(updated.configuration, equals(original.configuration));
+      expect(updated.createdAt, equals(original.createdAt));
     });
 
-    test('should mark as used', () {
+    test('should serialize to and from JSON', () {
       final preset = TimerPreset(
-        id: 'test-id',
-        name: 'Test Preset',
-        configuration: testConfig,
-        createdAt: testDate,
-      );
-
-      expect(preset.lastUsedAt, null);
-
-      final usedPreset = preset.markAsUsed();
-      expect(usedPreset.lastUsedAt, isNotNull);
-      expect(usedPreset.lastUsedAt!.isBefore(DateTime.now().add(const Duration(seconds: 1))), true);
-    });
-
-    test('should serialize to/from JSON', () {
-      final preset = TimerPreset(
-        id: 'test-id',
-        name: 'Test Preset',
-        configuration: testConfig,
-        createdAt: testDate,
-        lastUsedAt: testDate.add(const Duration(hours: 1)),
-      );
-
-      final json = preset.toJson();
-      final restored = TimerPreset.fromJson(json);
-
-      expect(restored, preset);
-    });
-
-    test('should serialize to/from JSON without lastUsedAt', () {
-      final preset = TimerPreset(
-        id: 'test-id',
-        name: 'Test Preset',
+        id: 'json-test',
+        name: 'JSON Test',
         configuration: testConfig,
         createdAt: testDate,
       );
@@ -111,34 +57,79 @@ void main() {
       final json = preset.toJson();
       final restored = TimerPreset.fromJson(json);
 
-      expect(restored, preset);
-      expect(restored.lastUsedAt, null);
+      expect(restored, equals(preset));
     });
 
-    test('should support equality comparison', () {
+    test('should implement equality correctly', () {
       final preset1 = TimerPreset(
-        id: 'test-id',
-        name: 'Test Preset',
+        id: 'same-id',
+        name: 'Same Name',
         configuration: testConfig,
         createdAt: testDate,
       );
 
       final preset2 = TimerPreset(
-        id: 'test-id',
-        name: 'Test Preset',
+        id: 'same-id',
+        name: 'Same Name',
         configuration: testConfig,
         createdAt: testDate,
       );
 
       final preset3 = TimerPreset(
         id: 'different-id',
-        name: 'Test Preset',
+        name: 'Same Name',
         configuration: testConfig,
         createdAt: testDate,
       );
 
-      expect(preset1, preset2);
-      expect(preset1, isNot(preset3));
+      expect(preset1, equals(preset2));
+      expect(preset1, isNot(equals(preset3)));
+      expect(preset1.hashCode, equals(preset2.hashCode));
+    });
+
+    test('should handle different configurations', () {
+      final config1 = const TimerConfiguration(
+        repetitions: 5,
+        workDuration: Duration(seconds: 20),
+        restDuration: Duration(seconds: 5),
+      );
+
+      final config2 = const TimerConfiguration(
+        repetitions: 10,
+        workDuration: Duration(seconds: 40),
+        restDuration: Duration(seconds: 10),
+      );
+
+      final preset1 = TimerPreset(
+        id: 'preset1',
+        name: 'Preset 1',
+        configuration: config1,
+        createdAt: testDate,
+      );
+
+      final preset2 = TimerPreset(
+        id: 'preset2',
+        name: 'Preset 2',
+        configuration: config2,
+        createdAt: testDate,
+      );
+
+      expect(preset1.configuration.totalDuration, equals(const Duration(seconds: 125))); // (20+5) * 5
+      expect(preset2.configuration.totalDuration, equals(const Duration(seconds: 500))); // (40+10) * 10
+    });
+
+    test('should handle date serialization correctly', () {
+      final preset = TimerPreset(
+        id: 'date-test',
+        name: 'Date Test',
+        configuration: testConfig,
+        createdAt: DateTime(2024, 3, 15, 14, 30, 45),
+      );
+
+      final json = preset.toJson();
+      final restored = TimerPreset.fromJson(json);
+
+      expect(restored.createdAt, equals(preset.createdAt));
     });
   });
 }

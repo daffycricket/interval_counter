@@ -1,206 +1,167 @@
-# Spécification fonctionnelle validée
-**Écran : Interval Timer – Démarrage rapide & Préréglages**  
-
----
-
-## Validation SPEC_CONTRACT ✅
-
-Cette spécification respecte tous les critères du SPEC_CONTRACT:
-- ✅ Texte utilisateur verbatim depuis design.json
-- ✅ Modèle d'interaction pour chaque composant interactif
-- ✅ Comportement d'accessibilité mappé
-- ✅ Rôles non-visuels par variants définis
-- ✅ Intentions de layout documentées
-- ✅ Dépendances de thème référencées
-
----
+# Spécification fonctionnelle - Écran Interval Timer
 
 ## 1. Identification
-- **Nom de l'écran** : Démarrage rapide & Préréglages  
-- **Code technique / ID** : `IntervalTimerHome`  
-- **Module / fonctionnalité associée** : Configuration et lancement d'intervalles d'entraînement (HIIT/Tabata/Interval training)  
-
----
+- **Nom de l'écran** : IntervalTimerHome
+- **ID technique** : `interval_timer_home_screen`
+- **Module** : Configuration et lancement d'entraînements par intervalles
 
 ## 2. Description générale
-- **Objectif de l'écran** :  
-  Permettre à l'utilisateur de configurer rapidement une séance d'entraînement par intervalles (répétitions, temps de travail, temps de repos) et/ou de sélectionner des préréglages sauvegardés pour lancer directement un entraînement.  
+**Objectif** : Permettre aux utilisateurs de configurer rapidement des séances d'entraînement par intervalles (HIIT/Tabata) via des contrôles directs ou des préréglages sauvegardés.
 
-- **Type d'écran** :  
-  Écran de **saisie + consultation de liste**.  
+**Type d'écran** : Écran de configuration avec saisie de paramètres et gestion de préréglages.
 
-- **Profils / rôles utilisateurs concernés** :  
-  - Utilisateur final (sportif, particulier, coach).  
-  - Aucun rôle différencié identifié (pas de notion d'administrateur).  
+**Utilisateurs cibles** : Sportifs, particuliers, coachs souhaitant créer des entraînements par intervalles.
 
----
+## 3. Structure et contenu
 
-## 3. Composants et interactions
+### 3.1 Sections principales
 
-### 3.1 Barre de contrôle supérieure (Container-1)
-**Thème**: `headerBackgroundDark` (#455A64)
+#### Barre supérieure (Container-1)
+- **Contrôle de volume** : Slider avec icône haut-parleur
+- **Menu contextuel** : Icône 3 points pour accès aux paramètres
 
-#### Volume (IconButton-2 + Slider-3)
-- **Icône**: `material.volume_up` (couleur: `onPrimary`)
-- **Interaction**: Régler le volume sonore
-- **A11y**: "Régler le volume"
-- **Slider**: Valeur normalisée 0.62, couleurs `sliderActive`/`sliderInactive`/`sliderThumb`
+#### Section Démarrage rapide (Card-6)
+- **Configuration manuelle** des paramètres d'entraînement
+- **Contrôles de valeur** : boutons +/- pour ajustement précis
+- **Actions** : Sauvegarder et Commencer
 
-#### Menu contextuel (IconButton-5)
-- **Icône**: `material.more_vert` (couleur: `onPrimary`)
-- **Interaction**: Accéder aux paramètres généraux
-- **A11y**: "Plus d'options"
-- **Variant**: `ghost`
+#### Section Vos préréglages (Card-28)
+- **Liste des configurations** sauvegardées
+- **Actions de gestion** : Ajouter, Éditer
+- **Aperçu des paramètres** par préréglage
 
-### 3.2 Section Démarrage rapide (Card-6)
+### 3.2 Champs et contrôles
 
-#### En-tête de section (Container-7)
-- **Layout**: `flex row`, `justify: between`, `align: center`
-- **Titre**: "Démarrage rapide" (`typographyRef: titleLarge`, `fontWeight: bold`)
-- **Action repli**: IconButton `material.expand_less` (A11y: "Replier la section Démarrage rapide")
+| Champ | Type | Format | Valeur par défaut | Validation |
+|-------|------|--------|-------------------|------------|
+| Volume | Slider | 0.0-1.0 | 0.62 | - |
+| Répétitions | Numérique | Entier | 16 | ≥ 1 |
+| Temps de travail | Durée | mm:ss | 00:44 | ≥ 00:01 |
+| Temps de repos | Durée | mm:ss | 00:15 | ≥ 00:01 |
 
-#### Contrôles de valeurs
-Chaque contrôle suit le pattern: Label + Bouton(-) + Valeur + Bouton(+)
+### 3.3 Textes et libellés
+- **Titres de section** : "Démarrage rapide", "VOS PRÉRÉGLAGES"
+- **Labels de champs** : "RÉPÉTITIONS", "TRAVAIL", "REPOS" (en majuscules)
+- **Actions principales** : "COMMENCER" (CTA), "SAUVEGARDER", "+ AJOUTER"
+- **Exemple de préréglage** : "gainage" avec durée totale "14:22"
 
-**RÉPÉTITIONS**
-- **Label**: "RÉPÉTITIONS" (`transform: uppercase`, `typographyRef: label`)
-- **Valeur**: "16" (`typographyRef: value`, `fontSize: 24`, `fontWeight: bold`)
-- **Boutons**: `material.remove`/`material.add` avec bordures (`borderColor: border`)
-- **A11y**: "Diminuer/Augmenter les répétitions"
+## 4. Actions utilisateur
 
-**TRAVAIL**
-- **Label**: "TRAVAIL" (`transform: uppercase`)
-- **Valeur**: "00 : 44" (format mm:ss)
-- **A11y**: "Diminuer/Augmenter le temps de travail"
+### Actions principales
+- **IconButton volume** (IconButton-2) : Accès rapide aux réglages audio
+- **Slider volume** (Slider-3) : Ajustement du niveau sonore (0-100%)
+- **Menu contextuel** (IconButton-5) : Accès aux paramètres généraux
 
-**REPOS**
-- **Label**: "REPOS" (`transform: uppercase`)
-- **Valeur**: "00 : 15" (format mm:ss)
-- **A11y**: "Diminuer/Augmenter le temps de repos"
+### Contrôles de valeurs
+- **Boutons -/+** (IconButton-11,13,15,17,19,21) : Incrémentation/décrémentation des valeurs
+- **Affichage des valeurs** (Text-12,16,20) : Visualisation en temps réel
 
-#### Actions principales
+### Actions de workflow
+- **SAUVEGARDER** (Button-22, variant: ghost) : Enregistre la configuration actuelle comme préréglage
+- **COMMENCER** (Button-23, variant: cta) : Lance l'entraînement avec les paramètres actuels
+- **+ AJOUTER** (Button-27, variant: secondary) : Crée un nouveau préréglage
+- **Éditer** (IconButton-26) : Modifie les préréglages existants
 
-**Bouton SAUVEGARDER (Button-22)**
-- **Variant**: `ghost` (action de faible emphase)
-- **Placement**: `end` (aligné à droite)
-- **WidthMode**: `intrinsic` (taille au contenu)
-- **Icône**: `material.save` + texte "SAUVEGARDER"
-- **A11y**: "Sauvegarder le préréglage rapide"
-- **Rôle**: Action de support pour persistance
+## 5. Règles fonctionnelles
 
-**Bouton COMMENCER (Button-23)**
-- **Variant**: `cta` (action de flux principal)
-- **Placement**: `start` 
-- **WidthMode**: `fill` (pleine largeur)
-- **Icône**: `material.bolt` (couleur: `accent`) + texte "COMMENCER"
-- **A11y**: "Démarrer l'intervalle"
-- **Rôle**: Action principale de lancement
-- **Thème**: Fond `cta`/`primary`, texte `onPrimary`
-
-### 3.3 Section Vos préréglages (Container-24)
-
-#### En-tête de section
-- **Layout**: `flex row`, `justify: between`, `align: center`
-- **Titre**: "VOS PRÉRÉGLAGES" (`transform: uppercase`, `typographyRef: title`)
-- **Action édition**: IconButton `material.edit` (A11y: "Éditer les préréglages")
-- **Action ajout**: Button "+ AJOUTER" (`variant: secondary`, `placement: end`)
-
-#### Carte préréglage (Card-28)
-**Thème**: `presetCardBg` (#FAFAFA)
-
-**En-tête préréglage (Container-29)**
-- **Layout**: `flex row`, `justify: between`
-- **Nom**: "gainage" (`typographyRef: title`, `fontSize: 20`)
-- **Durée totale**: "14:22" (`typographyRef: value`, couleur: `textSecondary`)
-
-**Détails préréglage**
-- "RÉPÉTITIONS 20x" (`typographyRef: body`)
-- "TRAVAIL 00:40" (`typographyRef: body`)  
-- "REPOS 00:03" (`typographyRef: body`)
-- Couleur texte: `textSecondary`
-
----
-
-## 4. Règles fonctionnelles & métier
-
-### Validation des entrées
-- **Répétitions**: ≥ 1 (entier)
-- **Travail/Repos**: ≥ 00:01 (format mm:ss strict)
-- **Champs obligatoires**: répétitions, travail, repos
+### Validation des données
+- **Répétitions** : Valeur entière ≥ 1
+- **Durées** : Format mm:ss, valeur ≥ 00:01
+- **Volume** : Valeur normalisée entre 0.0 et 1.0
 
 ### Calculs automatiques
-- **Durée totale**: (Travail + Repos) × Répétitions
-- **Affichage**: dans la carte préréglage (ex: "14:22")
+- **Durée totale** = (Temps de travail + Temps de repos) × Répétitions
+- **Affichage** : Format hh:mm pour les durées totales
 
-### Conditions d'affichage
-- **Section préréglages**: Affichée même si vide
-- **Message vide**: "Vous n'avez pas encore créé de préréglage. Utilisez + Ajouter pour en créer un."
+### Règles d'affichage
+- **Section préréglages** : Affichage conditionnel (masquée si vide)
+- **Boutons d'action** : État actif/inactif selon la validation des champs
 
----
-
-## 5. Navigation & enchaînements
+## 6. Navigation et enchaînements
 
 ### Écrans sources
-- Accueil de l'application
+- Écran d'accueil de l'application
 - Menu principal
 
 ### Écrans cibles
-- **COMMENCER** → Écran timer actif
-- **+ AJOUTER** → Écran création préréglage
-- **Édition** → Écran modification préréglages
-- **Menu (3 points)** → Écran paramètres généraux
+- **Écran de timer actif** (via COMMENCER)
+- **Écran d'édition de préréglage** (via bouton Éditer)
+- **Écran de paramètres** (via menu contextuel)
 
-### Modalités
-- Retour OS natif (Android/iOS)
-- Navigation par bouton "back"
-
----
-
-## 6. Thème et accessibilité
-
-### Tokens sémantiques utilisés
-- `cta`: Bouton principal COMMENCER
-- `primary`: Couleur principale des contrôles
-- `headerBackgroundDark`: Barre supérieure
-- `textPrimary`/`textSecondary`: Hiérarchie textuelle
-- `surface`/`background`: Surfaces et fond
-- `border`: Bordures des contrôles
-
-### Accessibilité
-- **Contraste**: Respecte les ratios WCAG
-- **Screen readers**: Tous les ariaLabel définis
-- **Navigation clavier**: Support des boutons et contrôles
-- **Taille des cibles**: Minimum 44px pour les boutons
-
----
+### Modalités de navigation
+- Navigation native Android/iOS (bouton retour)
+- Actions contextuelles dans l'écran
 
 ## 7. Scénarios d'usage
 
-### Cas nominal
-1. Utilisateur configure répétitions/travail/repos
-2. Clique "COMMENCER" 
-3. Timer se lance immédiatement
+### Cas nominal - Configuration rapide
+1. L'utilisateur ouvre l'écran
+2. Ajuste les paramètres (répétitions, travail, repos) via les contrôles +/-
+3. Clique sur "COMMENCER"
+4. L'entraînement se lance avec les paramètres configurés
 
-### Cas alternatifs
-- **Sauvegarde**: Configure + "SAUVEGARDER" → Nouveau préréglage
-- **Préréglage existant**: Sélectionne carte → Valeurs pré-remplies → "COMMENCER"
-- **Création**: "+ AJOUTER" → Écran dédié
+### Cas alternatif - Utilisation de préréglage
+1. L'utilisateur sélectionne un préréglage existant
+2. Les paramètres se chargent automatiquement
+3. Possibilité d'ajustement avant lancement
+4. Clique sur "COMMENCER"
 
-### Cas exceptionnels
-- **Valeur invalide**: Message d'erreur + focus sur champ
-- **Liste vide**: Message informatif + CTA vers création
+### Cas alternatif - Sauvegarde de configuration
+1. L'utilisateur configure ses paramètres
+2. Clique sur "SAUVEGARDER"
+3. Saisit un nom pour le préréglage
+4. Le préréglage apparaît dans la liste
 
----
+### Cas d'erreur - Validation
+- **Valeur invalide** : Message d'erreur contextuel, champ mis en évidence
+- **Durée zéro** : Blocage de l'action COMMENCER, indication visuelle
 
-## 8. Contraintes techniques
+## 8. Accessibilité
 
-### Performance
-- **Lancement**: < 1s attendu
-- **Réactivité**: Mise à jour temps réel des valeurs
+### Labels ARIA implémentés
+- Tous les contrôles interactifs ont des `ariaLabel` descriptifs
+- Navigation au clavier supportée
+- Contraste respectant les standards WCAG
+
+### Support des technologies d'assistance
+- Lecteurs d'écran : descriptions vocales des actions
+- Navigation tactile : zones de toucher optimisées (min 44px)
+
+## 9. Performance et contraintes
+
+### Réactivité
+- **Lancement instantané** : < 1s pour démarrer un entraînement
+- **Mise à jour en temps réel** : Affichage immédiat des changements de valeurs
 
 ### Compatibilité
-- **Plateformes**: Android/iOS (Flutter)
-- **Orientation**: Portrait privilégiée
-- **Responsive**: Adaptation écrans 5"-7"
+- **Orientation** : Portrait privilégiée, responsive
+- **Plateformes** : Android/iOS natif via Flutter
+- **Tailles d'écran** : Optimisé pour smartphones (558x1136 de référence)
 
----
+## 10. Hypothèses et questions ouvertes
+
+### Hypothèses techniques
+- **Persistance** : Les préréglages sont sauvegardés localement
+- **Audio** : Le contrôle de volume affecte les signaux sonores de l'entraînement
+- **Navigation** : Retour possible vers cet écran depuis le timer actif
+
+### Questions ouvertes
+- **Limite de préréglages** : Nombre maximum de préréglages autorisés ?
+- **Partage** : Fonctionnalité de partage de préréglages entre utilisateurs ?
+- **Synchronisation** : Sauvegarde cloud des préréglages ?
+
+## 11. Tokens de design
+
+### Couleurs sémantiques utilisées
+- **primary** (#607D8B) : Actions principales, contrôles
+- **cta** (#607D8B) : Bouton COMMENCER
+- **accent** (#FFC107) : Éléments de mise en évidence
+- **surface** (#FFFFFF) : Arrière-plans des cartes
+- **textPrimary** (#212121) : Textes principaux
+- **textSecondary** (#616161) : Labels et textes secondaires
+
+### Typographie
+- **titleLarge** : Titres de section (20px, bold)
+- **label** : Labels de champs (12px, medium, uppercase)
+- **value** : Valeurs numériques (24px, bold)
+- **body** : Textes descriptifs (14px, regular)
