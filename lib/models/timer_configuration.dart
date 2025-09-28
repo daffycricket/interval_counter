@@ -1,59 +1,57 @@
 /// Configuration d'un timer d'intervalles
 class TimerConfiguration {
   final int repetitions;
-  final Duration workTime;
-  final Duration restTime;
+  final Duration workDuration;
+  final Duration restDuration;
 
   const TimerConfiguration({
     required this.repetitions,
-    required this.workTime,
-    required this.restTime,
+    required this.workDuration,
+    required this.restDuration,
   });
 
-  /// Durée totale de l'entraînement
-  Duration get totalDuration => (workTime + restTime) * repetitions;
-
-  /// Durée de travail totale
-  Duration get totalWorkTime => workTime * repetitions;
-
-  /// Durée de repos totale
-  Duration get totalRestTime => restTime * repetitions;
+  /// Durée totale de la séance
+  Duration get totalDuration {
+    return Duration(
+      seconds: (workDuration.inSeconds + restDuration.inSeconds) * repetitions,
+    );
+  }
 
   /// Validation de la configuration
   bool get isValid {
     return repetitions >= 1 &&
-           workTime.inSeconds >= 1 &&
-           restTime.inSeconds >= 1;
+        workDuration.inSeconds >= 1 &&
+        restDuration.inSeconds >= 1;
   }
 
   /// Copie avec modifications
   TimerConfiguration copyWith({
     int? repetitions,
-    Duration? workTime,
-    Duration? restTime,
+    Duration? workDuration,
+    Duration? restDuration,
   }) {
     return TimerConfiguration(
       repetitions: repetitions ?? this.repetitions,
-      workTime: workTime ?? this.workTime,
-      restTime: restTime ?? this.restTime,
+      workDuration: workDuration ?? this.workDuration,
+      restDuration: restDuration ?? this.restDuration,
     );
   }
 
-  /// Conversion vers JSON
+  /// Sérialisation JSON
   Map<String, dynamic> toJson() {
     return {
       'repetitions': repetitions,
-      'workTimeSeconds': workTime.inSeconds,
-      'restTimeSeconds': restTime.inSeconds,
+      'workDurationSeconds': workDuration.inSeconds,
+      'restDurationSeconds': restDuration.inSeconds,
     };
   }
 
-  /// Création depuis JSON
+  /// Désérialisation JSON
   factory TimerConfiguration.fromJson(Map<String, dynamic> json) {
     return TimerConfiguration(
       repetitions: json['repetitions'] as int,
-      workTime: Duration(seconds: json['workTimeSeconds'] as int),
-      restTime: Duration(seconds: json['restTimeSeconds'] as int),
+      workDuration: Duration(seconds: json['workDurationSeconds'] as int),
+      restDuration: Duration(seconds: json['restDurationSeconds'] as int),
     );
   }
 
@@ -61,20 +59,18 @@ class TimerConfiguration {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is TimerConfiguration &&
-           other.repetitions == repetitions &&
-           other.workTime == workTime &&
-           other.restTime == restTime;
+        other.repetitions == repetitions &&
+        other.workDuration == workDuration &&
+        other.restDuration == restDuration;
   }
 
   @override
   int get hashCode {
-    return repetitions.hashCode ^
-           workTime.hashCode ^
-           restTime.hashCode;
+    return Object.hash(repetitions, workDuration, restDuration);
   }
 
   @override
   String toString() {
-    return 'TimerConfiguration(repetitions: $repetitions, workTime: $workTime, restTime: $restTime)';
+    return 'TimerConfiguration(repetitions: $repetitions, work: $workDuration, rest: $restDuration)';
   }
 }

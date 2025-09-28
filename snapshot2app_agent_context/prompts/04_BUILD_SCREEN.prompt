@@ -1,10 +1,112 @@
-# PROMPT – Build Screen (Code Generation by Agent)
+# PROMPT – Rules to build screen
 
-You are a **Builder**. Inputs: `design.json`, `spec.md`, `plan.md`, `guides/UI_MAPPING_GUIDE.md`.
-Output: a set of Flutter files according to `plan.md`.
+You are a **Builder**.  
+**Inputs**: `design.json`, `spec.md`, `plan.md`, `guides/UI_MAPPING_GUIDE.md`.  
+**Output**: a set of Flutter files according to `plan.md`.
 
-Rules:
-- Deterministic mapping and file paths.
-- Accessibility and keys per component.
-- No external services unless mandated by spec.
-- Respect tokens/typography.
+---
+
+## Hard requirements
+
+- **No guessing**: any color or style used must come from `tokens.colors` or explicit `component.style`. Never invent hex values.
+- **Respect semantics** found in `design.json`: `variant`, `placement`, `widthMode`, `group.{alignment,distribution,maxWidth}`, `typographyRef`, `style.transform`, `leadingIcon`, slider visual properties.
+- **Deterministic keys**: every rendered widget must have `Key('<screenName>__<component-id>')`.
+- **Guardrail**: if `qa.confidenceGlobal` exists and is below the configured threshold, emit a build warning (or stop if required by contracts).
+
+---
+
+## Theme bootstrap (from tokens)
+
+Build `ThemeData` and `ColorScheme` directly from `tokens.colors` and `tokens.typography`.
+- `AppBar.backgroundColor` = `tokens.colors.headerBackgroundDark` if present, else `colorScheme.primary`.
+- `SliderTheme` uses `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` when provided.
+
+> Refer to `guides/UI_MAPPING_GUIDE.md` for helper mappers (color lookup, radius, text styles).
+
+```dart
+ThemeData buildTheme(Tokens t) { /* see guide: color scheme + slider theme */ }
+TextTheme buildTextTheme(Tokens t) { /* map typographyRef to TextTheme */ }
+```
+
+---
+
+## Mapping rules (generic)
+
+### Text
+- Compute `final copy = applyTransform(node.text, node.style?.transform)` then render `Text(copy, style: resolveTextStyle(node, tokens))`.
+
+### Buttons by `variant`
+- `cta` → `ElevatedButton(.icon)` with background = `tokens.colors.cta` (fallback: `tokens.colors.primary`), foreground = `tokens.colors.onPrimary`.
+- `primary` → `ElevatedButton` bg = `tokens.colors.primary`, fg = `tokens.colors.onPrimary`.
+- `secondary` → `OutlinedButton` with `BorderSide(color = style.borderColor or tokens.colors.border, width = style.borderWidth or 1)`.
+- `ghost` → `TextButton` with foreground = `style.color` or `colorScheme.primary`.
+- If `leadingIcon` is present, use the `.icon` constructor and resolve the icon from `iconName`.
+
+### IconButton with shape
+- If `style.radius` and/or `style.borderWidth`/`borderColor` exist, wrap `IconButton` in a decorated `Container` enforcing size, border and radius.
+
+### Placement & width
+- `widthMode:"fill"` ⇒ wrap with `Expanded`.  
+- `widthMode:"intrinsic"` ⇒ size to content.  
+- `placement:"start|center|end"` ⇒ use `Align` inside the parent axis to position accordingly.
+
+### Group alignment & maxWidth
+- For containers/cards with a `group` block:
+  - If `alignment:"center"` ⇒ wrap child with `Center`.
+  - If `alignment:"end"` ⇒ wrap child with `Align(alignment: Alignment.centerRight)`.
+  - If `maxWidth > 0` ⇒ `ConstrainedBox(BoxConstraints(maxWidth: ...))` around the group.
+  - Map `distribution` to `MainAxisAlignment.start|spaceBetween|spaceAround|end`.
+
+### Slider
+- Render with a `SliderTheme` reflecting `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` from `node.style` when provided.
+- Set initial `value` from `valueNormalized` if present (range [0,1]).
+
+### Icons
+- When `iconName` starts with `material.`, map to `Icons.*`. Otherwise use a registry/provider function.
+
+### Keys
+- Every widget uses `key: Key('\${screenName}__\${node.id}')` for stability and testing.
+
+---
+
+## Renderer skeleton (pseudocode)
+
+```dart
+Widget buildNode(Node n, Tokens t, String screen) {
+  switch (n.type) {
+    case "Container":
+    case "Card":
+      final child = buildFlex(n, t, screen);
+      return groupWrap(child, n.group);
+    case "Text":
+      return Text(applyTransform(n.text, n.style?.transform ?? "none"),
+        key: compKey(screen, n),
+        style: resolveTextStyle(n, t));
+    case "Button":
+      return place(buildButton(n, t), n);
+    case "IconButton":
+      final raw = needsShape(n) ? shapedIconButton(n, t) : IconButton(
+        key: compKey(screen, n), onPressed: (){}, icon: buildIcon(n, t));
+      return place(raw, n);
+    case "Slider":
+      return place(buildSlider(n, t), n);
+    case "Icon":
+      return Icon(resolveIconData(n.iconName), key: compKey(screen, n));
+    default:
+      return const SizedBox.shrink();
+  }
+}
+```
+
+---
+
+## Acceptance checklist (auto-verify)
+
+- [ ] Every widget has a deterministic `Key`.
+- [ ] No color outside `tokens.colors` or explicit `style` on the component.
+- [ ] Button `variant` applied (`cta/primary/secondary/ghost`) and visible in code.
+- [ ] `placement` & `widthMode` respected (Expanded vs intrinsic + Align).
+- [ ] Groups with `alignment:center` are centered and constrained by `maxWidth` when provided.
+- [ ] `leadingIcon` rendered where present; label `transform` respected.
+- [ ] Sliders reflect `activeTrack/inactiveTrack/thumbColor/trackHeight`.
+- [ ] Build warns if `qa.confidenceGlobal` (when present) is below threshold.

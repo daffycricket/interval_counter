@@ -2,144 +2,170 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_text_styles.dart';
 
-/// Thème principal de l'application
+/// Thème de l'application basé sur les design tokens
 class AppTheme {
-  AppTheme._();
+  /// Rayon de bordure
+  static const double radiusSm = 4;
+  static const double radiusMd = 8;
+  static const double radiusLg = 12;
+  static const double radiusXl = 20;
 
-  /// Espacement basé sur les tokens de design
-  static const double spacingXxs = 2;
-  static const double spacingXs = 4;
-  static const double spacingSm = 8;
-  static const double spacingMd = 12;
-  static const double spacingLg = 16;
-  static const double spacingXl = 24;
-
-  /// Rayons de bordure
-  static const double radiusSm = 2;
-  static const double radiusMd = 4;
-  static const double radiusLg = 8;
-  static const double radiusXl = 16;
+  /// Espacement
+  static const double spacingXxs = 4;
+  static const double spacingXs = 8;
+  static const double spacingSm = 12;
+  static const double spacingMd = 16;
+  static const double spacingLg = 24;
+  static const double spacingXl = 32;
 
   /// Ombres
   static const BoxShadow shadowSm = BoxShadow(
-    color: Color.fromRGBO(0, 0, 0, 0.15),
+    color: Color(0x14000000), // rgba(0,0,0,0.08)
     offset: Offset(0, 1),
     blurRadius: 2,
   );
 
   static const BoxShadow shadowMd = BoxShadow(
-    color: Color.fromRGBO(0, 0, 0, 0.2),
+    color: Color(0x1F000000), // rgba(0,0,0,0.12)
     offset: Offset(0, 2),
-    blurRadius: 4,
+    blurRadius: 6,
   );
 
   static const BoxShadow shadowLg = BoxShadow(
-    color: Color.fromRGBO(0, 0, 0, 0.3),
-    offset: Offset(0, 4),
-    blurRadius: 8,
+    color: Color(0x29000000), // rgba(0,0,0,0.16)
+    offset: Offset(0, 6),
+    blurRadius: 20,
   );
 
-  /// Thème complet de l'application
-  static ThemeData get theme {
+  /// Récupère un rayon par nom
+  static double getRadius(String? radiusName) {
+    switch (radiusName) {
+      case 'sm':
+        return radiusSm;
+      case 'md':
+        return radiusMd;
+      case 'lg':
+        return radiusLg;
+      case 'xl':
+        return radiusXl;
+      default:
+        return radiusMd; // Fallback
+    }
+  }
+
+  /// Récupère un espacement par nom
+  static double getSpacing(String spacingName) {
+    switch (spacingName) {
+      case 'xxs':
+        return spacingXxs;
+      case 'xs':
+        return spacingXs;
+      case 'sm':
+        return spacingSm;
+      case 'md':
+        return spacingMd;
+      case 'lg':
+        return spacingLg;
+      case 'xl':
+        return spacingXl;
+      default:
+        return spacingMd; // Fallback
+    }
+  }
+
+  /// Thème principal de l'application
+  static ThemeData get lightTheme {
+    final colorScheme = ColorScheme(
+      brightness: Brightness.light,
+      primary: AppColors.primary,
+      onPrimary: AppColors.onPrimary,
+      surface: AppColors.surface,
+      onSurface: AppColors.textPrimary,
+      background: AppColors.background,
+      onBackground: AppColors.textPrimary,
+      secondary: AppColors.accent,
+      onSecondary: AppColors.onPrimary,
+      error: AppColors.warning,
+      onError: Colors.white,
+    );
+
     return ThemeData(
-      primarySwatch: _createMaterialColor(AppColors.primary),
-      primaryColor: AppColors.primary,
+      colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.background,
-      fontFamily: 'Roboto',
-      
-      // Configuration des app bars
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.headerBackground,
+        backgroundColor: AppColors.headerBackgroundDark,
         foregroundColor: AppColors.onPrimary,
         elevation: 0,
+        centerTitle: false,
       ),
-
-      // Configuration des cartes
-      cardTheme: CardTheme(
-        color: AppColors.surface,
-        elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radiusMd),
-        ),
-        shadowColor: Colors.black.withValues(alpha: 0.15),
-      ),
-
-      // Configuration des boutons
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: AppColors.onPrimary,
-          backgroundColor: AppColors.primary,
-          textStyle: AppTextStyles.buttonText,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radiusMd),
-          ),
-          minimumSize: const Size(0, 48),
-        ),
-      ),
-
-      // Configuration des boutons fantômes
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.textPrimary,
-          backgroundColor: AppColors.ghostButtonBg,
-          textStyle: AppTextStyles.buttonTextSmall,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radiusSm),
-          ),
-          side: BorderSide.none,
-          minimumSize: const Size(0, 40),
-        ),
-      ),
-
-      // Configuration des sliders
+      textTheme: _buildTextTheme(),
       sliderTheme: SliderThemeData(
         activeTrackColor: AppColors.sliderActive,
         inactiveTrackColor: AppColors.sliderInactive,
         thumbColor: AppColors.sliderThumb,
         trackHeight: 4,
-        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
       ),
-
-      // Configuration des boutons d'icône
-      iconButtonTheme: IconButtonThemeData(
-        style: IconButton.styleFrom(
-          foregroundColor: AppColors.textPrimary,
-          padding: const EdgeInsets.all(8),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.cta,
+          foregroundColor: AppColors.onPrimary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radiusMd),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: spacingMd,
+            vertical: spacingMd,
+          ),
         ),
       ),
-
-      // Thème de texte global
-      textTheme: const TextTheme(
-        headlineMedium: AppTextStyles.titleLarge,
-        titleLarge: AppTextStyles.title,
-        titleMedium: AppTextStyles.title,
-        bodyLarge: AppTextStyles.body,
-        bodyMedium: AppTextStyles.body,
-        labelLarge: AppTextStyles.label,
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: AppColors.border),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radiusXl),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: spacingSm,
+            vertical: spacingXs,
+          ),
+        ),
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radiusSm),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: spacingXs,
+            vertical: spacingXs,
+          ),
+        ),
+      ),
+      cardTheme: CardTheme(
+        color: AppColors.surface,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radiusLg),
+          side: const BorderSide(color: AppColors.divider),
+        ),
+        margin: EdgeInsets.zero,
+      ),
+      useMaterial3: false,
     );
   }
 
-  /// Utilitaire pour créer un MaterialColor à partir d'une couleur
-  static MaterialColor _createMaterialColor(Color color) {
-    List strengths = <double>[.05];
-    Map<int, Color> swatch = {};
-    final int r = color.red, g = color.green, b = color.blue;
-
-    for (int i = 1; i < 10; i++) {
-      strengths.add(0.1 * i);
-    }
-    
-    for (double strength in strengths) {
-      final double ds = 0.5 - strength;
-      swatch[(strength * 1000).round()] = Color.fromRGBO(
-        r + ((ds < 0 ? r : (255 - r)) * ds).round(),
-        g + ((ds < 0 ? g : (255 - g)) * ds).round(),
-        b + ((ds < 0 ? b : (255 - b)) * ds).round(),
-        1,
-      );
-    }
-    
-    return MaterialColor(color.value, swatch);
+  /// Construction du thème de texte
+  static TextTheme _buildTextTheme() {
+    return const TextTheme(
+      titleLarge: AppTextStyles.titleLarge,
+      titleMedium: AppTextStyles.title,
+      titleSmall: AppTextStyles.subtitle,
+      labelLarge: AppTextStyles.label,
+      bodyMedium: AppTextStyles.body,
+      bodySmall: AppTextStyles.muted,
+      headlineSmall: AppTextStyles.value,
+    );
   }
 }

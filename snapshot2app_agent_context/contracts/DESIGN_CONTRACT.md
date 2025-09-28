@@ -1,29 +1,21 @@
-# Design Contract – mini‑Figma enriched (v2)
+# DESIGN_CONTRACT — Updated
 
-**Goal:** Ensure `design.json` is exhaustive, measurable, and deterministic.
+## Purpose
+Define minimum quality and completeness for `design.json` produced from a snapshot.
 
-## Mandatory Top-Level Keys
-- `meta`, `tokens`, `screen`, `components`, `qa`
+## Pass/Fail Criteria
+- **Coverage**: `qa.coverageRatio == 1.0`.
+- **Measurements**: all components have integer `bbox` AND `sourceRect` (no `unknown`).
+- **A11y**: interactive components have `a11y.ariaLabel`.
+- **Colors**: every color used in styles exists in `tokens.colors` (no stray hex).
+- **Semantics (IT3)**: presence of the following when visually applicable:
+  - `variant` on `Button`/`IconButton`.
+  - `placement` + `widthMode` for non-fullwidth actions inside groups.
+  - `group.alignment`, `group.distribution`, optional `group.maxWidth`.
+  - `typographyRef` and `style.transform` for label casing.
+  - `leadingIcon` when an icon is visually paired with a label.
+- **Confidence**: `qa.confidenceGlobal ≥ 0.85` (configurable). If below, generation may proceed only in **degraded** mode with a warning.
 
-## Component-Level Requirements
-- `id` (kebab or fixed from extractor): deterministic, stable
-- `type`: one of allowed primitives (Text, Button, Icon, IconButton, Slider, Container, Card, Image, Input, Divider, etc.)
-- `bbox` and `sourceRect`: `[x,y,width,height]` integers (px)
-- `style`: explicit colors (hex), typography refs, radius, spacing
-- `layout`: `type` (flex/grid/absolute), direction, gap, align, justify
-- `a11y.ariaLabel` for interactive components
-- Texts **verbatim** (accents, punctuation, spaces)
-
-## QA Fields (must exist)
-- `qa.inventory` ordered top-left → bottom-right
-- `qa.countsByType`
-- `qa.textCoverage.found/missing`
-- `qa.colorsUsed`
-- `qa.assumptions` (with confidence ∈ [0.6;0.9]) for any estimate
-- `qa.coverageRatio` ≥ 1.0 and `qa.confidenceGlobal` ≥ 0.85
-
-## Failure Modes (abort generation)
-- Missing any mandatory top-level key
-- `bbox` or `sourceRect` with non-integers or negative
-- `coverageRatio` < 1.0 or `textCoverage.missing` non-empty
-- Interactive components without `a11y.ariaLabel`
+## Deliverables
+- Single valid JSON (`UTF‑8`), no comments or extra text.
+- `qa` section includes `assumptions` per estimation with confidence ∈ [0.6;0.9].

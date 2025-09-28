@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/quick_start_timer_screen.dart';
+import 'screens/interval_timer_home_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -13,8 +13,8 @@ class IntervalCounterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Interval Counter',
-      theme: AppTheme.theme,
-      home: const QuickStartTimerScreen(),
+      theme: AppTheme.lightTheme,
+      home: const IntervalTimerHomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

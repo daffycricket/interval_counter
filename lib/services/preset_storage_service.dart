@@ -1,158 +1,129 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/timer_preset.dart';
 import '../models/timer_configuration.dart';
 
-/// Service de stockage des préréglages
-/// Simule un stockage local pour la démonstration
+/// Service de stockage des préréglages de timer
 class PresetStorageService {
-  static final PresetStorageService _instance = PresetStorageService._internal();
-  factory PresetStorageService() => _instance;
-  PresetStorageService._internal();
-
-  // Stockage en mémoire pour la simulation
-  final List<TimerPreset> _presets = [];
-
-  /// Récupère tous les préréglages
-  Future<List<TimerPreset>> getPresets() async {
-    // Simulation d'un délai réseau/disque
-    await Future.delayed(const Duration(milliseconds: 100));
-    
-    // Retourne une copie pour éviter les modifications externes
-    return List.from(_presets);
+  static const String _presetsKey = 'timer_presets';
+  static PresetStorageService? _instance;
+  
+  PresetStorageService._();
+  
+  /// Instance singleton
+  static PresetStorageService get instance {
+    _instance ??= PresetStorageService._();
+    return _instance!;
   }
 
-  /// Sauvegarde un nouveau préréglage
-  Future<void> savePreset(TimerPreset preset) async {
-    // Simulation d'un délai réseau/disque
-    await Future.delayed(const Duration(milliseconds: 200));
-    
-    // Vérification que l'ID n'existe pas déjà
-    final existingIndex = _presets.indexWhere((p) => p.id == preset.id);
-    if (existingIndex != -1) {
-      throw Exception('Un préréglage avec cet ID existe déjà');
+  /// Charge tous les préréglages
+  Future<List<TimerPreset>> loadPresets() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final presetsJson = prefs.getStringList(_presetsKey) ?? [];
+      
+      return presetsJson
+          .map((json) => TimerPreset.fromJson(jsonDecode(json)))
+          .toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt)); // Tri par date décroissante
+    } catch (e) {
+      // En cas d'erreur, retourner une liste vide
+      return [];
     }
-    
-    _presets.add(preset);
-    _sortPresetsByCreationDate();
-    
-    if (kDebugMode) {
-      print('Préréglage sauvegardé: ${preset.name}');
+  }
+
+  /// Sauvegarde tous les préréglages
+  Future<bool> savePresets(List<TimerPreset> presets) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final presetsJson = presets
+          .map((preset) => jsonEncode(preset.toJson()))
+          .toList();
+      
+      return await prefs.setStringList(_presetsKey, presetsJson);
+    } catch (e) {
+      return false;
     }
+  }
+
+  /// Ajoute un nouveau préréglage
+  Future<bool> addPreset(TimerPreset preset) async {
+    final presets = await loadPresets();
+    presets.add(preset);
+    return await savePresets(presets);
   }
 
   /// Met à jour un préréglage existant
-  Future<void> updatePreset(TimerPreset preset) async {
-    await Future.delayed(const Duration(milliseconds: 200));
+  Future<bool> updatePreset(TimerPreset updatedPreset) async {
+    final presets = await loadPresets();
+    final index = presets.indexWhere((p) => p.id == updatedPreset.id);
     
-    final index = _presets.indexWhere((p) => p.id == preset.id);
-    if (index == -1) {
-      throw Exception('Préréglage non trouvé');
+    if (index != -1) {
+      presets[index] = updatedPreset;
+      return await savePresets(presets);
     }
     
-    _presets[index] = preset;
-    _sortPresetsByCreationDate();
-    
-    if (kDebugMode) {
-      print('Préréglage mis à jour: ${preset.name}');
-    }
+    return false;
   }
 
   /// Supprime un préréglage
-  Future<void> deletePreset(String id) async {
-    await Future.delayed(const Duration(milliseconds: 150));
-    
-    final index = _presets.indexWhere((p) => p.id == id);
-    if (index == -1) {
-      throw Exception('Préréglage non trouvé');
-    }
-    
-    final deletedPreset = _presets.removeAt(index);
-    
-    if (kDebugMode) {
-      print('Préréglage supprimé: ${deletedPreset.name}');
-    }
+  Future<bool> deletePreset(String presetId) async {
+    final presets = await loadPresets();
+    presets.removeWhere((p) => p.id == presetId);
+    return await savePresets(presets);
   }
 
-  /// Récupère un préréglage par ID
-  Future<TimerPreset?> getPresetById(String id) async {
-    await Future.delayed(const Duration(milliseconds: 50));
-    
+  /// Crée un préréglage à partir d'une configuration
+  TimerPreset createPreset({
+    required String name,
+    required TimerConfiguration configuration,
+  }) {
+    return TimerPreset(
+      id: _generateId(),
+      name: name,
+      configuration: configuration,
+      createdAt: DateTime.now(),
+    );
+  }
+
+  /// Génère un ID unique pour un préréglage
+  String _generateId() {
+    return 'preset_${DateTime.now().millisecondsSinceEpoch}';
+  }
+
+  /// Efface tous les préréglages (pour les tests ou reset)
+  Future<bool> clearAllPresets() async {
     try {
-      return _presets.firstWhere((preset) => preset.id == id);
+      final prefs = await SharedPreferences.getInstance();
+      return await prefs.remove(_presetsKey);
     } catch (e) {
-      return null;
+      return false;
     }
   }
 
   /// Vérifie si un nom de préréglage existe déjà
   Future<bool> presetNameExists(String name, {String? excludeId}) async {
-    await Future.delayed(const Duration(milliseconds: 50));
-    
-    return _presets.any((preset) => 
-      preset.name.toLowerCase() == name.toLowerCase() && 
-      preset.id != excludeId
+    final presets = await loadPresets();
+    return presets.any((p) => 
+        p.name.toLowerCase() == name.toLowerCase() && 
+        p.id != excludeId
     );
   }
 
-  /// Trie les préréglages par date de création (plus récent en premier)
-  void _sortPresetsByCreationDate() {
-    _presets.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  }
-
-  /// Charge des données d'exemple pour la démonstration
-  Future<void> loadSampleData() async {
-    if (_presets.isNotEmpty) return;
-
-    final samplePreset = TimerPreset(
-      id: 'sample-gainage',
-      name: 'gainage',
-      configuration: TimerConfiguration(
-        repetitions: 20,
-        workTime: Duration(seconds: 40),
-        restTime: Duration(seconds: 3),
-      ),
-      createdAt: DateTime.now().subtract(const Duration(hours: 2, minutes: 22)),
-    );
-
-    await savePreset(samplePreset);
-  }
-
-  /// Export de tous les préréglages au format JSON
-  Future<String> exportPresets() async {
-    final presets = await getPresets();
-    final presetsJson = presets.map((preset) => preset.toJson()).toList();
-    return jsonEncode(presetsJson);
-  }
-
-  /// Import de préréglages depuis JSON
-  Future<void> importPresets(String jsonString) async {
-    try {
-      final List<dynamic> presetsData = jsonDecode(jsonString);
-      final presets = presetsData
-          .map((data) => TimerPreset.fromJson(data as Map<String, dynamic>))
-          .toList();
-      
-      for (final preset in presets) {
-        // Éviter les doublons en vérifiant l'ID
-        if (!_presets.any((p) => p.id == preset.id)) {
-          _presets.add(preset);
-        }
-      }
-      
-      _sortPresetsByCreationDate();
-      
-      if (kDebugMode) {
-        print('${presets.length} préréglage(s) importé(s)');
-      }
-    } catch (e) {
-      throw Exception('Erreur lors de l\'import: $e');
+  /// Génère un nom unique pour un préréglage
+  Future<String> generateUniqueName(String baseName) async {
+    if (!await presetNameExists(baseName)) {
+      return baseName;
     }
-  }
-
-  /// Vide tous les préréglages (pour les tests)
-  @visibleForTesting
-  Future<void> clearAllPresets() async {
-    _presets.clear();
+    
+    int counter = 1;
+    String uniqueName;
+    
+    do {
+      uniqueName = '$baseName ($counter)';
+      counter++;
+    } while (await presetNameExists(uniqueName));
+    
+    return uniqueName;
   }
 }

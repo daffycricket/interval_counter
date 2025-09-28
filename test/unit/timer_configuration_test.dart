@@ -3,126 +3,107 @@ import 'package:interval_counter/models/timer_configuration.dart';
 
 void main() {
   group('TimerConfiguration', () {
+    test('should create valid configuration', () {
+      const config = TimerConfiguration(
+        repetitions: 10,
+        workDuration: Duration(seconds: 30),
+        restDuration: Duration(seconds: 10),
+      );
+
+      expect(config.repetitions, 10);
+      expect(config.workDuration, const Duration(seconds: 30));
+      expect(config.restDuration, const Duration(seconds: 10));
+      expect(config.isValid, true);
+    });
+
     test('should calculate total duration correctly', () {
       const config = TimerConfiguration(
-        repetitions: 5,
-        workTime: Duration(seconds: 30),
-        restTime: Duration(seconds: 10),
-      );
-
-      expect(config.totalDuration, equals(const Duration(seconds: 200))); // (30+10) * 5
-    });
-
-    test('should calculate total work time correctly', () {
-      const config = TimerConfiguration(
         repetitions: 3,
-        workTime: Duration(seconds: 45),
-        restTime: Duration(seconds: 15),
+        workDuration: Duration(seconds: 20),
+        restDuration: Duration(seconds: 10),
       );
 
-      expect(config.totalWorkTime, equals(const Duration(seconds: 135))); // 45 * 3
+      expect(config.totalDuration, const Duration(seconds: 90)); // (20+10) * 3
     });
 
-    test('should calculate total rest time correctly', () {
-      const config = TimerConfiguration(
-        repetitions: 4,
-        workTime: Duration(seconds: 20),
-        restTime: Duration(seconds: 10),
-      );
-
-      expect(config.totalRestTime, equals(const Duration(seconds: 40))); // 10 * 4
-    });
-
-    test('should validate configuration correctly', () {
+    test('should validate minimum values', () {
       const validConfig = TimerConfiguration(
         repetitions: 1,
-        workTime: Duration(seconds: 1),
-        restTime: Duration(seconds: 1),
+        workDuration: Duration(seconds: 1),
+        restDuration: Duration(seconds: 1),
       );
-      expect(validConfig.isValid, isTrue);
+      expect(validConfig.isValid, true);
 
       const invalidRepetitions = TimerConfiguration(
         repetitions: 0,
-        workTime: Duration(seconds: 30),
-        restTime: Duration(seconds: 10),
+        workDuration: Duration(seconds: 30),
+        restDuration: Duration(seconds: 10),
       );
-      expect(invalidRepetitions.isValid, isFalse);
+      expect(invalidRepetitions.isValid, false);
 
-      const invalidWorkTime = TimerConfiguration(
+      const invalidWork = TimerConfiguration(
         repetitions: 5,
-        workTime: Duration.zero,
-        restTime: Duration(seconds: 10),
+        workDuration: Duration.zero,
+        restDuration: Duration(seconds: 10),
       );
-      expect(invalidWorkTime.isValid, isFalse);
+      expect(invalidWork.isValid, false);
 
-      const invalidRestTime = TimerConfiguration(
+      const invalidRest = TimerConfiguration(
         repetitions: 5,
-        workTime: Duration(seconds: 30),
-        restTime: Duration.zero,
+        workDuration: Duration(seconds: 30),
+        restDuration: Duration.zero,
       );
-      expect(invalidRestTime.isValid, isFalse);
+      expect(invalidRest.isValid, false);
     });
 
-    test('should serialize to JSON correctly', () {
-      const config = TimerConfiguration(
+    test('should support copyWith', () {
+      const original = TimerConfiguration(
         repetitions: 10,
-        workTime: Duration(seconds: 45),
-        restTime: Duration(seconds: 15),
+        workDuration: Duration(seconds: 30),
+        restDuration: Duration(seconds: 10),
+      );
+
+      final modified = original.copyWith(repetitions: 15);
+
+      expect(modified.repetitions, 15);
+      expect(modified.workDuration, const Duration(seconds: 30));
+      expect(modified.restDuration, const Duration(seconds: 10));
+    });
+
+    test('should serialize to/from JSON', () {
+      const config = TimerConfiguration(
+        repetitions: 8,
+        workDuration: Duration(seconds: 45),
+        restDuration: Duration(seconds: 15),
       );
 
       final json = config.toJson();
-      expect(json['repetitions'], equals(10));
-      expect(json['workTimeSeconds'], equals(45));
-      expect(json['restTimeSeconds'], equals(15));
+      final restored = TimerConfiguration.fromJson(json);
+
+      expect(restored, config);
     });
 
-    test('should deserialize from JSON correctly', () {
-      final json = {
-        'repetitions': 8,
-        'workTimeSeconds': 60,
-        'restTimeSeconds': 20,
-      };
-
-      final config = TimerConfiguration.fromJson(json);
-      expect(config.repetitions, equals(8));
-      expect(config.workTime, equals(const Duration(seconds: 60)));
-      expect(config.restTime, equals(const Duration(seconds: 20)));
-    });
-
-    test('should support copyWith correctly', () {
-      const original = TimerConfiguration(
-        repetitions: 5,
-        workTime: Duration(seconds: 30),
-        restTime: Duration(seconds: 10),
-      );
-
-      final modified = original.copyWith(repetitions: 8);
-      expect(modified.repetitions, equals(8));
-      expect(modified.workTime, equals(original.workTime));
-      expect(modified.restTime, equals(original.restTime));
-    });
-
-    test('should implement equality correctly', () {
+    test('should support equality comparison', () {
       const config1 = TimerConfiguration(
-        repetitions: 5,
-        workTime: Duration(seconds: 30),
-        restTime: Duration(seconds: 10),
+        repetitions: 10,
+        workDuration: Duration(seconds: 30),
+        restDuration: Duration(seconds: 10),
       );
 
       const config2 = TimerConfiguration(
-        repetitions: 5,
-        workTime: Duration(seconds: 30),
-        restTime: Duration(seconds: 10),
+        repetitions: 10,
+        workDuration: Duration(seconds: 30),
+        restDuration: Duration(seconds: 10),
       );
 
       const config3 = TimerConfiguration(
-        repetitions: 6,
-        workTime: Duration(seconds: 30),
-        restTime: Duration(seconds: 10),
+        repetitions: 5,
+        workDuration: Duration(seconds: 30),
+        restDuration: Duration(seconds: 10),
       );
 
-      expect(config1, equals(config2));
-      expect(config1, isNot(equals(config3)));
+      expect(config1, config2);
+      expect(config1, isNot(config3));
     });
   });
 }

@@ -1,18 +1,18 @@
-# Spec Contract – functional behaviors (v2)
+# SPEC_CONTRACT — Updated
 
-**Objective:** Align generated code behavior to a stable, tool-agnostic spec.
+## Goal
+Ensure the functional specification derived from `design.json` is actionable and consistent with the UI semantics.
 
-## Spec must cover
-- Identification: screen name, tech id
-- Purpose & type
-- Structure: sections/fields (inputs, buttons, lists)
-- Actions: user intents and outcomes
-- Validation rules and constraints
-- Navigation: sources/targets
-- Scenarios: nominal, alternative, exceptional
-- Accessibility notes
+## Must include
+- User-visible copy **verbatim** from `components.Text.text` (with `transform` applied).  
+- Interaction model for each interactive component (`Button`, `IconButton`, `Slider`, inputs...).  
+- Accessibility behavior mapping `a11y.ariaLabel` to semantics.  
+- Non-visual roles implied by variants:  
+  - `cta` = primary flow action,  
+  - `secondary` = supportive action,  
+  - `ghost` = low-emphasis action.
+- Layout intentions where they impact behavior: centered groups, actions aligned to end.
+- Theming dependencies: reference to semantic tokens used by actions (`cta`, `success`, etc.).
 
-## Agent obligations
-- Do not infer missing rules silently. Surface `assumptions` and `openQuestions` in `reports/agent_report.md`.
-- Apply validation strictly (e.g., formats like `mm:ss`).
-- Keep state local unless the spec mandates persistence or services.
+## Out of scope
+- Pixel-perfect values beyond what `design.json` already encodes.

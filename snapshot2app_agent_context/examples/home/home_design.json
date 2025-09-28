@@ -1,102 +1,55 @@
 {
   "meta": {
     "version": "1.0",
-    "screenName": "quick_start_timer",
-    "snapshotRef": "c91a9928-e5f8-422f-84e0-4464232039a7.png"
+    "screenName": "IntervalTimerHome",
+    "snapshotRef": "580c54bd-6e3f-44f9-86ef-ce42233fc0dd.png"
   },
   "tokens": {
     "colors": {
-      "primary": "#2E7D32",
+      "primary": "#607D8B",
       "onPrimary": "#FFFFFF",
-      "background": "#F5F5F5",
+      "background": "#F2F2F2",
       "surface": "#FFFFFF",
-      "textPrimary": "#000000",
-      "textSecondary": "#555555",
-      "divider": "#DDDDDD",
+      "textPrimary": "#212121",
+      "textSecondary": "#616161",
+      "divider": "#E0E0E0",
       "accent": "#FFC107",
-      "sliderActive": "#3F51B5",
-      "sliderInactive": "#BDBDBD",
+      "sliderActive": "#FFFFFF",
+      "sliderInactive": "#90A4AE",
       "sliderThumb": "#FFFFFF",
-      "border": "#CCCCCC",
-      "headerBackground": "#455A64",
-      "ghostButtonBg": "#EEEEEE",
+      "border": "#DDDDDD",
+      "cta": "#607D8B",
+      "success": "#4CAF50",
+      "warning": "#FFC107",
+      "info": "#2196F3",
+      "headerBackgroundDark": "#455A64",
       "presetCardBg": "#FAFAFA"
     },
     "typography": {
-      "fontFamilies": [
-        "Roboto",
-        "sans-serif",
-        "unknown"
-      ],
-      "fontSizes": {
-        "xs": 10,
-        "sm": 12,
-        "md": 14,
-        "lg": 18,
-        "xl": 22
-      },
-      "fontWeights": {
-        "regular": 400,
-        "medium": 500,
-        "bold": 700
-      },
-      "lineHeights": {
-        "sm": 14,
-        "md": 18,
-        "lg": 24
-      }
+      "fontFamilies": ["Roboto", "sans-serif", "unknown"],
+      "fontSizes": { "xs": 12, "sm": 14, "md": 16, "lg": 20, "xl": 24 },
+      "fontWeights": { "regular": 400, "medium": 500, "bold": 700 },
+      "lineHeights": { "sm": 16, "md": 20, "lg": 28 }
     },
-    "spacing": {
-      "xxs": 2,
-      "xs": 4,
-      "sm": 8,
-      "md": 12,
-      "lg": 16,
-      "xl": 24
-    },
-    "radius": {
-      "sm": 2,
-      "md": 4,
-      "lg": 8,
-      "xl": 16
-    },
+    "spacing": { "xxs": 4, "xs": 8, "sm": 12, "md": 16, "lg": 24, "xl": 32 },
+    "radius": { "sm": 4, "md": 8, "lg": 12, "xl": 20 },
     "shadow": {
-      "sm": "0px 1px 2px rgba(0,0,0,0.15)",
-      "md": "0px 2px 4px rgba(0,0,0,0.2)",
-      "lg": "0px 4px 8px rgba(0,0,0,0.3)"
+      "sm": "0 1px 2px rgba(0,0,0,0.08)",
+      "md": "0 2px 6px rgba(0,0,0,0.12)",
+      "lg": "0 6px 20px rgba(0,0,0,0.16)"
     }
   },
   "screen": {
-    "size": {
-      "width": 562,
-      "height": 1136
-    },
-    "layout": {
-      "orientation": "portrait",
-      "scrollable": true
-    }
+    "size": { "width": 558, "height": 1136 },
+    "layout": { "orientation": "portrait", "scrollable": true }
   },
   "components": [
     {
-      "id": "container-1",
+      "id": "Container-1",
       "type": "Container",
-      "bbox": [
-        0,
-        0,
-        562,
-        56
-      ],
-      "sourceRect": [
-        0,
-        0,
-        562,
-        56
-      ],
-      "style": {
-        "backgroundColor": "#455A64",
-        "paddingX": 8,
-        "paddingY": 8
-      },
+      "bbox": [0, 0, 558, 88],
+      "sourceRect": [0, 0, 558, 88],
+      "style": { "backgroundColor": "#455A64", "paddingX": 16, "paddingY": 12 },
       "layout": {
         "type": "flex",
         "direction": "row",
@@ -104,118 +57,76 @@
         "align": "center",
         "justify": "between"
       },
-      "children": [
-        {
-          "id": "iconbutton-1",
-          "type": "IconButton",
-          "bbox": [
-            8,
-            12,
-            24,
-            24
-          ],
-          "sourceRect": [
-            8,
-            12,
-            24,
-            24
-          ],
-          "iconName": "material.volume_up",
-          "a11y": {
-            "ariaLabel": "volume"
-          },
-          "style": {
-            "color": "#FFFFFF"
-          }
-        },
-        {
-          "id": "slider-1",
-          "type": "Slider",
-          "bbox": [
-            40,
-            12,
-            400,
-            24
-          ],
-          "sourceRect": [
-            40,
-            12,
-            400,
-            24
-          ],
-          "style": {
-            "activeTrack": "#3F51B5",
-            "inactiveTrack": "#BDBDBD",
-            "thumbColor": "#FFFFFF",
-            "trackHeight": 4
-          },
-          "valueNormalized": 0.7,
-          "children": [
-            {
-              "id": "icon-2",
-              "type": "Icon",
-              "bbox": [
-                300,
-                12,
-                24,
-                24
-              ],
-              "sourceRect": [
-                300,
-                12,
-                24,
-                24
-              ],
-              "iconName": "material.circle",
-              "style": {
-                "color": "#FFFFFF"
-              }
-            }
-          ]
-        },
-        {
-          "id": "iconbutton-2",
-          "type": "IconButton",
-          "bbox": [
-            520,
-            12,
-            24,
-            24
-          ],
-          "sourceRect": [
-            520,
-            12,
-            24,
-            24
-          ],
-          "iconName": "material.more_vert",
-          "a11y": {
-            "ariaLabel": "menu"
-          },
-          "style": {
-            "color": "#FFFFFF"
-          }
-        }
-      ]
+      "group": {
+        "alignment": "center",
+        "distribution": "between",
+        "maxWidth": 558
+      },
+      "children": []
     },
     {
-      "id": "card-1",
+      "id": "IconButton-2",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [12, 28, 24, 24],
+      "sourceRect": [12, 28, 24, 24],
+      "iconName": "material.volume_up",
+      "a11y": { "ariaLabel": "Régler le volume" },
+      "style": {
+        "color": "#FFFFFF",
+        "radius": "sm",
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Slider-3",
+      "type": "Slider",
+      "bbox": [52, 26, 420, 28],
+      "sourceRect": [52, 26, 420, 28],
+      "a11y": { "ariaLabel": "Curseur de volume" },
+      "valueNormalized": 0.62,
+      "style": {
+        "activeTrack": "#FFFFFF",
+        "inactiveTrack": "#90A4AE",
+        "thumbColor": "#FFFFFF",
+        "trackHeight": 4
+      },
+      "children": []
+    },
+    {
+      "id": "Icon-4",
+      "type": "Icon",
+      "bbox": [312, 26, 16, 16],
+      "sourceRect": [312, 26, 16, 16],
+      "iconName": "material.circle",
+      "style": { "color": "#FFFFFF" }
+    },
+    {
+      "id": "IconButton-5",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [518, 26, 28, 28],
+      "sourceRect": [518, 26, 28, 28],
+      "iconName": "material.more_vert",
+      "a11y": { "ariaLabel": "Plus d’options" },
+      "style": {
+        "color": "#FFFFFF",
+        "radius": "sm",
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Card-6",
       "type": "Card",
-      "bbox": [
-        8,
-        64,
-        546,
-        300
-      ],
-      "sourceRect": [
-        8,
-        64,
-        546,
-        300
-      ],
+      "bbox": [12, 96, 534, 560],
+      "sourceRect": [12, 96, 534, 560],
       "style": {
         "backgroundColor": "#FFFFFF",
-        "radius": "md",
+        "borderColor": "#E0E0E0",
+        "borderWidth": 1,
+        "radius": "lg",
         "paddingX": 16,
         "paddingY": 16,
         "shadow": "sm"
@@ -227,391 +138,19 @@
         "align": "start",
         "justify": "start"
       },
-      "children": [
-        {
-          "id": "text-1",
-          "type": "Text",
-          "bbox": [
-            16,
-            72,
-            200,
-            24
-          ],
-          "sourceRect": [
-            16,
-            72,
-            200,
-            24
-          ],
-          "text": "Démarrage rapide",
-          "style": {
-            "color": "#000000",
-            "fontSize": 18,
-            "fontWeight": "bold",
-            "typographyRef": "title"
-          }
-        },
-        {
-          "id": "text-2",
-          "type": "Text",
-          "bbox": [
-            32,
-            120,
-            100,
-            20
-          ],
-          "sourceRect": [
-            32,
-            120,
-            100,
-            20
-          ],
-          "text": "RÉPÉTITIONS",
-          "style": {
-            "color": "#555555",
-            "fontSize": 14,
-            "fontWeight": "medium",
-            "typographyRef": "label"
-          }
-        },
-        {
-          "id": "iconbutton-3",
-          "type": "IconButton",
-          "bbox": [
-            160,
-            112,
-            32,
-            32
-          ],
-          "sourceRect": [
-            160,
-            112,
-            32,
-            32
-          ],
-          "iconName": "material.remove",
-          "a11y": {
-            "ariaLabel": "diminuer répétitions"
-          },
-          "style": {
-            "color": "#000000"
-          }
-        },
-        {
-          "id": "text-3",
-          "type": "Text",
-          "bbox": [
-            200,
-            112,
-            40,
-            32
-          ],
-          "sourceRect": [
-            200,
-            112,
-            40,
-            32
-          ],
-          "text": "16",
-          "style": {
-            "color": "#000000",
-            "fontSize": 18,
-            "fontWeight": "bold",
-            "typographyRef": "title"
-          }
-        },
-        {
-          "id": "iconbutton-4",
-          "type": "IconButton",
-          "bbox": [
-            250,
-            112,
-            32,
-            32
-          ],
-          "sourceRect": [
-            250,
-            112,
-            32,
-            32
-          ],
-          "iconName": "material.add",
-          "a11y": {
-            "ariaLabel": "augmenter répétitions"
-          },
-          "style": {
-            "color": "#000000"
-          }
-        },
-        {
-          "id": "text-4",
-          "type": "Text",
-          "bbox": [
-            32,
-            168,
-            100,
-            20
-          ],
-          "sourceRect": [
-            32,
-            168,
-            100,
-            20
-          ],
-          "text": "TRAVAIL",
-          "style": {
-            "color": "#555555",
-            "fontSize": 14,
-            "fontWeight": "medium",
-            "typographyRef": "label"
-          }
-        },
-        {
-          "id": "iconbutton-5",
-          "type": "IconButton",
-          "bbox": [
-            160,
-            160,
-            32,
-            32
-          ],
-          "sourceRect": [
-            160,
-            160,
-            32,
-            32
-          ],
-          "iconName": "material.remove",
-          "a11y": {
-            "ariaLabel": "diminuer travail"
-          },
-          "style": {
-            "color": "#000000"
-          }
-        },
-        {
-          "id": "text-5",
-          "type": "Text",
-          "bbox": [
-            200,
-            160,
-            80,
-            32
-          ],
-          "sourceRect": [
-            200,
-            160,
-            80,
-            32
-          ],
-          "text": "00 : 44",
-          "style": {
-            "color": "#000000",
-            "fontSize": 18,
-            "fontWeight": "bold",
-            "typographyRef": "title"
-          }
-        },
-        {
-          "id": "iconbutton-6",
-          "type": "IconButton",
-          "bbox": [
-            290,
-            160,
-            32,
-            32
-          ],
-          "sourceRect": [
-            290,
-            160,
-            32,
-            32
-          ],
-          "iconName": "material.add",
-          "a11y": {
-            "ariaLabel": "augmenter travail"
-          },
-          "style": {
-            "color": "#000000"
-          }
-        },
-        {
-          "id": "text-6",
-          "type": "Text",
-          "bbox": [
-            32,
-            216,
-            100,
-            20
-          ],
-          "sourceRect": [
-            32,
-            216,
-            100,
-            20
-          ],
-          "text": "REPOS",
-          "style": {
-            "color": "#555555",
-            "fontSize": 14,
-            "fontWeight": "medium",
-            "typographyRef": "label"
-          }
-        },
-        {
-          "id": "iconbutton-7",
-          "type": "IconButton",
-          "bbox": [
-            160,
-            208,
-            32,
-            32
-          ],
-          "sourceRect": [
-            160,
-            208,
-            32,
-            32
-          ],
-          "iconName": "material.remove",
-          "a11y": {
-            "ariaLabel": "diminuer repos"
-          },
-          "style": {
-            "color": "#000000"
-          }
-        },
-        {
-          "id": "text-7",
-          "type": "Text",
-          "bbox": [
-            200,
-            208,
-            80,
-            32
-          ],
-          "sourceRect": [
-            200,
-            208,
-            80,
-            32
-          ],
-          "text": "00 : 15",
-          "style": {
-            "color": "#000000",
-            "fontSize": 18,
-            "fontWeight": "bold",
-            "typographyRef": "title"
-          }
-        },
-        {
-          "id": "iconbutton-8",
-          "type": "IconButton",
-          "bbox": [
-            290,
-            208,
-            32,
-            32
-          ],
-          "sourceRect": [
-            290,
-            208,
-            32,
-            32
-          ],
-          "iconName": "material.add",
-          "a11y": {
-            "ariaLabel": "augmenter repos"
-          },
-          "style": {
-            "color": "#000000"
-          }
-        },
-        {
-          "id": "button-1",
-          "type": "Button",
-          "bbox": [
-            16,
-            260,
-            200,
-            40
-          ],
-          "sourceRect": [
-            16,
-            260,
-            200,
-            40
-          ],
-          "text": "SAUVEGARDER",
-          "a11y": {
-            "ariaLabel": "sauvegarder"
-          },
-          "style": {
-            "backgroundColor": "#EEEEEE",
-            "color": "#000000",
-            "fontSize": 14,
-            "fontWeight": "medium",
-            "radius": "sm",
-            "typographyRef": "label"
-          }
-        }
-      ]
+      "group": {
+        "alignment": "start",
+        "distribution": "start",
+        "maxWidth": 534
+      },
+      "children": []
     },
     {
-      "id": "button-2",
-      "type": "Button",
-      "bbox": [
-        8,
-        380,
-        546,
-        56
-      ],
-      "sourceRect": [
-        8,
-        380,
-        546,
-        56
-      ],
-      "text": "COMMENCER",
-      "leadingIcon": {
-        "type": "Icon",
-        "iconName": "material.bolt",
-        "style": {
-          "color": "#FFFFFF"
-        }
-      },
-      "a11y": {
-        "ariaLabel": "commencer"
-      },
-      "style": {
-        "backgroundColor": "#2E7D32",
-        "color": "#FFFFFF",
-        "fontSize": 16,
-        "fontWeight": "bold",
-        "radius": "md",
-        "typographyRef": "title"
-      }
-    },
-    {
-      "id": "container-2",
+      "id": "Container-7",
       "type": "Container",
-      "bbox": [
-        8,
-        450,
-        546,
-        100
-      ],
-      "sourceRect": [
-        8,
-        450,
-        546,
-        100
-      ],
-      "style": {
-        "backgroundColor": "#FFFFFF",
-        "paddingX": 8,
-        "paddingY": 8
-      },
+      "bbox": [24, 112, 510, 36],
+      "sourceRect": [24, 112, 510, 36],
+      "style": { "paddingX": 0, "paddingY": 0 },
       "layout": {
         "type": "flex",
         "direction": "row",
@@ -619,338 +158,539 @@
         "align": "center",
         "justify": "between"
       },
-      "children": [
-        {
-          "id": "text-8",
-          "type": "Text",
-          "bbox": [
-            16,
-            460,
-            200,
-            24
-          ],
-          "sourceRect": [
-            16,
-            460,
-            200,
-            24
-          ],
-          "text": "VOS PRÉRÉGLAGES",
-          "style": {
-            "color": "#000000",
-            "fontSize": 16,
-            "fontWeight": "bold",
-            "typographyRef": "title"
-          }
-        },
-        {
-          "id": "iconbutton-9",
-          "type": "IconButton",
-          "bbox": [
-            500,
-            460,
-            40,
-            24
-          ],
-          "sourceRect": [
-            500,
-            460,
-            40,
-            24
-          ],
-          "iconName": "material.add",
-          "a11y": {
-            "ariaLabel": "ajouter préréglage"
-          },
-          "style": {
-            "color": "#000000"
-          }
-        }
-      ]
+      "group": {
+        "alignment": "center",
+        "distribution": "between",
+        "maxWidth": 510
+      },
+      "children": []
     },
     {
-      "id": "card-2",
+      "id": "Text-8",
+      "type": "Text",
+      "bbox": [24, 112, 240, 36],
+      "sourceRect": [24, 112, 240, 36],
+      "text": "Démarrage rapide",
+      "style": {
+        "color": "#212121",
+        "fontSize": 20,
+        "fontWeight": "bold",
+        "typographyRef": "titleLarge",
+        "lineHeight": 28,
+        "transform": "none"
+      }
+    },
+    {
+      "id": "IconButton-9",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [500, 116, 24, 24],
+      "sourceRect": [500, 116, 24, 24],
+      "iconName": "material.expand_less",
+      "a11y": { "ariaLabel": "Replier la section Démarrage rapide" },
+      "style": {
+        "color": "#616161",
+        "radius": "sm",
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Text-10",
+      "type": "Text",
+      "bbox": [24, 168, 120, 20],
+      "sourceRect": [24, 168, 120, 20],
+      "text": "RÉPÉTITIONS",
+      "style": {
+        "color": "#616161",
+        "fontSize": 12,
+        "fontWeight": "medium",
+        "typographyRef": "label",
+        "transform": "uppercase",
+        "lineHeight": 16
+      }
+    },
+    {
+      "id": "IconButton-11",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [24, 200, 36, 36],
+      "sourceRect": [24, 200, 36, 36],
+      "iconName": "material.remove",
+      "a11y": { "ariaLabel": "Diminuer les répétitions" },
+      "style": {
+        "color": "#607D8B",
+        "radius": "md",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Text-12",
+      "type": "Text",
+      "bbox": [260, 200, 40, 36],
+      "sourceRect": [260, 200, 40, 36],
+      "text": "16",
+      "style": {
+        "color": "#212121",
+        "fontSize": 24,
+        "fontWeight": "bold",
+        "typographyRef": "value",
+        "transform": "none",
+        "lineHeight": 28
+      }
+    },
+    {
+      "id": "IconButton-13",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [498, 200, 36, 36],
+      "sourceRect": [498, 200, 36, 36],
+      "iconName": "material.add",
+      "a11y": { "ariaLabel": "Augmenter les répétitions" },
+      "style": {
+        "color": "#607D8B",
+        "radius": "md",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Text-14",
+      "type": "Text",
+      "bbox": [24, 260, 80, 20],
+      "sourceRect": [24, 260, 80, 20],
+      "text": "TRAVAIL",
+      "style": {
+        "color": "#616161",
+        "fontSize": 12,
+        "fontWeight": "medium",
+        "typographyRef": "label",
+        "transform": "uppercase",
+        "lineHeight": 16
+      }
+    },
+    {
+      "id": "IconButton-15",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [24, 292, 36, 36],
+      "sourceRect": [24, 292, 36, 36],
+      "iconName": "material.remove",
+      "a11y": { "ariaLabel": "Diminuer le temps de travail" },
+      "style": {
+        "color": "#607D8B",
+        "radius": "md",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Text-16",
+      "type": "Text",
+      "bbox": [250, 292, 80, 36],
+      "sourceRect": [250, 292, 80, 36],
+      "text": "00 : 44",
+      "style": {
+        "color": "#212121",
+        "fontSize": 24,
+        "fontWeight": "bold",
+        "typographyRef": "value",
+        "transform": "none",
+        "lineHeight": 28
+      }
+    },
+    {
+      "id": "IconButton-17",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [498, 292, 36, 36],
+      "sourceRect": [498, 292, 36, 36],
+      "iconName": "material.add",
+      "a11y": { "ariaLabel": "Augmenter le temps de travail" },
+      "style": {
+        "color": "#607D8B",
+        "radius": "md",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Text-18",
+      "type": "Text",
+      "bbox": [24, 352, 68, 20],
+      "sourceRect": [24, 352, 68, 20],
+      "text": "REPOS",
+      "style": {
+        "color": "#616161",
+        "fontSize": 12,
+        "fontWeight": "medium",
+        "typographyRef": "label",
+        "transform": "uppercase",
+        "lineHeight": 16
+      }
+    },
+    {
+      "id": "IconButton-19",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [24, 384, 36, 36],
+      "sourceRect": [24, 384, 36, 36],
+      "iconName": "material.remove",
+      "a11y": { "ariaLabel": "Diminuer le temps de repos" },
+      "style": {
+        "color": "#607D8B",
+        "radius": "md",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Text-20",
+      "type": "Text",
+      "bbox": [250, 384, 80, 36],
+      "sourceRect": [250, 384, 80, 36],
+      "text": "00 : 15",
+      "style": {
+        "color": "#212121",
+        "fontSize": 24,
+        "fontWeight": "bold",
+        "typographyRef": "value",
+        "transform": "none",
+        "lineHeight": 28
+      }
+    },
+    {
+      "id": "IconButton-21",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [498, 384, 36, 36],
+      "sourceRect": [498, 384, 36, 36],
+      "iconName": "material.add",
+      "a11y": { "ariaLabel": "Augmenter le temps de repos" },
+      "style": {
+        "color": "#607D8B",
+        "radius": "md",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Button-22",
+      "type": "Button",
+      "variant": "ghost",
+      "bbox": [418, 438, 118, 30],
+      "sourceRect": [418, 438, 118, 30],
+      "text": "SAUVEGARDER",
+      "leadingIcon": {
+        "type": "Icon",
+        "iconName": "material.save",
+        "style": { "color": "#607D8B" }
+      },
+      "a11y": { "ariaLabel": "Sauvegarder le préréglage rapide" },
+      "placement": "end",
+      "widthMode": "intrinsic",
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#FFFFFF",
+        "borderWidth": 0,
+        "color": "#607D8B",
+        "fontSize": 14,
+        "fontWeight": "medium",
+        "typographyRef": "label",
+        "paddingX": 8,
+        "paddingY": 6,
+        "radius": "sm"
+      }
+    },
+    {
+      "id": "Button-23",
+      "type": "Button",
+      "variant": "cta",
+      "bbox": [12, 496, 534, 64],
+      "sourceRect": [12, 496, 534, 64],
+      "text": "COMMENCER",
+      "leadingIcon": {
+        "type": "Icon",
+        "iconName": "material.bolt",
+        "style": { "color": "#FFC107" }
+      },
+      "a11y": { "ariaLabel": "Démarrer l’intervalle" },
+      "placement": "start",
+      "widthMode": "fill",
+      "style": {
+        "backgroundColor": "#607D8B",
+        "borderColor": "#607D8B",
+        "borderWidth": 1,
+        "color": "#FFFFFF",
+        "fontSize": 16,
+        "fontWeight": "bold",
+        "typographyRef": "title",
+        "paddingX": 16,
+        "paddingY": 16,
+        "radius": "md",
+        "shadow": "sm"
+      }
+    },
+    {
+      "id": "Container-24",
+      "type": "Container",
+      "bbox": [12, 570, 534, 48],
+      "sourceRect": [12, 570, 534, 48],
+      "style": { "paddingX": 4, "paddingY": 4 },
+      "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": "sm",
+        "align": "center",
+        "justify": "between"
+      },
+      "group": {
+        "alignment": "center",
+        "distribution": "between",
+        "maxWidth": 534
+      },
+      "children": []
+    },
+    {
+      "id": "Text-25",
+      "type": "Text",
+      "bbox": [12, 580, 250, 24],
+      "sourceRect": [12, 580, 250, 24],
+      "text": "VOS PRÉRÉGLAGES",
+      "style": {
+        "color": "#212121",
+        "fontSize": 16,
+        "fontWeight": "bold",
+        "typographyRef": "title",
+        "transform": "uppercase",
+        "lineHeight": 20
+      }
+    },
+    {
+      "id": "IconButton-26",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [280, 582, 24, 24],
+      "sourceRect": [280, 582, 24, 24],
+      "iconName": "material.edit",
+      "a11y": { "ariaLabel": "Éditer les préréglages" },
+      "style": {
+        "color": "#616161",
+        "radius": "sm",
+        "paddingX": 8,
+        "paddingY": 8
+      }
+    },
+    {
+      "id": "Button-27",
+      "type": "Button",
+      "variant": "secondary",
+      "bbox": [410, 574, 136, 36],
+      "sourceRect": [410, 574, 136, 36],
+      "text": "+ AJOUTER",
+      "leadingIcon": {
+        "type": "Icon",
+        "iconName": "material.add",
+        "style": { "color": "#607D8B" }
+      },
+      "a11y": { "ariaLabel": "Ajouter un préréglage" },
+      "placement": "end",
+      "widthMode": "intrinsic",
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "color": "#607D8B",
+        "fontSize": 14,
+        "fontWeight": "medium",
+        "typographyRef": "label",
+        "paddingX": 12,
+        "paddingY": 8,
+        "radius": "xl",
+        "shadow": "sm"
+      }
+    },
+    {
+      "id": "Card-28",
       "type": "Card",
-      "bbox": [
-        8,
-        560,
-        546,
-        100
-      ],
-      "sourceRect": [
-        8,
-        560,
-        546,
-        100
-      ],
+      "bbox": [12, 628, 534, 200],
+      "sourceRect": [12, 628, 534, 200],
       "style": {
         "backgroundColor": "#FAFAFA",
-        "radius": "md",
-        "paddingX": 12,
-        "paddingY": 12,
+        "borderColor": "#E0E0E0",
+        "borderWidth": 1,
+        "radius": "lg",
+        "paddingX": 16,
+        "paddingY": 16,
         "shadow": "sm"
       },
       "layout": {
         "type": "flex",
         "direction": "column",
-        "gap": "xs",
+        "gap": "sm",
         "align": "start",
         "justify": "start"
       },
-      "children": [
-        {
-          "id": "text-9",
-          "type": "Text",
-          "bbox": [
-            16,
-            570,
-            200,
-            20
-          ],
-          "sourceRect": [
-            16,
-            570,
-            200,
-            20
-          ],
-          "text": "gainage",
-          "style": {
-            "color": "#000000",
-            "fontSize": 16,
-            "fontWeight": "bold",
-            "typographyRef": "title"
-          }
-        },
-        {
-          "id": "text-10",
-          "type": "Text",
-          "bbox": [
-            220,
-            570,
-            100,
-            20
-          ],
-          "sourceRect": [
-            220,
-            570,
-            100,
-            20
-          ],
-          "text": "14:22",
-          "style": {
-            "color": "#555555",
-            "fontSize": 14,
-            "fontWeight": "medium",
-            "typographyRef": "label"
-          }
-        },
-        {
-          "id": "text-11",
-          "type": "Text",
-          "bbox": [
-            16,
-            600,
-            200,
-            20
-          ],
-          "sourceRect": [
-            16,
-            600,
-            200,
-            20
-          ],
-          "text": "RÉPÉTITIONS 20x",
-          "style": {
-            "color": "#555555",
-            "fontSize": 14,
-            "fontWeight": "regular",
-            "typographyRef": "body"
-          }
-        },
-        {
-          "id": "text-12",
-          "type": "Text",
-          "bbox": [
-            16,
-            620,
-            200,
-            20
-          ],
-          "sourceRect": [
-            16,
-            620,
-            200,
-            20
-          ],
-          "text": "TRAVAIL 00:40",
-          "style": {
-            "color": "#555555",
-            "fontSize": 14,
-            "fontWeight": "regular",
-            "typographyRef": "body"
-          }
-        },
-        {
-          "id": "text-13",
-          "type": "Text",
-          "bbox": [
-            16,
-            640,
-            200,
-            20
-          ],
-          "sourceRect": [
-            16,
-            640,
-            200,
-            20
-          ],
-          "text": "REPOS 00:03",
-          "style": {
-            "color": "#555555",
-            "fontSize": 14,
-            "fontWeight": "regular",
-            "typographyRef": "body"
-          }
-        }
-      ]
+      "group": {
+        "alignment": "start",
+        "distribution": "start",
+        "maxWidth": 534
+      },
+      "children": []
+    },
+    {
+      "id": "Container-29",
+      "type": "Container",
+      "bbox": [24, 644, 510, 32],
+      "sourceRect": [24, 644, 510, 32],
+      "style": { "paddingX": 0, "paddingY": 0 },
+      "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": "sm",
+        "align": "center",
+        "justify": "between"
+      },
+      "group": {
+        "alignment": "center",
+        "distribution": "between",
+        "maxWidth": 510
+      },
+      "children": []
+    },
+    {
+      "id": "Text-30",
+      "type": "Text",
+      "bbox": [24, 644, 140, 32],
+      "sourceRect": [24, 644, 140, 32],
+      "text": "gainage",
+      "style": {
+        "color": "#212121",
+        "fontSize": 20,
+        "fontWeight": "bold",
+        "typographyRef": "title",
+        "transform": "none",
+        "lineHeight": 28
+      }
+    },
+    {
+      "id": "Text-31",
+      "type": "Text",
+      "bbox": [470, 644, 64, 32],
+      "sourceRect": [470, 644, 64, 32],
+      "text": "14:22",
+      "style": {
+        "color": "#616161",
+        "fontSize": 16,
+        "fontWeight": "medium",
+        "typographyRef": "value",
+        "transform": "none",
+        "lineHeight": 20
+      }
+    },
+    {
+      "id": "Text-32",
+      "type": "Text",
+      "bbox": [24, 688, 200, 24],
+      "sourceRect": [24, 688, 200, 24],
+      "text": "RÉPÉTITIONS 20x",
+      "style": {
+        "color": "#616161",
+        "fontSize": 14,
+        "fontWeight": "regular",
+        "typographyRef": "body",
+        "transform": "none",
+        "lineHeight": 20
+      }
+    },
+    {
+      "id": "Text-33",
+      "type": "Text",
+      "bbox": [24, 716, 200, 24],
+      "sourceRect": [24, 716, 200, 24],
+      "text": "TRAVAIL 00:40",
+      "style": {
+        "color": "#616161",
+        "fontSize": 14,
+        "fontWeight": "regular",
+        "typographyRef": "body",
+        "transform": "none",
+        "lineHeight": 20
+      }
+    },
+    {
+      "id": "Text-34",
+      "type": "Text",
+      "bbox": [24, 744, 200, 24],
+      "sourceRect": [24, 744, 200, 24],
+      "text": "REPOS 00:03",
+      "style": {
+        "color": "#616161",
+        "fontSize": 14,
+        "fontWeight": "regular",
+        "typographyRef": "body",
+        "transform": "none",
+        "lineHeight": 20
+      }
     }
   ],
   "qa": {
     "inventory": [
-      {
-        "idx": 1,
-        "roughType": "IconButton",
-        "roughText": ""
-      },
-      {
-        "idx": 2,
-        "roughType": "Slider",
-        "roughText": ""
-      },
-      {
-        "idx": 3,
-        "roughType": "IconButton",
-        "roughText": ""
-      },
-      {
-        "idx": 4,
-        "roughType": "Text",
-        "roughText": "Démarrage rapide"
-      },
-      {
-        "idx": 5,
-        "roughType": "Text",
-        "roughText": "RÉPÉTITIONS"
-      },
-      {
-        "idx": 6,
-        "roughType": "IconButton",
-        "roughText": "-"
-      },
-      {
-        "idx": 7,
-        "roughType": "Text",
-        "roughText": "16"
-      },
-      {
-        "idx": 8,
-        "roughType": "IconButton",
-        "roughText": "+"
-      },
-      {
-        "idx": 9,
-        "roughType": "Text",
-        "roughText": "TRAVAIL"
-      },
-      {
-        "idx": 10,
-        "roughType": "IconButton",
-        "roughText": "-"
-      },
-      {
-        "idx": 11,
-        "roughType": "Text",
-        "roughText": "00 : 44"
-      },
-      {
-        "idx": 12,
-        "roughType": "IconButton",
-        "roughText": "+"
-      },
-      {
-        "idx": 13,
-        "roughType": "Text",
-        "roughText": "REPOS"
-      },
-      {
-        "idx": 14,
-        "roughType": "IconButton",
-        "roughText": "-"
-      },
-      {
-        "idx": 15,
-        "roughType": "Text",
-        "roughText": "00 : 15"
-      },
-      {
-        "idx": 16,
-        "roughType": "IconButton",
-        "roughText": "+"
-      },
-      {
-        "idx": 17,
-        "roughType": "Button",
-        "roughText": "SAUVEGARDER"
-      },
-      {
-        "idx": 18,
-        "roughType": "Button",
-        "roughText": "COMMENCER"
-      },
-      {
-        "idx": 19,
-        "roughType": "Text",
-        "roughText": "VOS PRÉRÉGLAGES"
-      },
-      {
-        "idx": 20,
-        "roughType": "IconButton",
-        "roughText": "+"
-      },
-      {
-        "idx": 21,
-        "roughType": "Text",
-        "roughText": "gainage"
-      },
-      {
-        "idx": 22,
-        "roughType": "Text",
-        "roughText": "14:22"
-      },
-      {
-        "idx": 23,
-        "roughType": "Text",
-        "roughText": "RÉPÉTITIONS 20x"
-      },
-      {
-        "idx": 24,
-        "roughType": "Text",
-        "roughText": "TRAVAIL 00:40"
-      },
-      {
-        "idx": 25,
-        "roughType": "Text",
-        "roughText": "REPOS 00:03"
-      }
+      { "idx": 1, "roughType": "Container", "roughText": "" },
+      { "idx": 2, "roughType": "IconButton", "roughText": "volume" },
+      { "idx": 3, "roughType": "Slider", "roughText": "volume" },
+      { "idx": 4, "roughType": "Icon", "roughText": "thumb" },
+      { "idx": 5, "roughType": "IconButton", "roughText": "more_vert" },
+      { "idx": 6, "roughType": "Card", "roughText": "Démarrage rapide (bloc)" },
+      { "idx": 7, "roughType": "Container", "roughText": "entête carte" },
+      { "idx": 8, "roughType": "Text", "roughText": "Démarrage rapide" },
+      { "idx": 9, "roughType": "IconButton", "roughText": "expand_less" },
+      { "idx": 10, "roughType": "Text", "roughText": "RÉPÉTITIONS" },
+      { "idx": 11, "roughType": "IconButton", "roughText": "−" },
+      { "idx": 12, "roughType": "Text", "roughText": "16" },
+      { "idx": 13, "roughType": "IconButton", "roughText": "+" },
+      { "idx": 14, "roughType": "Text", "roughText": "TRAVAIL" },
+      { "idx": 15, "roughType": "IconButton", "roughText": "−" },
+      { "idx": 16, "roughType": "Text", "roughText": "00 : 44" },
+      { "idx": 17, "roughType": "IconButton", "roughText": "+" },
+      { "idx": 18, "roughType": "Text", "roughText": "REPOS" },
+      { "idx": 19, "roughType": "IconButton", "roughText": "−" },
+      { "idx": 20, "roughType": "Text", "roughText": "00 : 15" },
+      { "idx": 21, "roughType": "IconButton", "roughText": "+" },
+      { "idx": 22, "roughType": "Button", "roughText": "SAUVEGARDER" },
+      { "idx": 23, "roughType": "Button", "roughText": "COMMENCER" },
+      { "idx": 24, "roughType": "Container", "roughText": "barre de section" },
+      { "idx": 25, "roughType": "Text", "roughText": "VOS PRÉRÉGLAGES" },
+      { "idx": 26, "roughType": "IconButton", "roughText": "edit" },
+      { "idx": 27, "roughType": "Button", "roughText": "+ AJOUTER" },
+      { "idx": 28, "roughType": "Card", "roughText": "préréglage" },
+      { "idx": 29, "roughType": "Container", "roughText": "entête préréglage" },
+      { "idx": 30, "roughType": "Text", "roughText": "gainage" },
+      { "idx": 31, "roughType": "Text", "roughText": "14:22" },
+      { "idx": 32, "roughType": "Text", "roughText": "RÉPÉTITIONS 20x" },
+      { "idx": 33, "roughType": "Text", "roughText": "TRAVAIL 00:40" },
+      { "idx": 34, "roughType": "Text", "roughText": "REPOS 00:03" }
     ],
     "countsByType": {
       "Text": 13,
-      "Button": 2,
-      "Icon": 2,
-      "IconButton": 9,
+      "Button": 3,
+      "Icon": 1,
+      "IconButton": 10,
       "Slider": 1,
-      "Container": 2,
+      "Container": 4,
       "Card": 2,
       "Placeholder": 0
     },
@@ -966,6 +706,7 @@
         "SAUVEGARDER",
         "COMMENCER",
         "VOS PRÉRÉGLAGES",
+        "+ AJOUTER",
         "gainage",
         "14:22",
         "RÉPÉTITIONS 20x",
@@ -975,42 +716,16 @@
       "missing": []
     },
     "colorsUsed": [
-      {
-        "hex": "#455A64",
-        "token": "headerBackground"
-      },
-      {
-        "hex": "#3F51B5",
-        "token": "sliderActive"
-      },
-      {
-        "hex": "#BDBDBD",
-        "token": "sliderInactive"
-      },
-      {
-        "hex": "#FFFFFF",
-        "token": "onPrimary"
-      },
-      {
-        "hex": "#2E7D32",
-        "token": "primary"
-      },
-      {
-        "hex": "#EEEEEE",
-        "token": "ghostButtonBg"
-      },
-      {
-        "hex": "#FAFAFA",
-        "token": "presetCardBg"
-      },
-      {
-        "hex": "#000000",
-        "token": "textPrimary"
-      },
-      {
-        "hex": "#555555",
-        "token": "textSecondary"
-      }
+      { "hex": "#455A64", "token": "headerBackgroundDark" },
+      { "hex": "#FFFFFF", "token": "surface" },
+      { "hex": "#F2F2F2", "token": "background" },
+      { "hex": "#212121", "token": "textPrimary" },
+      { "hex": "#616161", "token": "textSecondary" },
+      { "hex": "#E0E0E0", "token": "divider" },
+      { "hex": "#DDDDDD", "token": "border" },
+      { "hex": "#607D8B", "token": "primary" },
+      { "hex": "#FFC107", "token": "accent" },
+      { "hex": "#90A4AE", "token": "sliderInactive" }
     ],
     "missingAtoms": [],
     "coverageRatio": 1.0,
@@ -1024,21 +739,36 @@
       "all groups represented as Container/Card with styles",
       "all groups include explicit layout"
     ],
+    "semanticChecklist": [
+      "group alignment encoded when visually centered",
+      "non-fullwidth actions have placement and widthMode",
+      "icon+label actions encoded as composed buttons (leadingIcon+text)",
+      "uppercase labels use style.transform",
+      "variants map to semantic color tokens (no stray hex)"
+    ],
     "assumptions": [
       {
-        "note": "Colors estimated based on screenshot rendering, not sampled from source.",
+        "note": "Couleurs estimées à partir du rendu (matériel design gris/bleu).",
+        "confidence": 0.75
+      },
+      {
+        "note": "Nom d’icône d’en-tête 'expand_less' supposé (chevron de repli).",
+        "confidence": 0.7
+      },
+      {
+        "note": "Positions/bbox approchées par inspection visuelle (sans mesure pixel-perfect).",
+        "confidence": 0.7
+      },
+      {
+        "note": "Valeur du slider normalisée à ~0,62 d’après la position du pouce.",
+        "confidence": 0.7
+      },
+      {
+        "note": "Les boutons 'Sauvegarder' et '+ Ajouter' modélisés en 'ghost/secondary' selon le rendu non rempli.",
         "confidence": 0.8
-      },
-      {
-        "note": "Font family assumed Roboto, may differ.",
-        "confidence": 0.7
-      },
-      {
-        "note": "Slider thumb approximate position estimated at 70%.",
-        "confidence": 0.7
       }
     ],
     "openQuestions": [],
-    "confidenceGlobal": 0.87
+    "confidenceGlobal": 0.78
   }
 }
