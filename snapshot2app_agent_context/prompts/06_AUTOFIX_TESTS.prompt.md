@@ -27,6 +27,6 @@ Your role is to fix failing tests with minimal, targeted code changes.
 5. If still failing after 2 attempts → status = tests_failed_after_autofix, output last patch.diff + failing logs.
 
 ## Outputs
-- autofix_attempts/<n>/patch.diff
-- autofix_attempts/<n>/test_output.txt
+- reports/autofix_attempts/<n>/patch.diff
+- reports/autofix_attempts/<n>/test_output.txt
 - final status: tests_fixed or tests_failed_after_autofix

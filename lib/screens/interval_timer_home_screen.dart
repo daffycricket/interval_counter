@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import '../models/timer_configuration.dart';
-import '../models/timer_preset.dart';
-import '../services/preset_storage_service.dart';
+import 'package:provider/provider.dart';
+import '../state/interval_timer_home_state.dart';
+import '../widgets/interval_timer/volume_control_header.dart';
+import '../widgets/interval_timer/quick_start_card.dart';
+import '../widgets/interval_timer/preset_card.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_theme.dart';
-import '../utils/duration_formatter.dart';
-import '../widgets/value_control.dart';
-import '../widgets/preset_card.dart';
-import '../widgets/section_header.dart';
+import '../theme/app_text_styles.dart';
 
+/// Écran principal de l'application Interval Timer
 class IntervalTimerHomeScreen extends StatefulWidget {
   const IntervalTimerHomeScreen({super.key});
 
@@ -17,363 +16,350 @@ class IntervalTimerHomeScreen extends StatefulWidget {
 }
 
 class _IntervalTimerHomeScreenState extends State<IntervalTimerHomeScreen> {
-  double _volumeLevel = 0.62;
-  TimerConfiguration _currentConfig = TimerConfiguration.defaultConfig;
-  List<TimerPreset> _presets = [];
-  bool _isQuickStartExpanded = true;
-  final PresetStorageService _storageService = PresetStorageService();
+  late IntervalTimerHomeState _state;
 
   @override
   void initState() {
     super.initState();
-    _loadPresets();
+    _state = IntervalTimerHomeState();
+    _state.initialize();
   }
 
-  Future<void> _loadPresets() async {
-    final presets = await _storageService.loadPresets();
-    setState(() {
-      _presets = presets;
-    });
+  @override
+  void dispose() {
+    _state.dispose();
+    super.dispose();
   }
 
-  void _updateRepetitions(int delta) {
-    final newValue = _currentConfig.repetitions + delta;
-    if (newValue >= 1) {
-      setState(() {
-        _currentConfig = _currentConfig.copyWith(repetitions: newValue);
-      });
-    }
-  }
-
-  void _updateWorkDuration(int deltaSeconds) {
-    final newDuration = deltaSeconds > 0
-        ? DurationFormatter.incrementDuration(_currentConfig.workDuration, deltaSeconds)
-        : DurationFormatter.decrementDuration(_currentConfig.workDuration, -deltaSeconds);
+  void _showSavePresetDialog() {
+    final TextEditingController nameController = TextEditingController();
     
-    setState(() {
-      _currentConfig = _currentConfig.copyWith(workDuration: newDuration);
-    });
-  }
-
-  void _updateRestDuration(int deltaSeconds) {
-    final newDuration = deltaSeconds > 0
-        ? DurationFormatter.incrementDuration(_currentConfig.restDuration, deltaSeconds)
-        : DurationFormatter.decrementDuration(_currentConfig.restDuration, -deltaSeconds);
-    
-    setState(() {
-      _currentConfig = _currentConfig.copyWith(restDuration: newDuration);
-    });
-  }
-
-  void _updateVolume(double value) {
-    setState(() {
-      _volumeLevel = value;
-    });
-  }
-
-  Future<void> _saveCurrentAsPreset() async {
-    if (!_currentConfig.isValid) return;
-
-    final preset = TimerPreset(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: 'Préréglage ${_presets.length + 1}',
-      configuration: _currentConfig,
-      createdAt: DateTime.now(),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sauvegarder le préréglage'),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(
+            labelText: 'Nom du préréglage',
+            hintText: 'Ex: Gainage, HIIT, etc.',
+            counterText: '30 caractères max',
+          ),
+          maxLength: 30,
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ANNULER'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final name = nameController.text.trim();
+              if (name.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Le nom ne peut pas être vide'),
+                  ),
+                );
+                return;
+              }
+              
+              try {
+                await _state.saveQuickStartAsPreset(name);
+                if (mounted) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Préréglage "$name" sauvegardé'),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Erreur: $e'),
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('SAUVEGARDER'),
+          ),
+        ],
+      ),
     );
-
-    await _storageService.addPreset(preset);
-    await _loadPresets();
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Préréglage sauvegardé')),
-      );
-    }
   }
 
-  void _startTimer() {
-    if (!_currentConfig.isValid) return;
-    
-    // TODO: Navigate to timer screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Démarrage de l\'entraînement: ${_currentConfig.repetitions} répétitions, '
-          '${DurationFormatter.formatDuration(_currentConfig.workDuration)} travail, '
-          '${DurationFormatter.formatDuration(_currentConfig.restDuration)} repos',
+  void _showOptionsMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Paramètres'),
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: Navigate to settings
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('À propos'),
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: Show about dialog
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 
-  void _loadPreset(TimerPreset preset) {
-    setState(() {
-      _currentConfig = preset.configuration;
-    });
+  void _startInterval() {
+    if (!_state.validateConfig()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Configuration invalide'),
+        ),
+      );
+      return;
+    }
+
+    // TODO: Navigate to /timer with params
+    // Navigator.of(context).pushNamed(
+    //   '/timer',
+    //   arguments: {
+    //     'repetitions': _state.repetitions,
+    //     'workSeconds': _state.workSeconds,
+    //     'restSeconds': _state.restSeconds,
+    //   },
+    // );
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Démarrage: ${_state.repetitions} rép, '
+          '${_state.workSeconds}s travail, ${_state.restSeconds}s repos',
+        ),
+      ),
+    );
+  }
+
+  void _startIntervalFromPreset(String presetId) {
+    final preset = _state.presetsList.firstWhere((p) => p.id == presetId);
+    
+    // TODO: Navigate to /timer with preset config
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Démarrage du préréglage: ${preset.name}'),
+      ),
+    );
   }
 
   void _addNewPreset() {
-    // TODO: Navigate to preset creation screen
+    // TODO: Navigate to /preset/new
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Création de nouveau préréglage')),
+      const SnackBar(
+        content: Text('Navigation vers création de préréglage'),
+      ),
     );
   }
 
-  void _editPresets() {
-    // TODO: Navigate to presets management screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Édition des préréglages')),
+  void _deletePreset(String presetId) {
+    final preset = _state.presetsList.firstWhere((p) => p.id == presetId);
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Supprimer le préréglage'),
+        content: Text('Voulez-vous vraiment supprimer "${preset.name}" ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('ANNULER'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await _state.deletePreset(presetId);
+              if (mounted) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Préréglage supprimé'),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: const Text('SUPPRIMER'),
+          ),
+        ],
+      ),
     );
-  }
-
-  void _openSettings() {
-    // TODO: Navigate to settings screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ouverture des paramètres')),
-    );
-  }
-
-  void _toggleQuickStart() {
-    setState(() {
-      _isQuickStartExpanded = !_isQuickStartExpanded;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildHeader(),
-              SizedBox(height: AppTheme.getSpacing('xs')),
-              _buildQuickStartSection(),
-              SizedBox(height: AppTheme.getSpacing('sm')),
-              _buildPresetsSection(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+    return ChangeNotifierProvider<IntervalTimerHomeState>.value(
+      value: _state,
+      child: Scaffold(
+        body: SafeArea(
+          child: Consumer<IntervalTimerHomeState>(
+            builder: (context, state, child) {
+              if (state.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-  Widget _buildHeader() {
-    return Container(
-      key: const Key('interval_timer_home__Container-1'),
-      color: AppColors.headerBackgroundDark,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppTheme.getSpacing('md'),
-        vertical: AppTheme.getSpacing('sm'),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            key: const Key('interval_timer_home__IconButton-2'),
-            onPressed: () {}, // Volume control
-            icon: const Icon(Icons.volume_up),
-            color: AppColors.onPrimary,
-            padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppTheme.getSpacing('md')),
-              child: SliderTheme(
-                data: Theme.of(context).sliderTheme,
-                child: Slider(
-                  key: const Key('interval_timer_home__Slider-3'),
-                  value: _volumeLevel,
-                  onChanged: _updateVolume,
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Header avec contrôle de volume
+                    VolumeControlHeader(
+                      volumeLevel: state.volumeLevel,
+                      onVolumeChanged: state.setVolume,
+                      onVolumeButtonTap: () {
+                        // TODO: Toggle volume popup (simplification IT1)
+                      },
+                      onMoreOptionsTap: _showOptionsMenu,
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Carte Quick Start
+                    QuickStartCard(
+                      isExpanded: state.quickStartExpanded,
+                      onToggleExpanded: state.toggleQuickStartExpanded,
+                      repetitions: state.repetitions,
+                      workSeconds: state.workSeconds,
+                      restSeconds: state.restSeconds,
+                      onDecrementRepetitions: state.decrementRepetitions,
+                      onIncrementRepetitions: state.incrementRepetitions,
+                      onDecrementWorkTime: state.decrementWorkTime,
+                      onIncrementWorkTime: state.incrementWorkTime,
+                      onDecrementRestTime: state.decrementRestTime,
+                      onIncrementRestTime: state.incrementRestTime,
+                      canDecrementRepetitions: state.canDecrementRepetitions,
+                      canIncrementRepetitions: state.canIncrementRepetitions,
+                      canDecrementWorkTime: state.canDecrementWorkTime,
+                      canIncrementWorkTime: state.canIncrementWorkTime,
+                      canDecrementRestTime: state.canDecrementRestTime,
+                      canIncrementRestTime: state.canIncrementRestTime,
+                      onSave: _showSavePresetDialog,
+                      onStart: _startInterval,
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // Section préréglages
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Container(
+                        key: const Key('interval_timer_home__Container-24'),
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'VOS PRÉRÉGLAGES',
+                              key: const Key('interval_timer_home__Text-25'),
+                              style: AppTextStyles.title.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Semantics(
+                              label: 'Éditer les préréglages',
+                              button: true,
+                              child: IconButton(
+                                key: const Key('interval_timer_home__IconButton-26'),
+                                icon: const Icon(Icons.edit),
+                                color: AppColors.textSecondary,
+                                iconSize: 20,
+                                onPressed: state.toggleEditMode,
+                              ),
+                            ),
+                            const Spacer(),
+                            Semantics(
+                              label: 'Ajouter un préréglage',
+                              button: true,
+                              child: OutlinedButton.icon(
+                                key: const Key('interval_timer_home__Button-27'),
+                                onPressed: _addNewPreset,
+                                icon: const Icon(Icons.add, size: 16),
+                                label: const Text('+ AJOUTER'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AppColors.primary,
+                                  textStyle: AppTextStyles.label.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Liste des préréglages
+                    if (state.presetsList.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(32),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.timer_outlined,
+                                size: 64,
+                                color: AppColors.textSecondary.withOpacity(0.5),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Aucun préréglage sauvegardé',
+                                style: AppTextStyles.body,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Créez votre premier préréglage en configurant un intervalle et en cliquant sur "SAUVEGARDER"',
+                                style: AppTextStyles.body.copyWith(
+                                  color: AppColors.textSecondary.withOpacity(0.7),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      ...state.presetsList.map(
+                        (preset) => PresetCard(
+                          preset: preset,
+                          onTap: () => _startIntervalFromPreset(preset.id),
+                          showDeleteButton: state.editModeActive,
+                          onDelete: () => _deletePreset(preset.id),
+                        ),
+                      ),
+
+                    const SizedBox(height: 16),
+                  ],
                 ),
-              ),
-            ),
-          ),
-          const Icon(
-            key: Key('interval_timer_home__Icon-4'),
-            Icons.circle,
-            color: AppColors.onPrimary,
-            size: 16,
-          ),
-          SizedBox(width: AppTheme.getSpacing('md')),
-          IconButton(
-            key: const Key('interval_timer_home__IconButton-5'),
-            onPressed: _openSettings,
-            icon: const Icon(Icons.more_vert),
-            color: AppColors.onPrimary,
-            padding: EdgeInsets.all(AppTheme.getSpacing('xs')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickStartSection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppTheme.getSpacing('sm')),
-      child: Card(
-        key: const Key('interval_timer_home__Card-6'),
-        child: Padding(
-          padding: EdgeInsets.all(AppTheme.getSpacing('md')),
-          child: Column(
-            children: [
-              SectionHeader(
-                title: 'Démarrage rapide',
-                isExpanded: _isQuickStartExpanded,
-                onToggle: _toggleQuickStart,
-                toggleKey: 'interval_timer_home__IconButton-9',
-              ),
-              if (_isQuickStartExpanded) ...[
-                SizedBox(height: AppTheme.getSpacing('md')),
-                _buildValueControls(),
-                SizedBox(height: AppTheme.getSpacing('lg')),
-                _buildQuickStartActions(),
-              ],
-            ],
+              );
+            },
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildValueControls() {
-    return Column(
-      children: [
-        ValueControl(
-          label: 'Répétitions',
-          value: _currentConfig.repetitions.toString(),
-          onDecrease: () => _updateRepetitions(-1),
-          onIncrease: () => _updateRepetitions(1),
-          decreaseKey: 'interval_timer_home__repetitions_decrease',
-          valueKey: 'interval_timer_home__repetitions_value',
-          increaseKey: 'interval_timer_home__repetitions_increase',
-        ),
-        SizedBox(height: AppTheme.getSpacing('lg')),
-        ValueControl(
-          label: 'Travail',
-          value: DurationFormatter.formatDuration(_currentConfig.workDuration),
-          onDecrease: () => _updateWorkDuration(-1),
-          onIncrease: () => _updateWorkDuration(1),
-          decreaseKey: 'interval_timer_home__work_decrease',
-          valueKey: 'interval_timer_home__work_value',
-          increaseKey: 'interval_timer_home__work_increase',
-        ),
-        SizedBox(height: AppTheme.getSpacing('lg')),
-        ValueControl(
-          label: 'Repos',
-          value: DurationFormatter.formatDuration(_currentConfig.restDuration),
-          onDecrease: () => _updateRestDuration(-1),
-          onIncrease: () => _updateRestDuration(1),
-          decreaseKey: 'interval_timer_home__rest_decrease',
-          valueKey: 'interval_timer_home__rest_value',
-          increaseKey: 'interval_timer_home__rest_increase',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickStartActions() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TextButton.icon(
-              key: const Key('interval_timer_home__save_button'),
-              onPressed: _currentConfig.isValid ? _saveCurrentAsPreset : null,
-              icon: const Icon(Icons.save),
-              label: const Text('SAUVEGARDER'),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: AppTheme.getSpacing('sm')),
-        SizedBox(
-          width: double.infinity,
-          height: 64,
-          child: ElevatedButton.icon(
-            key: const Key('interval_timer_home__start_button'),
-            onPressed: _currentConfig.isValid ? _startTimer : null,
-            icon: const Icon(Icons.bolt, color: AppColors.accent),
-            label: const Text('COMMENCER'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.cta,
-              foregroundColor: AppColors.onPrimary,
-              textStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppTheme.getRadius('md')),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPresetsSection() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppTheme.getSpacing('sm')),
-      child: Column(
-        children: [
-          PresetsSectionHeader(
-            onAdd: _addNewPreset,
-            onEdit: _editPresets,
-          ),
-          SizedBox(height: AppTheme.getSpacing('sm')),
-          if (_presets.isEmpty)
-            _buildEmptyPresets()
-          else
-            _buildPresetsList(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyPresets() {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(AppTheme.getSpacing('xl')),
-        child: Column(
-          children: [
-            Icon(
-              Icons.timer,
-              size: 48,
-              color: AppColors.textSecondary,
-            ),
-            SizedBox(height: AppTheme.getSpacing('md')),
-            Text(
-              'Aucun préréglage',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            SizedBox(height: AppTheme.getSpacing('xs')),
-            Text(
-              'Créez votre premier préréglage en sauvegardant une configuration',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPresetsList() {
-    return Column(
-      children: _presets.map((preset) {
-        return Padding(
-          padding: EdgeInsets.only(bottom: AppTheme.getSpacing('sm')),
-          child: PresetCard(
-            preset: preset,
-            onTap: () => _loadPreset(preset),
-          ),
-        );
-      }).toList(),
     );
   }
 }

@@ -1,12 +1,23 @@
 # PROMPT – Generate/Refine Functional Spec
 
-You are a **Spec Synthesizer**. Inputs: `design.json` + optional snapshot. Output: `spec.md`.
+You are a **Spec Synthesizer**.  
+Inputs: `design.json` + optional snapshot.  
+Output: `reports/spec.md` following strictly the template `templates/spec_template.v2.md`.
 
-Checklist:
-- Identification, Description, Structure (fields/sections)
-- Actions, Validation rules, Navigation
-- Scenarios (nominal/alt/error)
-- Accessibility & performance notes
-- Assumptions/Open questions if design lacks clarity
+### Constraints
+- **Mandatory**: Fill **all sections** of the template in order. If no content is available, insert `—`.
+- **Controlled vocabularies**: Use only the allowed enumeration values for:
+  - variants: `cta|primary|secondary|ghost`
+  - placement: `start|center|end|stretch`
+  - widthMode: `fixed|hug|fill`
+  - typographyRef: `titleLarge|label|body|…`
+- **Keys**: Must follow `{{screenId}}__{{compId}}`.
+- **Texts**: Copy verbatim from `components.Text.text`, applying `style.transform` when present.
+- **Determinism**: Do not add free-form prose outside `notes` columns. Always output tables, even empty.
+- **Traceability**: For each interactive component, provide action, state impact, navigation, and link to tests.
 
-Keep it concise, actionable, and **tool-agnostic**.
+### Expected Output
+- Complete Markdown document using the template structure.
+- Front-matter YAML fully populated.
+- Tables filled with consistent, machine-parseable values.
+- French language for functional descriptions; English for technical keys and enumerations.

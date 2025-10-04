@@ -8,3 +8,16 @@ Steps:
 3. If issues → propose a normalized diff (JSON Patch style) and list assumptions with confidence.
 4. Never invent text or components; flag as `openQuestions` instead.
 5. Success criteria: coverageRatio=1.0, confidenceGlobal≥0.85, no missing texts.
+
+6. Check sliders.
+For each `Slider`:
+- Inspect siblings in the same Row/Group.
+- If a sibling matches a *thumb-like* pattern:
+  - `Icon` with `iconName == "material.circle"` **or**
+  - `Container` (or `Icon`) with width≈height≤40, no `text`, no `children`,
+  - color in {`#FFFFFF`, `tokens.colors.sliderThumb`, `tokens.colors.onPrimary`},
+  - center within 24 px of the slider right edge,
+THEN:
+- Append a finding to `validation_report.md` under `findings.decorations.orphanThumb` with:
+  - `sliderId`, `nodeId`, `reason: "thumb-like sibling (report-only)"`.
+- Set `summary.flags.hasOrphanThumb = true`.

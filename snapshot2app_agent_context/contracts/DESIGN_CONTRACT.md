@@ -1,4 +1,4 @@
-# DESIGN_CONTRACT — Updated
+# DESIGN_CONTRACT
 
 ## Purpose
 Define minimum quality and completeness for `design.json` produced from a snapshot.
@@ -8,7 +8,7 @@ Define minimum quality and completeness for `design.json` produced from a snapsh
 - **Measurements**: all components have integer `bbox` AND `sourceRect` (no `unknown`).
 - **A11y**: interactive components have `a11y.ariaLabel`.
 - **Colors**: every color used in styles exists in `tokens.colors` (no stray hex).
-- **Semantics (IT3)**: presence of the following when visually applicable:
+- **Semantics **: presence of the following when visually applicable:
   - `variant` on `Button`/`IconButton`.
   - `placement` + `widthMode` for non-fullwidth actions inside groups.
   - `group.alignment`, `group.distribution`, optional `group.maxWidth`.

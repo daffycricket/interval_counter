@@ -11,16 +11,16 @@ Output: validated, built, tested, and evaluated Flutter application files.
 ### Step 1 — Validate Design
 - Input: design.json, contracts/DESIGN_CONTRACT.md
 - Action: run 01_VALIDATE_DESIGN.prompt
-- Output: validation_report.md
+- Output: validation_report.md under reports/
 - If validation fails → stop pipeline.
 
 ### Step 2 — Generate Specification
 - Input: design.json, prompts/02_GENERATE_SPEC.prompt, contracts/SPEC_CONTRACT.md
-- Output: spec.md
+- Output: spec.md under reports/
 
 ### Step 3 — Plan Build
 - Input: design.json, spec.md, prompts/03_PLAN_BUILD.prompt, templates/plan.md
-- Output: plan.md
+- Output: plan.md under reports/
 
 ### Step 4 — Build Screen (Flutter code)
 - Input: design.json, spec.md, plan.md, guides/UI_MAPPING_GUIDE.md, prompts/04_BUILD_SCREEN.prompt

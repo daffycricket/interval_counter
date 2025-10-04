@@ -41,7 +41,7 @@ Output: `reports/evaluation_report.md` with final PASS/FAIL status and rationale
 
 ---
 
-## Output: evaluation_report.md
+## Output: reports/evaluation_report.md
 
 Must include:
 - Final Status: PASSED / PASSED (after auto-fix) / FAILED (tests_failed_after_autofix|low coverage|contract violation).

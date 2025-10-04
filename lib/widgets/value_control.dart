@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 /// Widget de contrôle de valeur avec boutons +/- et affichage central,
 /// en **grille à largeurs fixes** pour garantir l'alignement entre lignes.
@@ -127,7 +128,7 @@ class ValueControl extends StatelessWidget {
         width: btnSize,
         height: btnSize,
         child: Material(
-          key: keyString != null ? Key(keyString!) : null,
+          key: keyString != null ? Key(keyString) : null,
           color: enabled ? Colors.black : AppColors.border,
           borderRadius: BorderRadius.circular(borderRadius),
           child: InkWell(

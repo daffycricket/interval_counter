@@ -1,225 +1,187 @@
-# UI Mapping Guide — Updated (IT3-ready)
+# UI Mapping Guide
+Audience: Builder, Planner, Test runner
 
-This guide describes how to map the **mini‑Figma enriched** `design.json` into Flutter widgets.
-It **consumes** the new semantics introduced in IT3: `variant`, `placement`, `widthMode`, `group`, `typographyRef/transform`, and semantic color tokens (`cta`, `success`, `warning`, `info`, `headerBackgroundDark`).
-
----
-
-## 1) Theme from tokens
-
-Build `ThemeData` directly from `tokens` — do **not** guess colors or font sizes.
-
-```dart
-ThemeData buildTheme(DesignTokens t) {
-  final colorScheme = ColorScheme(
-    brightness: Brightness.light,
-    primary: t.color("primary"),
-    onPrimary: t.color("onPrimary"),
-    surface: t.color("surface"),
-    onSurface: t.color("textPrimary"),
-    background: t.color("background"),
-    onBackground: t.color("textPrimary"),
-    secondary: t.colorOr("accent", t.color("primary")),
-    onSecondary: t.color("onPrimary"),
-    error: t.colorOr("warning", const Color(0xFFB00020)),
-    onError: Colors.white,
-  );
-
-  return ThemeData(
-    colorScheme: colorScheme,
-    scaffoldBackgroundColor: t.color("background"),
-    appBarTheme: AppBarTheme(
-      backgroundColor: t.colorOr("headerBackgroundDark", colorScheme.primary),
-      foregroundColor: t.color("onPrimary"),
-      elevation: 0,
-    ),
-    textTheme: buildTextTheme(t),
-    sliderTheme: SliderThemeData(
-      activeTrackColor: t.color("sliderActive"),
-      inactiveTrackColor: t.color("sliderInactive"),
-      thumbColor: t.color("sliderThumb"),
-      trackHeight: t.doubleOr("sliderTrackHeight", 4),
-    ),
-    useMaterial3: false,
-  );
-}
-```
-
-### Text theme mapping
-`typographyRef` must resolve to the text style below; apply `transform` in code (see §4).
-
-| typographyRef | Maps to                  | Notes |
-|---|---|---|
-| `titleLarge`  | `textTheme.titleLarge`  | weight from `fontWeight` |
-| `title`       | `textTheme.titleMedium` |  |
-| `subtitle`    | `textTheme.titleSmall`  |  |
-| `label`       | `textTheme.labelLarge`  |  |
-| `body`        | `textTheme.bodyMedium`  |  |
-| `muted`       | `textTheme.bodySmall`   | lower contrast |
-| `value`       | `textTheme.headlineSmall` + optional monospace | numeric/time values |
+## Principles
+- Single source of truth for **rendering rules**.
+- Each rule has a **stable ID** used in `plan.md` (`buildStrategy` column).
+- No prose outside rule definitions; deterministic behavior only.
 
 ---
 
-## 2) Buttons by `variant`
-
-Map variants **without screen‑specific rules**:
-
-- `cta` → `ElevatedButton` (filled). Background = `tokens.colors.cta` (fallback: `primary`).  
-- `primary` → `ElevatedButton` (filled). Background = `tokens.colors.primary`.  
-- `secondary` → `OutlinedButton`. Border = `style.borderColor`/`tokens.colors.border`.  
-- `ghost` → `TextButton`. Text color = `style.color` or `colorScheme.primary`.
-
-If `leadingIcon` exists, use the `.icon(...)` constructor and render the icon from `iconName`.
-
-```dart
-Widget buildButton(Comp c, Tokens t) {
-  final child = c.leadingIcon != null
-    ? _buttonChildWithIcon(c)
-    : Text(applyTransform(c.text, c.style.transform));
-
-  switch (c.variant) {
-    case "cta":
-      return ElevatedButton.icon(
-        onPressed: (){},
-        icon: buildIcon(c.leadingIcon, t),
-        label: Text(applyTransform(c.text, c.style.transform)),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: t.colorOr("cta", t.color("primary")),
-          foregroundColor: t.color("onPrimary"),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(t.radius(c.style.radius)),
-          ),
-        ),
-      );
-    case "primary":
-      return ElevatedButton(
-        onPressed: (){},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: t.color("primary"),
-          foregroundColor: t.color("onPrimary"),
-        ),
-        child: child,
-      );
-    case "secondary":
-      return OutlinedButton(
-        onPressed: (){},
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: t.colorOr("border", t.color("primary")),
-                           width: (c.style.borderWidth ?? 1).toDouble()),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(t.radius(c.style.radius)),
-          ),
-        ),
-        child: child,
-      );
-    default: // ghost
-      return TextButton(
-        onPressed: (){},
-        style: TextButton.styleFrom(foregroundColor: c.style.colorOr(t.color("primary"))),
-        child: child,
-      );
-  }
-}
-```
+## Rule Index
+- rule:text/transform
+- rule:button/cta
+- rule:button/primary
+- rule:button/secondary
+- rule:button/ghost
+- rule:iconButton/shaped
+- rule:layout/placement
+- rule:layout/widthMode
+- rule:group/alignment
+- rule:group/maxWidth
+- rule:group/distribution
+- rule:slider/theme
+- rule:slider/normalizeSiblings
+- rule:icon/resolve
+- rule:keys/stable
+- rule:pattern/valueControl
 
 ---
 
-## 3) Placement & width
-
-Use container widgets to honor `placement` & `widthMode` **inside the parent layout**:
-
-```dart
-Widget place(Widget w, Comp c) {
-  final intrinsic = c.widthMode == "intrinsic";
-  final placed = switch (c.placement) {
-    "end" => Align(alignment: Alignment.centerRight, child: w),
-    "center" => Align(alignment: Alignment.center, child: w),
-    _ => Align(alignment: Alignment.centerLeft, child: w),
-  };
-  return intrinsic ? placed : Expanded(child: placed);
-}
-```
-
-- `widthMode: fill` → wrap with `Expanded`.  
-- `widthMode: intrinsic` → size to content (no `Expanded`).
+## rule:text/transform
+**Input**: `node.text`, `node.style.transform`, `tokens.typography`, `node.typographyRef`  
+**Output**: `Text` widget with transformed copy and resolved style.  
+**Deterministic Steps**:
+1. `copy = applyTransform(node.text, node.style?.transform or "none")`
+2. `style = resolveTextStyle(node.typographyRef, tokens) // no substitutions`
+3. `return Text(copy, key: Key('{screenId}__{node.id}'), style: style)`
 
 ---
 
-## 4) Text `transform`
-
-Apply transformation in code before building `Text`:
-
-```dart
-String applyTransform(String s, String? transform) {
-  if (s == null) return "";
-  switch (transform) {
-    case "uppercase": return s.toUpperCase();
-    case "lowercase": return s.toLowerCase();
-    default: return s;
-  }
-}
-```
+## rule:button/cta
+**When** `node.type == "Button" && node.variant == "cta"`  
+**Map to** `ElevatedButton` (or `.icon` if `leadingIcon` present)  
+**Colors**: `bg = tokens.colors.cta or tokens.colors.primary`; `fg = tokens.colors.onPrimary`  
+**Deterministic Steps**:
+1. `child = node.leadingIcon ? Row(Icon(resolveIconData), Text(copy)) : Text(copy)`
+2. Return `ElevatedButton(style: bg/fg from tokens, onPressed: handler, child: child)`
 
 ---
 
-## 5) Group alignment & maxWidth
-
-When a container has `group.alignment:"center"` and optional `maxWidth`, center and constrain:
-
-```dart
-Widget groupWrap(Widget child, Group g) {
-  Widget wrapped = child;
-  if (g.maxWidth != null && g.maxWidth! > 0) {
-    wrapped = ConstrainedBox(constraints: BoxConstraints(maxWidth: g.maxWidth!.toDouble()), child: wrapped);
-  }
-  return switch (g.alignment) {
-    "center" => Center(child: wrapped),
-    "end" => Align(alignment: Alignment.centerRight, child: wrapped),
-    _ => wrapped,
-  };
-}
-```
-
-Within the row, honor `group.distribution` with `MainAxisAlignment.start|spaceBetween|spaceAround|end`.
+## rule:button/primary
+Same as CTA but **bg = tokens.colors.primary**, **fg = tokens.colors.onPrimary**.
 
 ---
 
-## 6) IconButtons with shape
-
-If `IconButton` carries `borderWidth/radius/size`, compose shape:
-
-```dart
-Widget shapedIconButton(Comp c, Tokens t) {
-  final icon = buildIcon(c, t);
-  final size = (c.bbox?.height ?? 36).toDouble();
-  return Container(
-    width: size, height: size,
-    decoration: BoxDecoration(
-      color: c.style.backgroundColorOr(Colors.transparent),
-      border: (c.style.borderWidth ?? 0) > 0 
-        ? Border.all(color: c.style.borderColorOr(t.color("border")),
-                     width: (c.style.borderWidth ?? 1).toDouble())
-        : null,
-      borderRadius: BorderRadius.circular(t.radius(c.style.radius)),
-    ),
-    child: IconButton(onPressed: (){}, icon: icon, splashRadius: size/2),
-  );
-}
-```
+## rule:button/secondary
+Map to `OutlinedButton`.  
+**Border**: `color = node.style.borderColor or tokens.colors.border`; `width = node.style.borderWidth or 1`.
 
 ---
 
-## 7) Keys for testability
-
-Every rendered component should get a stable `Key`:
-
-```dart
-Key compKey(Screen s, Comp c) => Key('${s.name}__${c.id}');
-```
+## rule:button/ghost
+Map to `TextButton`.  
+**Foreground**: `node.style.color or colorScheme.primary`.
 
 ---
 
-## 8) Guardrails
+## rule:iconButton/shaped
+- If shape attributes present (`style.radius` and/or `style.borderWidth`/`borderColor`), wrap `IconButton` in a `Container` with decoration enforcing size/border/radius.
+- Do not render `IconButton` if `iconName` is missing. Treat as validation error.
 
-- If `qa.confidenceGlobal < 0.85`, emit a build warning (or stop if the contract requires it).  
-- Never invent colors: any style color must map to `tokens.colors`.
+---
+
+## rule:layout/widthMode
+- `fill` → wrap with `Expanded`
+- `hug` (intrinsic) → size to content
+- `fixed` → use `SizedBox(width: node.size.w, height: node.size.h)` when provided
+
+---
+
+## rule:layout/placement
+Inside the parent axis:  
+- `start|center|end` → `Align(alignment: Alignment.(centerLeft|center|centerRight))`  
+- `stretch` → expand to max cross-axis (`Expanded`/`SizedBox.expand` per parent constraints)
+
+---
+
+## rule:group/alignment
+For containers/cards with a `group` block:  
+- `alignment: "center"` → wrap with `Center`  
+- `alignment: "end"` → `Align(alignment: Alignment.centerRight)`
+
+---
+
+## rule:group/maxWidth
+If `group.maxWidth > 0` → `ConstrainedBox(BoxConstraints(maxWidth: ...))` around the group container.
+
+---
+
+## rule:group/distribution
+Map to `MainAxisAlignment`:  
+- `start` → `start`  
+- `spaceBetween` → `spaceBetween`  
+- `spaceAround` → `spaceAround`  
+- `end` → `end`
+
+---
+
+## rule:slider/theme
+- Use a `SliderTheme` where available.  
+- `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` from `node.style` if provided.  
+- Initial `value` from `valueNormalized` in [0,1] when present.
+- The thumb must **never** be rendered by a separate Icon/Container.
+- Any visual thumb customization must go through `SliderThemeData` (thumb/track colors, trackHeight).
+- When a sibling matches a likely-thumb pattern (square-ish bbox, diameter within [thumb−2; thumb+6], color in {`sliderThumb`, `onPrimary`, `#FFFFFF`}, within 24 px of the slider end), it must be **ignored** at build time and flagged during validation.
+
+---
+
+## rule:slider/normalizeSiblings
+  - In a `Row` containing a `Slider`, drop non-interactive siblings that are solid circles (max border radius, no text, no `iconName` OR `iconName` equals `material.circle`) and color in {`sliderThumb`, `onPrimary`, `#FFFFFF`}.
+  - Exception: keep only if `role == "indicator"` is explicitly set on the node.
+  - Record the decision in plan.md `buildStrategy` as `rule:slider/normalizeSiblings(drop)`.
+
+---
+
+## rule:icon/resolve
+- If `iconName` starts with `material.` → map to `Icons.*`  
+- Else → resolve via `IconRegistry` (project-defined).
+
+---
+
+## rule:keys/stable
+- Every widget uses `Key('{screenId}__{node.id}')` for stability and testing.  
+- Apply on all **interactive** and **test-targeted** widgets at minimum.
+- Decorative nodes that are intentionally kept (e.g., `role:"indicator"`) must still receive a stable key; otherwise filtered out nodes are **not** keyed.
+
+---
+
+## rule:pattern/valueControl
+When:
+- A horizontal `Row` or `Frame` contains **exactly three children** ordered as:
+  1. icon or button “−”
+  2. text-like element (value or label)
+  3. icon or button “+”
+- All items share the same vertical alignment (baseline or center)
+
+Then:
+- Map to existing widget `ValueControl` (import from `lib/widgets/value_control.dart`)
+- Main props:
+  - `label`: middle title,
+  - `value`: middle child text
+  - `onIncrease`, `onDecrease`: inherited from the actions
+  - `decreaseKey`, `valueKey`, `increaseKey`, `decreaseKey`: `{screenId}__{type}-{index}`
+  - `decreaseSemanticLabel`, `increaseSemanticLabel`: semantic labels
+- Do **not** generate a new widget
+- Mark `buildStrategy: rule:pattern/customStepper`
+
+
+              ValueControl(
+                label: 'RÉPÉTITIONS',
+                value: _reps.toString(),
+                onDecrease: _onDecreaseReps,
+                onIncrease: _onIncreaseReps,
+                decreaseKey: 'interval_timer_home__IconButton-11',
+                valueKey: 'interval_timer_home__Text-12',
+                increaseKey: 'interval_timer_home__IconButton-13',
+                decreaseSemanticLabel: 'Diminuer les répétitions',
+                increaseSemanticLabel: 'Augmenter les répétitions',
+                decreaseEnabled: _reps > _minReps,
+                increaseEnabled: _reps < _maxReps,
+              ),
+
+---
+
+## Implementation Notes (non-normative)
+- `resolveTextStyle(ref, tokens)` must be a pure function (no runtime randomness).
+- Avoid implicit animations unless specified by `spec.md`.
+- Any missing token/color/style ⇒ build must fail (guardrail).
+
+---
+
+## Test Hints
+For each rule, provide at least one widget test ensuring:
+- deterministic key,  
+- mapping to expected widget class,  
+- correct theme resolution,  
+- behavior hooks present when applicable.

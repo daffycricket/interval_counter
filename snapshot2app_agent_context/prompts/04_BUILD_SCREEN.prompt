@@ -1,112 +1,66 @@
-# PROMPT – Rules to build screen
+# PROMPT — Build flutter and dart components according to plan
 
-You are a **Builder**.  
-**Inputs**: `design.json`, `spec.md`, `plan.md`, `guides/UI_MAPPING_GUIDE.md`.  
-**Output**: a set of Flutter files according to `plan.md`.
+Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consuming:
+- `plan.md` (conforms to `templates/plan_template.v2.md`) — **authoritative build contract**
+- `design.json` — authoritative for **layout & styling**
+- `spec.md` — authoritative for **interactions/state/navigation/a11y**
+- `guides/UI_MAPPING_GUIDE.md` — mapping rules for rendering primitives
+- `guides/UI_MAPPING_GUIDE_EXAMPLES.md` — implementation examples
+- `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `GUARDRAILS.md`
 
----
+## Objectives
+- Produce a set of Flutter files **exactly** as declared in `plan.md` → *Files to Generate*.
+- Map UI strictly via `UI_MAPPING_GUIDE.md`. Do **not** restate mapping logic here.
+- Keep output deterministic, testable, and aligned to stable keys.
 
-## Hard requirements
+## Hard Rules (Determinism)
+- **No guessing**: colors/styles come only from `tokens.colors`, `tokens.typography`, or explicit `component.style` in `design.json`.
+- **Stable keys**: every test-targeted/interactive widget has `Key('{screenId}__{compId}')`.
+- **Controlled vocabularies only**: `variant (cta|primary|secondary|ghost)`, `placement (start|center|end|stretch)`, `widthMode (fixed|hug|fill)`…
+- **Conflict resolution**: layout → `design.json`; behavior/state/navigation → `spec.md`.
+- **No new routes/tokens/widgets** beyond those listed in `plan.md`.
+- **Verbatim** UI texts (already enforced by spec) — do not paraphrase.
+- **Fail fast** if a referenced key/route/token is missing.
 
-- **No guessing**: any color or style used must come from `tokens.colors` or explicit `component.style`. Never invent hex values.
-- **Respect semantics** found in `design.json`: `variant`, `placement`, `widthMode`, `group.{alignment,distribution,maxWidth}`, `typographyRef`, `style.transform`, `leadingIcon`, slider visual properties.
-- **Deterministic keys**: every rendered widget must have `Key('<screenName>__<component-id>')`.
-- **Guardrail**: if `qa.confidenceGlobal` exists and is below the configured threshold, emit a build warning (or stop if required by contracts).
+## Dependency Policy
+- Do **not** modify `pubspec.yaml` other than running `flutter pub get`.
+- Do **not** add or remove dependencies; only use those already declared in the file.
+- Use each library for its intended purpose:
+  - **provider** → state management (listenable view-model, context.watch, etc.)
+  - **shared_preferences** → lightweight local storage
+  - **collection** → functional and utility extensions on lists/maps
+  - **google_fonts** → dynamic typography when specified in design tokens
+  - **cupertino_icons** → iOS-style icons
+  - **flutter_test** → all widget and golden tests (no external golden frameworks)
+- Never import or rely on:
+  - `riverpod`, `get_it`, `flutter_hooks`, `freezed`, `json_serializable`,
+  - `golden_toolkit`, `golden_tests`, or any codegen dependency.
 
----
+## Execution Steps (follow in order)
+1. **Scaffold** all files declared in `plan.md/Files to Generate` (widgets, state, routes, themes/tokens, test scaffolds). Use paths *as-is*.
+2. **Widgets rendering**: for each row in `plan.md/Widget Breakdown`, create the corresponding widget and render components using the mapping rules from `UI_MAPPING_GUIDE.md` (containers, Row/Column/Stack, placement, widthMode, typographyRef, icons, sliders, shaped icon buttons, patterns…). Apply keys.
+3. **Layout composition**: implement structure/constraints from `plan.md/Layout Composition` (hierarchy, flex, alignment, maxWidth, scroll). `design.json` is authoritative for these values.
+4. **Interaction wiring**: bind each entry from `plan.md/Interaction Wiring` to concrete functions in the **state layer** (names must match `spec §6` and `plan §7`). Handle navigation exactly as declared (including Back).
+5. **State layer**: implement fields/defaults/persistence and actions/effects from `plan.md/State Model & Actions`. Expose read-only state to widgets; update via the declared actions only.
+6. **Accessibility**: set semantics, aria-like labels, and focus order per `plan.md/Accessibility Plan`.
+7. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
+8. **Emit Report**: concise summary listing generated files + any blocking Risk from `plan.md/Risks` (do not invent new TODOs).
 
-## Theme bootstrap (from tokens)
+## Build guard for orphan thumb
+During build, consult the plan row for each candidate sibling near a `Slider`:
+- If `buildStrategy == rule:slider/normalizeSiblings(drop)`, do **not** render the node.
+- Do **not** attempt to 're-detect'; use the plan as the single source of truth.
 
-Build `ThemeData` and `ColorScheme` directly from `tokens.colors` and `tokens.typography`.
-- `AppBar.backgroundColor` = `tokens.colors.headerBackgroundDark` if present, else `colorScheme.primary`.
-- `SliderTheme` uses `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` when provided.
+## Quality Constraints
+- Null-safety, no dead code, no unused imports.
+- Extract small reusable widgets; avoid magic numbers (prefer theme/tokens).
+- Deterministic rendering suitable for golden tests (avoid implicit animations/s randomness unless specified).
 
-> Refer to `guides/UI_MAPPING_GUIDE.md` for helper mappers (color lookup, radius, text styles).
-
-```dart
-ThemeData buildTheme(Tokens t) { /* see guide: color scheme + slider theme */ }
-TextTheme buildTextTheme(Tokens t) { /* map typographyRef to TextTheme */ }
-```
-
----
-
-## Mapping rules (generic)
-
-### Text
-- Compute `final copy = applyTransform(node.text, node.style?.transform)` then render `Text(copy, style: resolveTextStyle(node, tokens))`.
-
-### Buttons by `variant`
-- `cta` → `ElevatedButton(.icon)` with background = `tokens.colors.cta` (fallback: `tokens.colors.primary`), foreground = `tokens.colors.onPrimary`.
-- `primary` → `ElevatedButton` bg = `tokens.colors.primary`, fg = `tokens.colors.onPrimary`.
-- `secondary` → `OutlinedButton` with `BorderSide(color = style.borderColor or tokens.colors.border, width = style.borderWidth or 1)`.
-- `ghost` → `TextButton` with foreground = `style.color` or `colorScheme.primary`.
-- If `leadingIcon` is present, use the `.icon` constructor and resolve the icon from `iconName`.
-
-### IconButton with shape
-- If `style.radius` and/or `style.borderWidth`/`borderColor` exist, wrap `IconButton` in a decorated `Container` enforcing size, border and radius.
-
-### Placement & width
-- `widthMode:"fill"` ⇒ wrap with `Expanded`.  
-- `widthMode:"intrinsic"` ⇒ size to content.  
-- `placement:"start|center|end"` ⇒ use `Align` inside the parent axis to position accordingly.
-
-### Group alignment & maxWidth
-- For containers/cards with a `group` block:
-  - If `alignment:"center"` ⇒ wrap child with `Center`.
-  - If `alignment:"end"` ⇒ wrap child with `Align(alignment: Alignment.centerRight)`.
-  - If `maxWidth > 0` ⇒ `ConstrainedBox(BoxConstraints(maxWidth: ...))` around the group.
-  - Map `distribution` to `MainAxisAlignment.start|spaceBetween|spaceAround|end`.
-
-### Slider
-- Render with a `SliderTheme` reflecting `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` from `node.style` when provided.
-- Set initial `value` from `valueNormalized` if present (range [0,1]).
-
-### Icons
-- When `iconName` starts with `material.`, map to `Icons.*`. Otherwise use a registry/provider function.
-
-### Keys
-- Every widget uses `key: Key('\${screenName}__\${node.id}')` for stability and testing.
-
----
-
-## Renderer skeleton (pseudocode)
-
-```dart
-Widget buildNode(Node n, Tokens t, String screen) {
-  switch (n.type) {
-    case "Container":
-    case "Card":
-      final child = buildFlex(n, t, screen);
-      return groupWrap(child, n.group);
-    case "Text":
-      return Text(applyTransform(n.text, n.style?.transform ?? "none"),
-        key: compKey(screen, n),
-        style: resolveTextStyle(n, t));
-    case "Button":
-      return place(buildButton(n, t), n);
-    case "IconButton":
-      final raw = needsShape(n) ? shapedIconButton(n, t) : IconButton(
-        key: compKey(screen, n), onPressed: (){}, icon: buildIcon(n, t));
-      return place(raw, n);
-    case "Slider":
-      return place(buildSlider(n, t), n);
-    case "Icon":
-      return Icon(resolveIconData(n.iconName), key: compKey(screen, n));
-    default:
-      return const SizedBox.shrink();
-  }
-}
-```
-
----
-
-## Acceptance checklist (auto-verify)
-
-- [ ] Every widget has a deterministic `Key`.
-- [ ] No color outside `tokens.colors` or explicit `style` on the component.
-- [ ] Button `variant` applied (`cta/primary/secondary/ghost`) and visible in code.
-- [ ] `placement` & `widthMode` respected (Expanded vs intrinsic + Align).
-- [ ] Groups with `alignment:center` are centered and constrained by `maxWidth` when provided.
-- [ ] `leadingIcon` rendered where present; label `transform` respected.
-- [ ] Sliders reflect `activeTrack/inactiveTrack/thumbColor/trackHeight`.
-- [ ] Build warns if `qa.confidenceGlobal` (when present) is below threshold.
+## Acceptance (auto-verify)
+- [ ] Keys follow `{screenId}__{compId}` on interactive widgets.
+- [ ] Only whitelisted enums used; mapping rules applied as per guide.
+- [ ] Layout matches `design.json` (placement/widthMode/constraints).
+- [ ] Interactions/state/navigation match `spec.md` and names in plan.
+- [ ] Tokens/typography resolved from theme or explicit component styles.
+- [ ] Routes referenced exist and compile.
+- [ ] Build fails on any missing key/token/route or on vocabulary violation.

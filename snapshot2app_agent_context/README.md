@@ -1,4 +1,4 @@
-# Snapshot2App – Agent Context Pack (v2)
+# Snapshot2App – Agent Context Pack
 
 **Purpose:** Provide deterministic, tool-agnostic context so an agent (Cursor, Cline, Claude Code, etc.) can
 generate a Flutter app **screen-by-screen** from:

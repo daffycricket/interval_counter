@@ -1,0 +1,106 @@
+{
+  "meta": { "version": "1.0", "screenName": "string", "snapshotRef": "string" },
+  "tokens": {
+    "colors": {
+      "primary": "#RRGGBB",
+      "onPrimary": "#RRGGBB",
+      "background": "#RRGGBB",
+      "surface": "#RRGGBB",
+      "textPrimary": "#RRGGBB",
+      "textSecondary": "#RRGGBB",
+      "divider": "#RRGGBB",
+      "accent": "#RRGGBB",
+      "sliderActive": "#RRGGBB",
+      "sliderInactive": "#RRGGBB",
+      "sliderThumb": "#RRGGBB",
+      "border": "#RRGGBB",
+      "cta": "#RRGGBB",
+      "success": "#RRGGBB",
+      "warning": "#RRGGBB",
+      "info": "#RRGGBB",
+      "headerBackgroundDark": "#RRGGBB"
+      /* autres couleurs sémantiques autorisées : ex. "headerBackground", "ghostButtonBg", "presetCardBg", … */
+    },
+    "typography": {
+      "fontFamilies": ["Roboto","sans-serif","unknown"],
+      "fontSizes": { "xs":0,"sm":0,"md":0,"lg":0,"xl":0 },
+      "fontWeights": { "regular":400,"medium":500,"bold":700 },
+      "lineHeights": { "sm":0,"md":0,"lg":0 }
+    },
+    "spacing": { "xxs":0,"xs":0,"sm":0,"md":0,"lg":0,"xl":0 },
+    "radius": { "sm":0,"md":0,"lg":0,"xl":0 },
+    "shadow": { "sm":"...", "md":"...", "lg":"..." }
+  },
+  "screen": { "size": { "width":0,"height":0 }, "layout": { "orientation":"portrait","scrollable":true } },
+  "components": [
+    {
+      "id":"...",
+      "type":"...",
+      "variant":"primary|secondary|ghost|cta",
+      "bbox":[0,0,0,0],
+      "sourceRect":[0,0,0,0],
+      "text":"...",
+      "iconName":"...",
+      "leadingIcon": { "type":"Icon", "iconName":"...", "style":{ "color":"#RRGGBB" } },
+      "a11y":{ "ariaLabel":"..." },
+      "placement":"start|center|end",
+      "widthMode":"intrinsic|fill",
+      "style":{
+        "backgroundColor":"#RRGGBB",
+        "color":"#RRGGBB",
+        "fontSize":0,
+        "fontWeight":"regular",
+        "typographyRef":"title|titleLarge|label|body|muted|value|subtitle",
+        "transform":"uppercase|lowercase|none",
+        "paddingX":0,
+        "paddingY":0,
+        "radius":"sm",
+        "borderColor":"#RRGGBB",
+        "borderWidth":1,
+        "shadow":"sm"
+      },
+      "layout":{
+        "type":"flex",
+        "direction":"row|column",
+        "gap":"sm",
+        "align":"center",
+        "justify":"start"
+      },
+      "group":{
+        "alignment":"start|center|end",
+        "distribution":"start|between|around|end",
+        "maxWidth":0
+      },
+      "children":[ ... ]
+      /* champs spécifiques au type autorisés (p.ex. Slider: activeTrack, inactiveTrack, thumbColor, trackHeight, valueNormalized; etc.) */
+    }
+  ],
+  "qa": {
+    "inventory": [ { "idx":1, "roughType":"string", "roughText":"string-or-empty" } ],
+    "countsByType": { "Text":0, "Button":0, "Icon":0, "IconButton":0, "Slider":0, "Container":0, "Card":0, "Placeholder":0 },
+    "textCoverage": { "found":[ "...","..." ], "missing":[ "...","..." ] },
+    "colorsUsed": [ { "hex":"#RRGGBB", "token":"primary" }, { "hex":"#AABBCC", "token":"headerBackground" } ],
+    "missingAtoms": [],
+    "coverageRatio": 0.0,
+    "checklist": [
+      "every visual element in snapshot has a component with bbox",
+      "all texts copied verbatim",
+      "colors extracted as hex",
+      "interactive elements have a11y.ariaLabel",
+      "no invented components",
+      "units are px integers",
+      "all groups represented as Container/Card with styles",
+      "all groups include explicit layout"
+    ],
+    "semanticChecklist": [
+      "group alignment encoded when visually centered",
+      "non-fullwidth actions have placement and widthMode",
+      "icon+label actions encoded as composed buttons (leadingIcon+text)",
+      "uppercase labels use style.transform",
+      "variants map to semantic color tokens (no stray hex)"
+    ],
+    "assumptions": [],
+    "openQuestions": [],
+    "confidenceGlobal": 0.0
+  }
+}

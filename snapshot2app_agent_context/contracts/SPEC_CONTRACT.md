@@ -1,4 +1,4 @@
-# SPEC_CONTRACT — Updated
+# SPEC_CONTRACT
 
 ## Goal
 Ensure the functional specification derived from `design.json` is actionable and consistent with the UI semantics.
