@@ -6,7 +6,7 @@ import '../theme/app_text_styles.dart';
 /// en **grille à largeurs fixes** pour garantir l'alignement entre lignes.
 class ValueControl extends StatelessWidget {
   // Tailles par défaut (px). Modifiables via les paramètres constructeur si besoin.
-  static const double _defaultOuterBlank = 50;   // espace blanc gauche/droite
+  static const double _defaultOuterBlank = 70;   // espace blanc gauche/droite
   static const double _defaultBtnSize    = 22;    // bouton carré
   static const double _defaultGap        = 40;   // espaces blancs entre éléments
   static const double _defaultCenterW    = 80;   // largeur dédiée à la valeur
