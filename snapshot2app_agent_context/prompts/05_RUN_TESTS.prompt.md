@@ -16,7 +16,7 @@ Run the Flutter test suite and report results.
    - flutter test --reporter expanded --coverage
 
 2. Outputs:
-   - reports/test_report.txt (stdout/stderr of test run)
+   - test_report.md (stdout/stderr of test run)
    - coverage/lcov.info (if generated)
    - .dart_tool/test_results.json (if generated)
 

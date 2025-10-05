@@ -22,6 +22,30 @@ workspace under `lib/`, `test/`, etc.
 2. Read `spec.md` and derive **behavioral contracts** (validation rules, actions, navigation).
 3. Plan the file diff (no code yet): list widgets, state endpoints, keys, and tests to generate.
 4. Generate code (by the agent) in a separate step, using these contracts and the mapping guide.
-5. Run the Evaluation rubric and produce `reports/agent_report.md`.
+5. Run the Evaluation rubric and produce `agent_report.md`.
 
 See `runbooks/` for detailed step-by-step playbooks per tool.
+
+## Typical commands for the agent
+
+
+### Buid screen from scratch (eg, first screen)
+Run 00_ORCHESTRATOR.prompt
+Input: design.json: examples/home/home_design.json
+Report folder: reports/home
+
+### Build screen, starting at specific step
+#### It allows the user to edit generated files manually before carrying on
+Run 00_ORCHESTRATOR.prompt, starting step 03 and up to the last step
+Inputs:
+ - design.json: examples/home/home_design.json
+ - validation_report.md ans spec.md in reports/home
+Report folder: reports/home
+
+### Build new screen, using previous screen generation as reference
+Run 00_ORCHESTRATOR.prompt
+Inputs:
+ - design.json: examples/new_preset/preset_editor_design.json
+ - spec.md from home screen in reports/home
+Report folder: reports/new_preset
+

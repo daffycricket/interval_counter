@@ -10,7 +10,7 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
 - `UI_MAPPING_GUIDE.md`, `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `GUARDRAILS.md`
 
 ## Output
-- A single Markdown file `reports/plan.md` **strictly following** `templates/plan_template.md`.
+- A single Markdown file `plan.md` **strictly following** `templates/plan_template.md`.
 - **Fill every section and table**. If data is missing, write `—` (dash). No extra sections.
 
 ## Hard Rules (Determinism)
