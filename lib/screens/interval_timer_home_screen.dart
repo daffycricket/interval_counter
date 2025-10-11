@@ -2,298 +2,280 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/interval_timer_home_state.dart';
 import '../state/presets_state.dart';
+import '../models/preset.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/home/volume_header.dart';
 import '../widgets/home/quick_start_card.dart';
 import '../widgets/home/preset_card.dart';
 
-/// Écran principal de configuration du minuteur d'intervalles
+/// Écran principal d'accueil du minuteur d'intervalles
 class IntervalTimerHomeScreen extends StatelessWidget {
   const IntervalTimerHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => IntervalTimerHomeState()),
-        ChangeNotifierProvider(create: (_) => PresetsState()),
-      ],
-      child: const _IntervalTimerHomeScreenContent(),
-    );
-  }
-}
-
-class _IntervalTimerHomeScreenContent extends StatelessWidget {
-  const _IntervalTimerHomeScreenContent();
-
-  @override
-  Widget build(BuildContext context) {
-    final homeState = context.watch<IntervalTimerHomeState>();
-    final presetsState = context.watch<PresetsState>();
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          // En-tête avec volume
-          VolumeHeader(
-            volumeLevel: homeState.volumeLevel,
-            onVolumeChanged: homeState.setVolume,
-            onVolumeButtonPressed: () {
-              // TODO: Implémenter le comportement du bouton volume
-              debugPrint('Volume button pressed');
-            },
-            onMenuPressed: () {
-              // TODO: Implémenter le menu d'options
-              _showOptionsMenu(context);
-            },
-          ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // En-tête avec contrôle de volume
+              Consumer<IntervalTimerHomeState>(
+                builder: (context, state, _) {
+                  return VolumeHeader(
+                    volume: state.volume,
+                    onVolumeChanged: state.onVolumeChanged,
+                    onOptionsPressed: () {
+                      // TODO: Navigation vers menu d'options
+                      debugPrint('Options pressed');
+                    },
+                  );
+                },
+              ),
 
-          // Contenu scrollable
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Carte de démarrage rapide
-                  QuickStartCard(
-                    isExpanded: homeState.quickStartExpanded,
-                    onToggleExpanded: homeState.toggleQuickStartSection,
-                    repetitions: homeState.repetitions,
-                    workTime: homeState.formattedWorkTime,
-                    restTime: homeState.formattedRestTime,
-                    onIncrementReps: homeState.incrementReps,
-                    onDecrementReps: homeState.decrementReps,
-                    onIncrementWork: homeState.incrementWork,
-                    onDecrementWork: homeState.decrementWork,
-                    onIncrementRest: homeState.incrementRest,
-                    onDecrementRest: homeState.decrementRest,
-                    canIncrementReps: homeState.canIncrementReps,
-                    canDecrementReps: homeState.canDecrementReps,
-                    canIncrementWork: homeState.canIncrementWork,
-                    canDecrementWork: homeState.canDecrementWork,
-                    canIncrementRest: homeState.canIncrementRest,
-                    canDecrementRest: homeState.canDecrementRest,
-                    onSavePreset: () => _onSavePreset(context),
-                    onStartInterval: () => _onStartInterval(context),
-                    isStartEnabled: homeState.isConfigValid,
-                  ),
+              const SizedBox(height: 8),
 
-                  const SizedBox(height: 16),
+              // Carte de démarrage rapide
+              Consumer<IntervalTimerHomeState>(
+                builder: (context, state, _) {
+                  return QuickStartCard(
+                    isExpanded: state.quickStartExpanded,
+                    reps: state.reps,
+                    workSeconds: state.workSeconds,
+                    restSeconds: state.restSeconds,
+                    onToggle: state.toggleQuickStartSection,
+                    onIncrementReps: state.incrementReps,
+                    onDecrementReps: state.decrementReps,
+                    onIncrementWork: state.incrementWorkTime,
+                    onDecrementWork: state.decrementWorkTime,
+                    onIncrementRest: state.incrementRestTime,
+                    onDecrementRest: state.decrementRestTime,
+                    onSave: () => _showSavePresetDialog(context, state),
+                    onStart: () => _startTimer(context, state),
+                    formatSeconds: state.formatSeconds,
+                    canDecrementReps: state.reps > IntervalTimerHomeState.minReps,
+                    canIncrementReps: state.reps < IntervalTimerHomeState.maxReps,
+                    canDecrementWork: state.workSeconds > IntervalTimerHomeState.minWorkSeconds,
+                    canIncrementWork: state.workSeconds < IntervalTimerHomeState.maxSeconds,
+                    canDecrementRest: state.restSeconds > IntervalTimerHomeState.minSeconds,
+                    canIncrementRest: state.restSeconds < IntervalTimerHomeState.maxSeconds,
+                  );
+                },
+              ),
 
-                  // En-tête de la section préréglages
-                  Container(
-                    key: const Key('interval_timer_home__Container-24'),
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'VOS PRÉRÉGLAGES',
-                          style: AppTextStyles.title,
-                        ),
-                        Row(
-                          children: [
-                            // Bouton éditer
-                            Semantics(
-                              label: 'Éditer les préréglages',
-                              button: true,
-                              child: IconButton(
-                                key: const Key('interval_timer_home__IconButton-26'),
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: AppColors.textSecondary,
-                                ),
-                                onPressed: () {
-                                  homeState.enterEditMode();
-                                  // TODO: Implémenter le mode édition
-                                  debugPrint('Edit mode entered');
-                                },
-                                padding: const EdgeInsets.all(8),
-                                constraints: const BoxConstraints(),
-                                iconSize: 24,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            // Bouton ajouter
-                            Semantics(
-                              label: 'Ajouter un préréglage',
-                              button: true,
-                              child: OutlinedButton.icon(
-                                key: const Key('interval_timer_home__Button-27'),
-                                onPressed: () => _onAddPreset(context),
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: AppColors.primary,
-                                  size: 18,
-                                ),
-                                label: Text(
-                                  '+ AJOUTER',
-                                  style: AppTextStyles.buttonLabel.copyWith(
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(
-                                    color: AppColors.border,
-                                    width: 1,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+              const SizedBox(height: 18),
+
+              // Barre de titre des préréglages
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  key: const Key('interval_timer_home__Container-24'),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'VOS PRÉRÉGLAGES',
+                        key: Key('interval_timer_home__Text-25'),
+                        style: AppTextStyles.title,
+                      ),
                     ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Liste des préréglages
-                  if (presetsState.presets.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 32),
-                      child: Center(
-                        child: Text(
-                          'Aucun préréglage enregistré',
-                          style: AppTextStyles.body,
+                    IconButton(
+                      key: const Key('interval_timer_home__IconButton-26'),
+                      icon: const Icon(Icons.edit),
+                      color: AppColors.textSecondary,
+                      iconSize: 24,
+                      padding: const EdgeInsets.all(8),
+                      constraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 40,
+                      ),
+                      onPressed: () {
+                        // TODO: Entrer en mode édition
+                        debugPrint('Edit mode');
+                      },
+                      tooltip: 'Éditer les préréglages',
+                    ),
+                    OutlinedButton.icon(
+                      key: const Key('interval_timer_home__Button-27'),
+                      onPressed: () => _createNewPreset(context),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(
+                          color: AppColors.border,
+                          width: 1,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                    )
-                  else
-                    ...presetsState.presets.map((preset) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: PresetCard(
-                          preset: preset,
-                          onTap: () => _onSelectPreset(context, preset),
+                      icon: const Icon(
+                        Icons.add,
+                        size: 18,
+                        color: AppColors.primary,
+                      ),
+                      label: const Text(
+                        '+ AJOUTER',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                         ),
-                      );
-                    }),
-
-                  const SizedBox(height: 16),
-                ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+
+              const SizedBox(height: 10),
+
+              // Liste des préréglages
+              Consumer2<PresetsState, IntervalTimerHomeState>(
+                builder: (context, presetsState, homeState, _) {
+                  if (presetsState.isLoading) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(24),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+
+                  if (presetsState.presets.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Center(
+                        child: Text(
+                          'Aucun préréglage. Créez-en un avec + AJOUTER',
+                          style: AppTextStyles.body,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: presetsState.presets.map((preset) {
+                      return PresetCard(
+                        preset: preset,
+                        onTap: () => _loadPreset(context, preset, homeState),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 24),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  /// Sauvegarde la configuration rapide comme préréglage
-  void _onSavePreset(BuildContext context) {
-    final homeState = context.read<IntervalTimerHomeState>();
-    final presetsState = context.read<PresetsState>();
-
-    // Dialogue pour saisir le nom du préréglage
+  /// Affiche un dialogue pour sauvegarder un nouveau préréglage
+  void _showSavePresetDialog(
+    BuildContext context,
+    IntervalTimerHomeState state,
+  ) {
     final TextEditingController nameController = TextEditingController();
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Sauvegarder le préréglage'),
-        content: TextField(
-          controller: nameController,
-          decoration: const InputDecoration(
-            labelText: 'Nom du préréglage',
-            hintText: 'Ex: Gainage, HIIT, etc.',
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Sauvegarder le préréglage'),
+          content: TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              labelText: 'Nom du préréglage',
+              hintText: 'Ex: Gainage, Tabata, etc.',
+            ),
+            autofocus: true,
           ),
-          autofocus: true,
-          textCapitalization: TextCapitalization.words,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('ANNULER'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final name = nameController.text.trim();
-              if (name.isNotEmpty) {
-                try {
-                  await presetsState.createPreset(
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Annuler'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final name = nameController.text.trim();
+                if (name.isNotEmpty) {
+                  final preset = Preset(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
                     name: name,
-                    repetitions: homeState.repetitions,
-                    workSeconds: homeState.workSeconds,
-                    restSeconds: homeState.restSeconds,
+                    repetitions: state.reps,
+                    workSeconds: state.workSeconds,
+                    restSeconds: state.restSeconds,
+                    createdAt: DateTime.now(),
                   );
-                  
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Préréglage "$name" sauvegardé'),
-                        backgroundColor: AppColors.success,
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Erreur lors de la sauvegarde'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
+
+                  context.read<PresetsState>().savePreset(preset);
+                  Navigator.of(dialogContext).pop();
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Préréglage sauvegardé'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
                 }
-              }
-            },
-            child: const Text('SAUVEGARDER'),
-          ),
-        ],
-      ),
+              },
+              child: const Text('Sauvegarder'),
+            ),
+          ],
+        );
+      },
     );
   }
 
-  /// Démarre un intervalle avec la configuration actuelle
-  void _onStartInterval(BuildContext context) {
-    final homeState = context.read<IntervalTimerHomeState>();
-    
+  /// Démarre le minuteur avec la configuration actuelle
+  void _startTimer(BuildContext context, IntervalTimerHomeState state) {
+    if (!state.canStart) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Configuration invalide'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     // TODO: Navigation vers l'écran Timer
-    debugPrint('Démarrage intervalle: reps=${homeState.repetitions}, '
-        'work=${homeState.workSeconds}s, rest=${homeState.restSeconds}s');
-    
+    debugPrint('Start timer: reps=${state.reps}, '
+        'work=${state.workSeconds}, rest=${state.restSeconds}');
+
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Démarrage de l\'intervalle...'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text(
+          'Démarrage: ${state.reps} reps × '
+          '(${state.formatSeconds(state.workSeconds)} + '
+          '${state.formatSeconds(state.restSeconds)})',
+        ),
+        duration: const Duration(seconds: 2),
       ),
     );
-    
-    // Navigation vers TimerScreen (à implémenter)
-    // Navigator.of(context).pushNamed(
-    //   '/timer',
-    //   arguments: {
-    //     'reps': homeState.repetitions,
-    //     'work': homeState.workSeconds,
-    //     'rest': homeState.restSeconds,
-    //   },
-    // );
   }
 
-  /// Charge un préréglage dans la configuration rapide
-  void _onSelectPreset(BuildContext context, preset) {
-    final homeState = context.read<IntervalTimerHomeState>();
-    
-    homeState.loadPresetValues(
-      repetitions: preset.repetitions,
-      workSeconds: preset.workSeconds,
-      restSeconds: preset.restSeconds,
+  /// Charge un préréglage
+  void _loadPreset(
+    BuildContext context,
+    Preset preset,
+    IntervalTimerHomeState homeState,
+  ) {
+    homeState.loadPresetConfig(
+      preset.repetitions,
+      preset.workSeconds,
+      preset.restSeconds,
     );
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Préréglage "${preset.name}" chargé'),
@@ -302,50 +284,17 @@ class _IntervalTimerHomeScreenContent extends StatelessWidget {
     );
   }
 
-  /// Ouvre l'écran d'ajout de préréglage
-  void _onAddPreset(BuildContext context) {
-    // TODO: Navigation vers PresetEditor
-    debugPrint('Ajouter un nouveau préréglage');
-    
+  /// Crée un nouveau préréglage
+  void _createNewPreset(BuildContext context) {
+    // TODO: Navigation vers l'éditeur de préréglages
+    debugPrint('Create new preset');
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Éditeur de préréglage (à implémenter)'),
+        content: Text('Éditeur de préréglages (à venir)'),
         duration: Duration(seconds: 2),
-      ),
-    );
-    
-    // Navigator.of(context).pushNamed('/preset-editor', arguments: {'mode': 'create'});
-  }
-
-  /// Affiche le menu d'options
-  void _showOptionsMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Paramètres'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Navigation vers les paramètres
-                debugPrint('Ouvrir les paramètres');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('À propos'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Afficher la page À propos
-                debugPrint('À propos');
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
 }
+

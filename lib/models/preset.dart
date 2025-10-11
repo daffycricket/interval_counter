@@ -1,4 +1,7 @@
-/// Modèle de préréglage d'intervalle
+import 'package:flutter/foundation.dart';
+
+/// Modèle représentant un préréglage d'intervalle sauvegardé
+@immutable
 class Preset {
   final String id;
   final String name;
@@ -6,7 +9,6 @@ class Preset {
   final int workSeconds;
   final int restSeconds;
   final DateTime createdAt;
-  final DateTime modifiedAt;
 
   const Preset({
     required this.id,
@@ -15,20 +17,29 @@ class Preset {
     required this.workSeconds,
     required this.restSeconds,
     required this.createdAt,
-    required this.modifiedAt,
   });
 
-  /// Calcule la durée totale de l'intervalle en secondes
-  int get totalDurationSeconds => repetitions * (workSeconds + restSeconds);
+  /// Calcule la durée totale de la session en secondes
+  int get totalDuration => repetitions * (workSeconds + restSeconds);
 
-  /// Formate la durée totale en MM:SS
+  /// Formatte la durée totale en MM:SS ou HH:MM:SS
   String get formattedDuration {
-    final minutes = totalDurationSeconds ~/ 60;
-    final seconds = totalDurationSeconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    final int totalSeconds = totalDuration;
+    final int hours = totalSeconds ~/ 3600;
+    final int minutes = (totalSeconds % 3600) ~/ 60;
+    final int seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:'
+          '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    } else {
+      return '${minutes.toString().padLeft(2, '0')}:'
+          '${seconds.toString().padLeft(2, '0')}';
+    }
   }
 
-  /// Crée un Preset à partir d'un Map JSON
+  /// Crée une instance depuis un JSON
   factory Preset.fromJson(Map<String, dynamic> json) {
     return Preset(
       id: json['id'] as String,
@@ -37,11 +48,10 @@ class Preset {
       workSeconds: json['workSeconds'] as int,
       restSeconds: json['restSeconds'] as int,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      modifiedAt: DateTime.parse(json['modifiedAt'] as String),
     );
   }
 
-  /// Convertit le Preset en Map JSON
+  /// Convertit l'instance en JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -50,11 +60,10 @@ class Preset {
       'workSeconds': workSeconds,
       'restSeconds': restSeconds,
       'createdAt': createdAt.toIso8601String(),
-      'modifiedAt': modifiedAt.toIso8601String(),
     };
   }
 
-  /// Crée une copie du Preset avec des valeurs modifiées
+  /// Crée une copie avec des champs modifiés
   Preset copyWith({
     String? id,
     String? name,
@@ -62,7 +71,6 @@ class Preset {
     int? workSeconds,
     int? restSeconds,
     DateTime? createdAt,
-    DateTime? modifiedAt,
   }) {
     return Preset(
       id: id ?? this.id,
@@ -71,19 +79,38 @@ class Preset {
       workSeconds: workSeconds ?? this.workSeconds,
       restSeconds: restSeconds ?? this.restSeconds,
       createdAt: createdAt ?? this.createdAt,
-      modifiedAt: modifiedAt ?? this.modifiedAt,
     );
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Preset && other.id == id;
+
+    return other is Preset &&
+        other.id == id &&
+        other.name == name &&
+        other.repetitions == repetitions &&
+        other.workSeconds == workSeconds &&
+        other.restSeconds == restSeconds &&
+        other.createdAt == createdAt;
   }
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode {
+    return Object.hash(
+      id,
+      name,
+      repetitions,
+      workSeconds,
+      restSeconds,
+      createdAt,
+    );
+  }
 
   @override
-  String toString() => 'Preset(id: $id, name: $name, reps: $repetitions, work: $workSeconds, rest: $restSeconds)';
+  String toString() {
+    return 'Preset(id: $id, name: $name, reps: $repetitions, '
+        'work: $workSeconds, rest: $restSeconds, created: $createdAt)';
+  }
 }
+

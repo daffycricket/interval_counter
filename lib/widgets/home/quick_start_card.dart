@@ -3,51 +3,51 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../value_control.dart';
 
-/// Carte de configuration rapide du minuteur
+/// Carte de configuration rapide des intervalles
 class QuickStartCard extends StatelessWidget {
   final bool isExpanded;
-  final VoidCallback onToggleExpanded;
-  final int repetitions;
-  final String workTime;
-  final String restTime;
+  final int reps;
+  final int workSeconds;
+  final int restSeconds;
+  final VoidCallback onToggle;
   final VoidCallback onIncrementReps;
   final VoidCallback onDecrementReps;
   final VoidCallback onIncrementWork;
   final VoidCallback onDecrementWork;
   final VoidCallback onIncrementRest;
   final VoidCallback onDecrementRest;
-  final bool canIncrementReps;
+  final VoidCallback onSave;
+  final VoidCallback onStart;
+  final String Function(int) formatSeconds;
   final bool canDecrementReps;
-  final bool canIncrementWork;
+  final bool canIncrementReps;
   final bool canDecrementWork;
-  final bool canIncrementRest;
+  final bool canIncrementWork;
   final bool canDecrementRest;
-  final VoidCallback onSavePreset;
-  final VoidCallback onStartInterval;
-  final bool isStartEnabled;
+  final bool canIncrementRest;
 
   const QuickStartCard({
     super.key,
     required this.isExpanded,
-    required this.onToggleExpanded,
-    required this.repetitions,
-    required this.workTime,
-    required this.restTime,
+    required this.reps,
+    required this.workSeconds,
+    required this.restSeconds,
+    required this.onToggle,
     required this.onIncrementReps,
     required this.onDecrementReps,
     required this.onIncrementWork,
     required this.onDecrementWork,
     required this.onIncrementRest,
     required this.onDecrementRest,
-    required this.canIncrementReps,
+    required this.onSave,
+    required this.onStart,
+    required this.formatSeconds,
     required this.canDecrementReps,
-    required this.canIncrementWork,
+    required this.canIncrementReps,
     required this.canDecrementWork,
-    required this.canIncrementRest,
+    required this.canIncrementWork,
     required this.canDecrementRest,
-    required this.onSavePreset,
-    required this.onStartInterval,
-    required this.isStartEnabled,
+    required this.canIncrementRest,
   });
 
   @override
@@ -55,52 +55,59 @@ class QuickStartCard extends StatelessWidget {
     return Card(
       key: const Key('interval_timer_home__Card-6'),
       color: AppColors.surface,
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: AppColors.divider, width: 1),
+        borderRadius: BorderRadius.circular(2),
+        side: const BorderSide(
+          color: AppColors.divider,
+          width: 1,
+        ),
       ),
-      elevation: 1,
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // En-tête avec titre et bouton de repliement
+            // En-tête avec titre et bouton de repli/dépli
             Row(
               key: const Key('interval_timer_home__Container-7'),
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Démarrage rapide',
+                  key: const Key('interval_timer_home__Text-8'),
                   style: AppTextStyles.titleLarge,
                 ),
-                Semantics(
-                  label: 'Replier la section Démarrage rapide',
-                  button: true,
-                  child: IconButton(
-                    key: const Key('interval_timer_home__IconButton-9'),
-                    icon: Icon(
-                      isExpanded ? Icons.expand_less : Icons.expand_more,
-                      color: AppColors.textSecondary,
-                    ),
-                    onPressed: onToggleExpanded,
-                    padding: const EdgeInsets.all(8),
-                    constraints: const BoxConstraints(),
-                    iconSize: 24,
+                IconButton(
+                  key: const Key('interval_timer_home__IconButton-9'),
+                  icon: Icon(
+                    isExpanded ? Icons.expand_less : Icons.expand_more,
                   ),
+                  color: AppColors.textSecondary,
+                  iconSize: 24,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(
+                    minWidth: 40,
+                    minHeight: 40,
+                  ),
+                  onPressed: onToggle,
+                  tooltip: isExpanded
+                      ? 'Replier la section Démarrage rapide'
+                      : 'Déplier la section Démarrage rapide',
                 ),
               ],
             ),
 
-            // Contenu replié ou étendu
+            // Contenu de la carte (visible seulement si expanded)
             if (isExpanded) ...[
               const SizedBox(height: 16),
 
-              // ValueControl RÉPÉTITIONS
+              // Contrôle répétitions
               ValueControl(
                 label: 'RÉPÉTITIONS',
-                value: repetitions.toString(),
+                value: reps.toString(),
                 onDecrease: onDecrementReps,
                 onIncrease: onIncrementReps,
                 decreaseKey: 'interval_timer_home__IconButton-11',
@@ -112,12 +119,12 @@ class QuickStartCard extends StatelessWidget {
                 increaseEnabled: canIncrementReps,
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-              // ValueControl TRAVAIL
+              // Contrôle temps de travail
               ValueControl(
                 label: 'TRAVAIL',
-                value: workTime,
+                value: formatSeconds(workSeconds),
                 onDecrease: onDecrementWork,
                 onIncrease: onIncrementWork,
                 decreaseKey: 'interval_timer_home__IconButton-15',
@@ -129,12 +136,12 @@ class QuickStartCard extends StatelessWidget {
                 increaseEnabled: canIncrementWork,
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-              // ValueControl REPOS
+              // Contrôle temps de repos
               ValueControl(
                 label: 'REPOS',
-                value: restTime,
+                value: formatSeconds(restSeconds),
                 onDecrease: onDecrementRest,
                 onIncrease: onIncrementRest,
                 decreaseKey: 'interval_timer_home__IconButton-19',
@@ -146,73 +153,62 @@ class QuickStartCard extends StatelessWidget {
                 increaseEnabled: canIncrementRest,
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-              // Bouton SAUVEGARDER (aligné à droite)
+              // Bouton Sauvegarder
               Align(
                 alignment: Alignment.centerRight,
-                child: Semantics(
-                  label: 'Sauvegarder le préréglage rapide',
-                  button: true,
-                  child: TextButton.icon(
-                    key: const Key('interval_timer_home__Button-22'),
-                    onPressed: onSavePreset,
-                    icon: const Icon(
-                      Icons.save,
+                child: TextButton.icon(
+                  key: const Key('interval_timer_home__Button-22'),
+                  onPressed: onSave,
+                  icon: const Icon(
+                    Icons.save,
+                    size: 18,
+                    color: AppColors.primary,
+                  ),
+                  label: const Text(
+                    'SAUVEGARDER',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                       color: AppColors.primary,
-                      size: 18,
-                    ),
-                    label: Text(
-                      'SAUVEGARDER',
-                      style: AppTextStyles.buttonLabel.copyWith(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
 
-              // Bouton COMMENCER (pleine largeur)
-              Semantics(
-                label: 'Démarrer l\'intervalle',
-                button: true,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    key: const Key('interval_timer_home__Button-23'),
-                    onPressed: isStartEnabled ? onStartInterval : null,
-                    icon: const Icon(
-                      Icons.bolt,
-                      color: AppColors.accent,
-                      size: 20,
-                    ),
-                    label: Text(
-                      'COMMENCER',
-                      style: AppTextStyles.buttonTitle.copyWith(
-                        color: AppColors.onPrimary,
+              // Bouton COMMENCER (CTA)
+              SizedBox(
+                width: double.infinity,
+                height: 64,
+                child: ElevatedButton.icon(
+                  key: const Key('interval_timer_home__Button-23'),
+                  onPressed: onStart,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.cta,
+                    foregroundColor: AppColors.onPrimary,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                      side: const BorderSide(
+                        color: AppColors.cta,
+                        width: 1,
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.cta,
-                      foregroundColor: AppColors.onPrimary,
-                      disabledBackgroundColor: AppColors.divider,
-                      disabledForegroundColor: AppColors.textSecondary,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 1,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  icon: const Icon(
+                    Icons.bolt,
+                    size: 20,
+                    color: AppColors.accent,
+                  ),
+                  label: const Text(
+                    'COMMENCER',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -224,3 +220,4 @@ class QuickStartCard extends StatelessWidget {
     );
   }
 }
+

@@ -1,131 +1,133 @@
 # Validation Report — IntervalTimerHome
 
-## Summary
-- **coverageRatio**: 1.0 ✅
-- **confidenceGlobal**: 0.78 ⚠️ (seuil recommandé: 0.85)
-- **issues**: Mode dégradé - Confiance globale sous le seuil
-- **assumptions**: 5 hypothèses avec confiances 0.70-0.80
-
-## Statut Global
-⚠️ **PASS (avec avertissement)** — Le design respecte les critères du contrat DESIGN_CONTRACT.md, mais la confiance globale (0.78) est sous le seuil recommandé de 0.85. La génération peut procéder en mode dégradé.
+**Date:** 2025-10-11  
+**Design File:** `examples/home/home_design.json`  
+**Schema:** `schema/minifigma.schema.json`  
+**Contract:** `contracts/DESIGN_CONTRACT.md`
 
 ---
 
-## Vérification par critère
+## Summary
 
-### ✅ 1. Coverage
-- **Critère**: `qa.coverageRatio == 1.0`
-- **Résultat**: 1.0
-- **Statut**: ✅ PASS
-
-### ✅ 2. Measurements
-- **Critère**: tous les composants ont des `bbox` et `sourceRect` entiers
-- **Résultat**: Tous les 34 composants ont des mesures entières valides
-- **Statut**: ✅ PASS
-
-### ✅ 3. A11y
-- **Critère**: composants interactifs ont `a11y.ariaLabel`
-- **Résultat**: 
-  - 10 IconButton → tous avec ariaLabel ✅
-  - 3 Button → tous avec ariaLabel ✅
-  - 1 Slider → avec ariaLabel ✅
-- **Statut**: ✅ PASS
-
-### ✅ 4. Colors
-- **Critère**: toutes les couleurs existent dans `tokens.colors`
-- **Résultat**: 10 couleurs utilisées, toutes mappées à des tokens
-  - `#455A64` → `headerBackgroundDark`
-  - `#FFFFFF` → `surface`
-  - `#F2F2F2` → `background`
-  - `#212121` → `textPrimary`
-  - `#616161` → `textSecondary`
-  - `#E0E0E0` → `divider`
-  - `#DDDDDD` → `border`
-  - `#607D8B` → `primary`
-  - `#FFC107` → `accent`
-  - `#90A4AE` → `sliderInactive`
-- **Statut**: ✅ PASS
-
-### ✅ 5. Semantics
-- **Critère**: présence des attributs sémantiques quand visuellement applicable
-- **Résultat**:
-  - **Variants**: Tous les Button/IconButton ont des variants appropriés (cta, ghost, secondary) ✅
-  - **Placement + widthMode**: Présents sur tous les boutons non-fullwidth ✅
-  - **Group attributes**: Tous les Container/Card ont alignment, distribution, maxWidth ✅
-  - **TypographyRef**: Présent sur tous les Text ✅
-  - **Transform**: Présent sur les labels uppercase ✅
-  - **LeadingIcon**: Présent sur les boutons avec icônes (Button-22, Button-23, Button-27) ✅
-- **Statut**: ✅ PASS
-
-### ⚠️ 6. Confidence
-- **Critère**: `qa.confidenceGlobal >= 0.85`
-- **Résultat**: 0.78
-- **Statut**: ⚠️ WARNING — Sous le seuil, mode dégradé
+| Critère | Statut | Détails |
+|---------|--------|---------|
+| **Coverage Ratio** | ✅ **PASS** | 1.0 (100%) |
+| **Measurements** | ✅ **PASS** | Tous les composants ont bbox et sourceRect en entiers |
+| **A11y Labels** | ✅ **PASS** | Tous les éléments interactifs ont ariaLabel |
+| **Colors** | ✅ **PASS** | Toutes les couleurs sont mappées aux tokens |
+| **Semantics** | ✅ **PASS** | Variants, placement, widthMode, groupes alignés |
+| **Confidence Global** | ⚠️ **DEGRADED** | 0.78 (< 0.85) |
 
 ---
 
 ## Findings
 
-### Decorations (Slider Thumbs)
-#### finding.decorations.orphanThumb
-- **sliderId**: `Slider-3`
-- **nodeId**: `Icon-4`
-- **reason**: thumb-like sibling (report-only)
-- **description**: L'icône `Icon-4` (material.circle, #FFFFFF, 16x16) est positionnée à [312, 26] dans le même groupe que le Slider-3 [52, 26, 420, 28]. Son centre (320, 34) est à ~3px du bord droit du slider (472). Ce pattern correspond à un thumb visuel redondant.
-- **action**: Report-only (pas de modification requise)
+### ✅ Pass Criteria Met
 
-### Assumptions (depuis design.json)
-| # | Énoncé | Confiance |
-|---|--------|-----------|
-| 1 | Couleurs estimées à partir du rendu (matériel design gris/bleu) | 0.75 |
-| 2 | Nom d'icône d'en-tête 'expand_less' supposé (chevron de repli) | 0.70 |
-| 3 | Positions/bbox approchées par inspection visuelle (sans mesure pixel-perfect) | 0.70 |
-| 4 | Valeur du slider normalisée à ~0,62 d'après la position du pouce | 0.70 |
-| 5 | Les boutons 'Sauvegarder' et '+ Ajouter' modélisés en 'ghost/secondary' selon le rendu non rempli | 0.80 |
+1. **Coverage Ratio = 1.0**
+   - Tous les éléments visuels du snapshot sont représentés.
+   - Aucun `missingAtoms` dans l'inventaire QA.
 
-**Moyenne des confiances**: 0.73
+2. **Integer Measurements**
+   - Tous les `bbox` et `sourceRect` sont des entiers en pixels.
+   - Aucune valeur `"unknown"` ou flottante détectée.
 
----
+3. **A11y Labels**
+   - Vérification des éléments interactifs:
+     - IconButton-2: ✅ "Régler le volume"
+     - Slider-3: ✅ "Curseur de volume"
+     - IconButton-5: ✅ "Plus d'options"
+     - IconButton-9: ✅ "Replier la section Démarrage rapide"
+     - IconButton-11: ✅ "Diminuer les répétitions"
+     - IconButton-13: ✅ "Augmenter les répétitions"
+     - IconButton-15: ✅ "Diminuer le temps de travail"
+     - IconButton-17: ✅ "Augmenter le temps de travail"
+     - IconButton-19: ✅ "Diminuer le temps de repos"
+     - IconButton-21: ✅ "Augmenter le temps de repos"
+     - Button-22: ✅ "Sauvegarder le préréglage rapide"
+     - Button-23: ✅ "Démarrer l'intervalle"
+     - IconButton-26: ✅ "Éditer les préréglages"
+     - Button-27: ✅ "Ajouter un préréglage"
 
-## JSON Patch (normalization)
-Aucune modification structurelle requise. Le fichier est valide tel quel.
+4. **Color Tokens**
+   - Toutes les couleurs utilisées sont définies dans `tokens.colors`:
+     - `#455A64` → headerBackgroundDark
+     - `#FFFFFF` → surface/onPrimary/sliderActive/sliderThumb
+     - `#F2F2F2` → background
+     - `#212121` → textPrimary
+     - `#616161` → textSecondary
+     - `#E0E0E0` → divider
+     - `#DDDDDD` → border
+     - `#607D8B` → primary/cta
+     - `#FFC107` → accent/warning
+     - `#90A4AE` → sliderInactive
+     - `#FAFAFA` → presetCardBg
 
-```json
-[]
-```
-
----
-
-## Open Questions
-- Aucune question ouverte.
-
----
-
-## Text Coverage Verification
-### Found (16/16) ✅
-- "Démarrage rapide"
-- "RÉPÉTITIONS"
-- "16"
-- "TRAVAIL"
-- "00 : 44"
-- "REPOS"
-- "00 : 15"
-- "SAUVEGARDER"
-- "COMMENCER"
-- "VOS PRÉRÉGLAGES"
-- "+ AJOUTER"
-- "gainage"
-- "14:22"
-- "RÉPÉTITIONS 20x"
-- "TRAVAIL 00:40"
-- "REPOS 00:03"
-
-### Missing (0/16) ✅
-- (aucun)
+5. **Semantic Markup**
+   - ✅ Variants présents sur tous les Button/IconButton
+   - ✅ `placement` et `widthMode` sur les actions non-fullwidth (Button-22, Button-27)
+   - ✅ `group.alignment` et `group.distribution` sur tous les containers/cards
+   - ✅ `typographyRef` présent sur tous les textes
+   - ✅ `style.transform` utilisé pour les labels en majuscules
+   - ✅ `leadingIcon` utilisé pour les boutons avec icônes (Button-22, Button-23, Button-27)
 
 ---
 
-## Counts by Type
+### ⚠️ Warnings
+
+#### 1. Confidence Global Below Threshold
+**Statut:** DEGRADED MODE  
+**Valeur:** 0.78 (seuil recommandé: 0.85)
+
+**Raison:** Plusieurs estimations avec confiance < 0.8
+- Couleurs estimées à partir du rendu (confidence: 0.75)
+- Nom d'icône 'expand_less' supposé (confidence: 0.7)
+- Positions/bbox approchées par inspection visuelle (confidence: 0.7)
+- Valeur du slider normalisée (confidence: 0.7)
+
+**Impact:** La génération peut continuer mais avec un avertissement. Recommandation: vérifier manuellement les couleurs et positions.
+
+#### 2. Orphan Thumb Detection (Slider)
+
+**Slider-3** (Curseur de volume)
+- Sibling trouvé: **Icon-4** (material.circle)
+- Position: bbox [312, 26, 16, 16]
+- Couleur: #FFFFFF (correspond à sliderThumb)
+- Distance du bord droit du slider: ~10px
+- **Raison:** thumb-like sibling (report-only)
+
+**Action:** Aucune modification requise. Ce thumb sera ignoré lors de la génération Flutter car Flutter génère automatiquement le thumb du Slider.
+
+**Flag:** `summary.flags.hasOrphanThumb = true`
+
+---
+
+### 📋 Text Coverage
+
+**Found (16/16):**
+- ✅ "Démarrage rapide"
+- ✅ "RÉPÉTITIONS"
+- ✅ "16"
+- ✅ "TRAVAIL"
+- ✅ "00 : 44"
+- ✅ "REPOS"
+- ✅ "00 : 15"
+- ✅ "SAUVEGARDER"
+- ✅ "COMMENCER"
+- ✅ "VOS PRÉRÉGLAGES"
+- ✅ "+ AJOUTER"
+- ✅ "gainage"
+- ✅ "14:22"
+- ✅ "RÉPÉTITIONS 20x"
+- ✅ "TRAVAIL 00:40"
+- ✅ "REPOS 00:03"
+
+**Missing:** Aucun
+
+---
+
+### 📊 Component Inventory
+
 | Type | Count |
 |------|-------|
 | Text | 13 |
@@ -139,20 +141,57 @@ Aucune modification structurelle requise. Le fichier est valide tel quel.
 
 ---
 
-## Flags
-- `hasOrphanThumb`: true (Icon-4 détecté comme thumb orphelin du Slider-3)
+## Assumptions (from QA section)
+
+1. **Couleurs estimées à partir du rendu (matériel design gris/bleu)**
+   - Confidence: 0.75
+   - Note: Nécessite validation avec un color picker précis
+
+2. **Nom d'icône d'en-tête 'expand_less' supposé (chevron de repli)**
+   - Confidence: 0.7
+   - Note: Basé sur l'apparence visuelle
+
+3. **Positions/bbox approchées par inspection visuelle**
+   - Confidence: 0.7
+   - Note: Sans mesure pixel-perfect
+
+4. **Valeur du slider normalisée à ~0,62**
+   - Confidence: 0.7
+   - Note: D'après la position du pouce
+
+5. **Les boutons 'Sauvegarder' et '+ Ajouter' modélisés en 'ghost/secondary'**
+   - Confidence: 0.8
+   - Note: Selon le rendu non rempli
 
 ---
 
-## Recommendation
-✅ **Procéder à l'étape suivante** avec les notes suivantes:
-- La confiance globale de 0.78 est acceptable pour continuer en mode dégradé.
-- Les 5 assumptions doivent être traitées avec prudence lors de la génération.
-- Le thumb orphelin (Icon-4) peut être ignoré ou nettoyé selon les besoins.
-- Tous les critères structurels du contrat sont respectés.
+## Open Questions
+
+Aucune question ouverte.
 
 ---
 
-**Validateur**: Design Validator Agent  
-**Date**: 2025-10-05T00:00:00Z  
-**Version du schema**: 1.0
+## Recommendations
+
+1. **Pour améliorer la confidence:**
+   - Utiliser un color picker pour valider les couleurs exactes
+   - Mesurer les bbox avec un outil de capture précis
+   - Confirmer les noms d'icônes Material Design
+
+2. **Pour le développement:**
+   - Ignorer Icon-4 (thumb orphelin) lors de la génération du Slider
+   - Utiliser les tokens de couleur systématiquement
+   - Respecter les groupes et alignements définis
+
+---
+
+## Final Status
+
+🟡 **PASS WITH WARNINGS**
+
+Le design est valide et respecte tous les critères obligatoires du contrat, mais la confiance globale est en mode dégradé (0.78 < 0.85). La génération peut continuer avec prudence.
+
+---
+
+**Generated by:** Design Validator  
+**Pipeline:** Step 1 / Orchestrator

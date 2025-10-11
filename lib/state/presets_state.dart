@@ -3,34 +3,41 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/preset.dart';
 
-/// État de gestion des préréglages
+/// Gestion de l'état des préréglages sauvegardés
 class PresetsState extends ChangeNotifier {
-  static const String _keyPresets = 'presets_list';
+  static const String _presetsKey = 'presets';
 
   List<Preset> _presets = [];
+  bool _isLoading = false;
 
   List<Preset> get presets => List.unmodifiable(_presets);
+  bool get isLoading => _isLoading;
 
-  /// Constructeur : charge les préréglages depuis SharedPreferences
   PresetsState() {
     _loadPresets();
   }
 
   /// Charge les préréglages depuis SharedPreferences
   Future<void> _loadPresets() async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
       final prefs = await SharedPreferences.getInstance();
-      final presetsJson = prefs.getString(_keyPresets);
-      
+      final presetsJson = prefs.getString(_presetsKey);
+
       if (presetsJson != null) {
-        final List<dynamic> decoded = jsonDecode(presetsJson);
+        final List<dynamic> decoded = jsonDecode(presetsJson) as List<dynamic>;
         _presets = decoded
             .map((json) => Preset.fromJson(json as Map<String, dynamic>))
             .toList();
-        notifyListeners();
       }
     } catch (e) {
-      debugPrint('Erreur lors du chargement des préréglages: $e');
+      debugPrint('Error loading presets: $e');
+      _presets = [];
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -39,43 +46,27 @@ class PresetsState extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final presetsJson = jsonEncode(_presets.map((p) => p.toJson()).toList());
-      await prefs.setString(_keyPresets, presetsJson);
+      await prefs.setString(_presetsKey, presetsJson);
     } catch (e) {
-      debugPrint('Erreur lors de la sauvegarde des préréglages: $e');
+      debugPrint('Error saving presets: $e');
       rethrow;
     }
   }
 
-  /// Crée un nouveau préréglage
-  Future<void> createPreset({
-    required String name,
-    required int repetitions,
-    required int workSeconds,
-    required int restSeconds,
-  }) async {
-    final now = DateTime.now();
-    final preset = Preset(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: name,
-      repetitions: repetitions,
-      workSeconds: workSeconds,
-      restSeconds: restSeconds,
-      createdAt: now,
-      modifiedAt: now,
-    );
-
+  /// Ajoute un nouveau préréglage
+  Future<void> savePreset(Preset preset) async {
     _presets.add(preset);
     notifyListeners();
     await _savePresets();
   }
 
-  /// Met à jour un préréglage existant
-  Future<void> updatePreset(Preset updatedPreset) async {
-    final index = _presets.indexWhere((p) => p.id == updatedPreset.id);
-    if (index != -1) {
-      _presets[index] = updatedPreset.copyWith(modifiedAt: DateTime.now());
-      notifyListeners();
-      await _savePresets();
+  /// Charge un préréglage par son ID
+  Preset? loadPreset(String presetId) {
+    try {
+      return _presets.firstWhere((p) => p.id == presetId);
+    } catch (e) {
+      debugPrint('Preset not found: $presetId');
+      return null;
     }
   }
 
@@ -86,17 +77,9 @@ class PresetsState extends ChangeNotifier {
     await _savePresets();
   }
 
-  /// Recherche un préréglage par ID
-  Preset? getPresetById(String id) {
-    try {
-      return _presets.firstWhere((p) => p.id == id);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  /// Recharge les préréglages depuis le stockage
-  Future<void> reload() async {
+  /// Rafraîchit les préréglages depuis le stockage
+  Future<void> refresh() async {
     await _loadPresets();
   }
 }
+
