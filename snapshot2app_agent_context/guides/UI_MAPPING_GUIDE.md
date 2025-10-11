@@ -25,6 +25,7 @@ Audience: Builder, Planner, Test runner
 - rule:icon/resolve
 - rule:keys/stable
 - rule:pattern/valueControl
+- rule:card/style
 
 ---
 
@@ -169,6 +170,48 @@ Then:
                 decreaseEnabled: _reps > _minReps,
                 increaseEnabled: _reps < _maxReps,
               ),
+
+---
+
+---
+
+## rule:card/style
+**When** `node.type == "Card"`  
+**Map to** `Card` widget with standardized styling  
+**Deterministic Steps**:
+1. Always set `elevation: 0`
+2. Apply `shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))`
+3. Use `node.style.backgroundColor` or `tokens.colors.surface` for `color`
+4. Use `node.style.borderColor` or `tokens.colors.divider` for border color (width: 1)
+5. If Card contains interactive child → wrap child with `InkWell(borderRadius: BorderRadius.circular(2))`
+
+**Style override hierarchy**:
+- Radius: always `2` (ignore `node.style.radius` or tokens)
+- Elevation: always `0` (ignore `node.style.shadow`)
+- Border: use `node.style.borderColor/borderWidth` if present, else default `divider/1`
+
+**Example**:
+```dart
+Card(
+  key: Key('{screenId}__{node.id}'),
+  color: node.style.backgroundColor ?? AppColors.surface,
+  elevation: 0,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(2),
+    side: BorderSide(
+      color: node.style.borderColor ?? AppColors.divider,
+      width: node.style.borderWidth ?? 1,
+    ),
+  ),
+  child: node.hasInteractiveChild 
+    ? InkWell(
+        onTap: handler,
+        borderRadius: BorderRadius.circular(2),
+        child: content,
+      )
+    : content,
+)
+```
 
 ---
 

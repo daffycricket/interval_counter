@@ -12,6 +12,7 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
 - Confirm that generated Flutter code respects:
   - design.json semantics (variants, placement, widthMode, group alignment, tokens, typography, a11y, keys).
   - contracts/DESIGN_CONTRACT.md and contracts/SPEC_CONTRACT.md.
+  - contracts/PROJECT_CONTRACT.md (file organization, state patterns, naming).
 
 ### 2. Check Tests
 - Parse test results from `flutter test`.
@@ -36,8 +37,13 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
 ### 5. Determinism
 - Verify that all widgets include deterministic keys: `Key('<screenName>__<id>')`.
 
-### 6. Maintainability
-- Veryfy split widgets, no duplicate styles, theming via tokens.
+### 6. Project Structure & Maintainability
+- Verify compliance with contracts/PROJECT_CONTRACT.md:
+  - File paths match declared structure
+  - State classes are ChangeNotifier subclasses
+  - Widget decomposition rules respected
+  - Naming conventions followed
+- Verify split widgets, no duplicate styles, theming via tokens.
 
 ---
 

@@ -6,6 +6,7 @@ Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consum
 - `spec.md` — authoritative for **interactions/state/navigation/a11y**
 - `guides/UI_MAPPING_GUIDE.md` — mapping rules for rendering primitives
 - `guides/UI_MAPPING_GUIDE_EXAMPLES.md` — implementation examples
+- `contracts/PROJECT_CONTRACT.md` — code organization & architecture patterns
 - `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `GUARDRAILS.md`
 
 ## Objectives
@@ -43,8 +44,9 @@ Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consum
 4. **Interaction wiring**: bind each entry from `plan.md/Interaction Wiring` to concrete functions in the **state layer** (names must match `spec §6` and `plan §7`). Handle navigation exactly as declared (including Back).
 5. **State layer**: implement fields/defaults/persistence and actions/effects from `plan.md/State Model & Actions`. Expose read-only state to widgets; update via the declared actions only.
 6. **Accessibility**: set semantics, aria-like labels, and focus order per `plan.md/Accessibility Plan`.
-7. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
-8. **Emit Report**: concise summary listing generated files + any blocking Risk from `plan.md/Risks` (do not invent new TODOs).
+7. **Project Structure**: verify all file paths, state patterns, and naming conventions comply with `PROJECT_CONTRACT.md`.
+8. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
+9. **Emit Report**: concise summary listing generated files + any blocking Risk from `plan.md/Risks` (do not invent new TODOs).
 
 ## Build guard for orphan thumb
 During build, consult the plan row for each candidate sibling near a `Slider`:
