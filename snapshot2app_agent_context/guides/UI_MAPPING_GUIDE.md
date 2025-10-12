@@ -112,6 +112,7 @@ Map to `MainAxisAlignment`:
 - Use a `SliderTheme` where available.  
 - `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` from `node.style` if provided.  
 - Initial `value` from `valueNormalized` in [0,1] when present.
+- Set height of track to 1 `trackHeight: 1`.
 - The thumb must **never** be rendered by a separate Icon/Container.
 - Any visual thumb customization must go through `SliderThemeData` (thumb/track colors, trackHeight).
 - When a sibling matches a likely-thumb pattern (square-ish bbox, diameter within [thumb−2; thumb+6], color in {`sliderThumb`, `onPrimary`, `#FFFFFF`}, within 24 px of the slider end), it must be **ignored** at build time and flagged during validation.
@@ -177,11 +178,16 @@ Then:
 ## rule:font/size
 1. Always use the characteristics below for the fonts you identify
 2. If possible, infer the other font charasterics using these as a reference
+3. Never override a predefined style with specific characteristics, such as fontSize or fontWeight. If no predefined style corresponds exactly to the text at hand, choose the one whose font whose size is the closest to the text at hand :
+  - forbidden to override font style with `style: AppTextStyles.title.copyWith(fontSize: 16)`
+  - stick always with `style: AppTextStyles.titleLarge`
+
 
 Font characteristics : 
 - titleLarge: fontSize = 22, fontWeight = FontWeight.bold, height: 1.4
 - title: fontSize = 22, fontWeight = FontWeight.bold, height = 1.25
 - label: fontSize = 14, fontWeight = FontWeight.w500, height = 1.33
+
 ---
 
 ## rule:card/style
