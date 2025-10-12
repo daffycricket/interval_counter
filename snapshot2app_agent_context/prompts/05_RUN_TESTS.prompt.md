@@ -14,10 +14,11 @@ Run the Flutter test suite and report results.
    - flutter pub get
    - flutter analyze
    - flutter test --reporter expanded --coverage
+   - genhtml coverage/lcov.info --output-directory coverage/html
 
 2. Outputs:
    - test_report.md (stdout/stderr of test run)
-   - coverage/lcov.info (if generated)
+   - coverage/lcov.info + html report (if generated)
    - .dart_tool/test_results.json (if generated)
 
 3. Routing:

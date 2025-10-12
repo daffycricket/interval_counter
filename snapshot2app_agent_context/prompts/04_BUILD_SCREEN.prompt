@@ -1,7 +1,7 @@
 # PROMPT — Build flutter and dart components according to plan
 
 Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consuming:
-- `plan.md` (conforms to `templates/plan_template.v2.md`) — **authoritative build contract**
+- `plan.md` (conforms to `templates/plan_template.md`) — **authoritative build contract**
 - `design.json` — authoritative for **layout & styling**
 - `spec.md` — authoritative for **interactions/state/navigation/a11y**
 - `guides/UI_MAPPING_GUIDE.md` — mapping rules for rendering primitives
