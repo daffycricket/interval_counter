@@ -26,6 +26,7 @@ Audience: Builder, Planner, Test runner
 - rule:keys/stable
 - rule:pattern/valueControl
 - rule:card/style
+- rule:font/size
 
 ---
 
@@ -173,6 +174,14 @@ Then:
 
 ---
 
+## rule:font/size
+1. Always use the characteristics below for the fonts you identify
+2. If possible, infer the other font charasterics using these as a reference
+
+Font characteristics : 
+- titleLarge: fontSize = 22, fontWeight = FontWeight.bold, height: 1.4
+- title: fontSize = 22, fontWeight = FontWeight.bold, height = 1.25
+- label: fontSize = 14, fontWeight = FontWeight.w500, height = 1.33
 ---
 
 ## rule:card/style
@@ -181,13 +190,17 @@ Then:
 **Deterministic Steps**:
 1. Always set `elevation: 0`
 2. Apply `shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))`
-3. Use `node.style.backgroundColor` or `tokens.colors.surface` for `color`
-4. Use `node.style.borderColor` or `tokens.colors.divider` for border color (width: 1)
-5. If Card contains interactive child → wrap child with `InkWell(borderRadius: BorderRadius.circular(2))`
+3. Apply `margin: const EdgeInsets.symmetric(horizontal: 6)`.
+4. Apply `Padding(padding: const EdgeInsets.all(12)` to child within Card.
+5. Use `node.style.backgroundColor` or `tokens.colors.surface` for `color`
+6. Use `node.style.borderColor` or `tokens.colors.divider` for border color (width: 1)
+7. If Card contains interactive child → wrap child with `InkWell(borderRadius: BorderRadius.circular(2))`
 
 **Style override hierarchy**:
 - Radius: always `2` (ignore `node.style.radius` or tokens)
 - Elevation: always `0` (ignore `node.style.shadow`)
+- Margin: always `6` and symmetric
+- Padding for child: always `12`
 - Border: use `node.style.borderColor/borderWidth` if present, else default `divider/1`
 
 **Example**:
@@ -203,13 +216,17 @@ Card(
       width: node.style.borderWidth ?? 1,
     ),
   ),
-  child: node.hasInteractiveChild 
-    ? InkWell(
-        onTap: handler,
-        borderRadius: BorderRadius.circular(2),
-        child: content,
-      )
-    : content,
+  margin: const EdgeInsets.symmetric(horizontal: 6),
+  child: Padding(
+    padding: const EdgeInsets.all(12)
+      child: node.hasInteractiveChild 
+      ? InkWell(
+          onTap: handler,
+          borderRadius: BorderRadius.circular(2),
+          child: content,
+        )
+      : content,
+  )
 )
 ```
 

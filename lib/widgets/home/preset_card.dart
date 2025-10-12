@@ -27,7 +27,7 @@ class PresetCard extends StatelessWidget {
           width: 1,
         ),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 6),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(2),

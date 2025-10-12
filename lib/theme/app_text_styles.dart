@@ -6,21 +6,21 @@ class AppTextStyles {
   AppTextStyles._();
 
   static const TextStyle titleLarge = TextStyle(
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.4,
   );
 
   static const TextStyle title = TextStyle(
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.25,
   );
 
   static const TextStyle label = TextStyle(
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.33,
