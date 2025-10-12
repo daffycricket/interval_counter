@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/preset.dart';
+import '../../state/interval_timer_home_state.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 
-/// Carte affichant un préréglage sauvegardé
+/// Carte de préréglage
 class PresetCard extends StatelessWidget {
   final Preset preset;
-  final VoidCallback onTap;
 
   const PresetCard({
     super.key,
     required this.preset,
-    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      key: const Key('interval_timer_home__Card-28'),
+      key: Key('interval_timer_home__card_28_${preset.id}'),
       color: AppColors.presetCardBg,
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -27,56 +27,61 @@ class PresetCard extends StatelessWidget {
           width: 1,
         ),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       child: InkWell(
-        onTap: onTap,
         borderRadius: BorderRadius.circular(2),
+        onTap: () {
+          context.read<IntervalTimerHomeState>().loadPreset(preset);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Préréglage "${preset.name}" chargé'),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        },
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // En-tête: nom et durée
+              // En-tête : nom et durée totale
               Row(
-                key: const Key('interval_timer_home__Container-29'),
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    preset.name,
-                    key: const Key('interval_timer_home__Text-30'),
-                    style: AppTextStyles.titleLarge,
-                  ),
-                  Text(
-                    preset.formattedDuration,
-                    key: const Key('interval_timer_home__Text-31'),
-                    style: AppTextStyles.value.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary,
+                  Expanded(
+                    child: Text(
+                      preset.name,
+                      style: AppTextStyles.title,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    preset.formattedTotalDuration,
+                    style: AppTextStyles.subtitle,
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
 
-              const SizedBox(height: 12),
-
-              // Détails du préréglage
+              // Détails : répétitions
               Text(
-                'RÉPÉTITIONS ${preset.repetitions}x',
-                key: const Key('interval_timer_home__Text-32'),
+                'RÉPÉTITIONS ${preset.reps}x',
                 style: AppTextStyles.body,
               ),
               const SizedBox(height: 4),
+
+              // Détails : temps de travail
               Text(
                 'TRAVAIL ${_formatTime(preset.workSeconds)}',
-                key: const Key('interval_timer_home__Text-33'),
                 style: AppTextStyles.body,
               ),
               const SizedBox(height: 4),
+
+              // Détails : temps de repos
               Text(
                 'REPOS ${_formatTime(preset.restSeconds)}',
-                key: const Key('interval_timer_home__Text-34'),
                 style: AppTextStyles.body,
               ),
             ],
@@ -86,12 +91,10 @@ class PresetCard extends StatelessWidget {
     );
   }
 
-  /// Formatte les secondes en MM:SS
   String _formatTime(int seconds) {
-    final int minutes = seconds ~/ 60;
-    final int secs = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:'
-        '${secs.toString().padLeft(2, '0')}';
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
   }
 }
 

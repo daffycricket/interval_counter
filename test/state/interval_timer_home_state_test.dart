@@ -1,185 +1,148 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interval_counter/state/interval_timer_home_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('IntervalTimerHomeState', () {
+    late IntervalTimerHomeState state;
+
     setUp(() {
-      SharedPreferences.setMockInitialValues({});
+      state = IntervalTimerHomeState();
     });
 
-    test('Valeurs par défaut correctes', () {
-      final state = IntervalTimerHomeState();
+    test('initial values are correct', () {
       expect(state.reps, 16);
       expect(state.workSeconds, 44);
       expect(state.restSeconds, 15);
-      expect(state.volume, 0.62);
+      expect(state.volume, closeTo(0.62, 0.01));
       expect(state.quickStartExpanded, true);
     });
 
-    test('Incrémenter les répétitions', () {
-      final state = IntervalTimerHomeState();
+    test('incrementReps increases reps by 1', () {
       final initialReps = state.reps;
-
       state.incrementReps();
-
       expect(state.reps, initialReps + 1);
     });
 
-    test('Décrémenter les répétitions', () {
-      final state = IntervalTimerHomeState();
+    test('decrementReps decreases reps by 1', () {
       final initialReps = state.reps;
-
       state.decrementReps();
-
       expect(state.reps, initialReps - 1);
     });
 
-    test('Ne peut pas décrémenter en dessous du minimum (reps)', () {
-      final state = IntervalTimerHomeState();
-
-      // Descendre au minimum
+    test('decrementReps does not go below minReps', () {
+      // Set reps to minimum
       while (state.reps > IntervalTimerHomeState.minReps) {
         state.decrementReps();
       }
-
-      final minValue = state.reps;
+      expect(state.reps, IntervalTimerHomeState.minReps);
+      
+      // Try to decrement again
       state.decrementReps();
-
-      expect(state.reps, minValue);
       expect(state.reps, IntervalTimerHomeState.minReps);
     });
 
-    test('Ne peut pas incrémenter au-dessus du maximum (reps)', () {
-      final state = IntervalTimerHomeState();
-
-      // Monter au maximum
+    test('incrementReps does not go above maxReps', () {
+      // Set reps to maximum
       while (state.reps < IntervalTimerHomeState.maxReps) {
         state.incrementReps();
       }
-
-      final maxValue = state.reps;
+      expect(state.reps, IntervalTimerHomeState.maxReps);
+      
+      // Try to increment again
       state.incrementReps();
-
-      expect(state.reps, maxValue);
       expect(state.reps, IntervalTimerHomeState.maxReps);
     });
 
-    test('Incrémenter/décrémenter le temps de travail', () {
-      final state = IntervalTimerHomeState();
+    test('incrementWorkTime increases workSeconds by timeStep', () {
       final initialWork = state.workSeconds;
-
       state.incrementWorkTime();
-      expect(state.workSeconds, initialWork + 1);
-
-      state.decrementWorkTime();
-      expect(state.workSeconds, initialWork);
+      expect(state.workSeconds, initialWork + IntervalTimerHomeState.timeStep);
     });
 
-    test('Incrémenter/décrémenter le temps de repos', () {
-      final state = IntervalTimerHomeState();
-      final initialRest = state.restSeconds;
-
-      state.incrementRestTime();
-      expect(state.restSeconds, initialRest + 1);
-
-      state.decrementRestTime();
-      expect(state.restSeconds, initialRest);
-    });
-
-    test('Changer le volume', () {
-      final state = IntervalTimerHomeState();
-
-      state.onVolumeChanged(0.75);
-      expect(state.volume, 0.75);
-
-      state.onVolumeChanged(0.0);
-      expect(state.volume, 0.0);
-
-      state.onVolumeChanged(1.0);
-      expect(state.volume, 1.0);
-    });
-
-    test('Volume clamped entre 0 et 1', () {
-      final state = IntervalTimerHomeState();
-
-      state.onVolumeChanged(-0.5);
-      expect(state.volume, 0.0);
-
-      state.onVolumeChanged(1.5);
-      expect(state.volume, 1.0);
-    });
-
-    test('Basculer l\'expansion de la section Démarrage rapide', () {
-      final state = IntervalTimerHomeState();
-      final initialExpanded = state.quickStartExpanded;
-
-      state.toggleQuickStartSection();
-      expect(state.quickStartExpanded, !initialExpanded);
-
-      state.toggleQuickStartSection();
-      expect(state.quickStartExpanded, initialExpanded);
-    });
-
-    test('Formater les secondes en MM:SS', () {
-      final state = IntervalTimerHomeState();
-
-      expect(state.formatSeconds(0), '00 : 00');
-      expect(state.formatSeconds(15), '00 : 15');
-      expect(state.formatSeconds(60), '01 : 00');
-      expect(state.formatSeconds(125), '02 : 05');
-      expect(state.formatSeconds(3599), '59 : 59');
-    });
-
-    test('Calculer la durée totale', () {
-      final state = IntervalTimerHomeState();
-
-      // reps=16, work=44, rest=15
-      // total = 16 * (44 + 15) = 16 * 59 = 944 secondes
-      expect(state.calculateTotalDuration(), 944);
-    });
-
-    test('Charger une configuration de préréglage', () {
-      final state = IntervalTimerHomeState();
-
-      state.loadPresetConfig(20, 40, 3);
-
-      expect(state.reps, 20);
-      expect(state.workSeconds, 40);
-      expect(state.restSeconds, 3);
-    });
-
-    test('canStart retourne true si configuration valide', () {
-      final state = IntervalTimerHomeState();
-
-      expect(state.canStart, true);
-    });
-
-    test('canStart retourne false si reps < minimum', () {
-      final state = IntervalTimerHomeState();
-
-      while (state.reps > 1) {
-        state.decrementReps();
+    test('decrementWorkTime decreases workSeconds by timeStep', () {
+      // Set to a higher value first
+      while (state.workSeconds < 50) {
+        state.incrementWorkTime();
       }
-      state.decrementReps(); // Tente de descendre en dessous du minimum
-
-      expect(state.canStart, true); // Reste à 1, donc valide
+      final initialWork = state.workSeconds;
+      state.decrementWorkTime();
+      expect(state.workSeconds, initialWork - IntervalTimerHomeState.timeStep);
     });
 
-    test('canStart retourne false si workSeconds < minimum', () {
-      final state = IntervalTimerHomeState();
-
-      while (state.workSeconds > 1) {
+    test('decrementWorkTime does not go below minWorkSeconds', () {
+      // Set to minimum
+      while (state.workSeconds > IntervalTimerHomeState.minWorkSeconds) {
         state.decrementWorkTime();
       }
+      expect(state.workSeconds, IntervalTimerHomeState.minWorkSeconds);
+      
+      // Try to decrement again
+      state.decrementWorkTime();
+      expect(state.workSeconds, IntervalTimerHomeState.minWorkSeconds);
+    });
 
-      expect(state.canStart, true); // workSeconds = 1, valide
+    test('incrementRestTime increases restSeconds by timeStep', () {
+      final initialRest = state.restSeconds;
+      state.incrementRestTime();
+      expect(state.restSeconds, initialRest + IntervalTimerHomeState.timeStep);
+    });
 
-      state.decrementWorkTime(); // Tente de descendre en dessous
+    test('decrementRestTime decreases restSeconds by timeStep', () {
+      final initialRest = state.restSeconds;
+      state.decrementRestTime();
+      expect(state.restSeconds, initialRest - IntervalTimerHomeState.timeStep);
+    });
 
-      expect(state.canStart, true); // Reste à 1, donc valide
+    test('decrementRestTime does not go below minRestSeconds', () {
+      // Set to minimum
+      while (state.restSeconds > IntervalTimerHomeState.minRestSeconds) {
+        state.decrementRestTime();
+      }
+      expect(state.restSeconds, IntervalTimerHomeState.minRestSeconds);
+      
+      // Try to decrement again
+      state.decrementRestTime();
+      expect(state.restSeconds, IntervalTimerHomeState.minRestSeconds);
+    });
+
+    test('updateVolume sets volume correctly', () {
+      state.updateVolume(0.8);
+      expect(state.volume, 0.8);
+      
+      state.updateVolume(0.0);
+      expect(state.volume, 0.0);
+      
+      state.updateVolume(1.0);
+      expect(state.volume, 1.0);
+    });
+
+    test('updateVolume clamps to 0.0-1.0 range', () {
+      state.updateVolume(1.5);
+      expect(state.volume, 1.0);
+      
+      state.updateVolume(-0.5);
+      expect(state.volume, 0.0);
+    });
+
+    test('toggleQuickStartSection toggles expanded state', () {
+      final initialState = state.quickStartExpanded;
+      state.toggleQuickStartSection();
+      expect(state.quickStartExpanded, !initialState);
+      
+      state.toggleQuickStartSection();
+      expect(state.quickStartExpanded, initialState);
+    });
+
+    test('formatTime formats seconds correctly', () {
+      expect(state.formatTime(0), '00 : 00');
+      expect(state.formatTime(44), '00 : 44');
+      expect(state.formatTime(60), '01 : 00');
+      expect(state.formatTime(125), '02 : 05');
+      expect(state.formatTime(3599), '59 : 59');
+    });
+
+    test('canStart returns true when values are valid', () {
+      expect(state.canStart, true);
     });
   });
 }

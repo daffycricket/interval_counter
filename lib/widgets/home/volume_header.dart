@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../state/interval_timer_home_state.dart';
 import '../../theme/app_colors.dart';
 
 /// En-tête avec contrôle de volume
 class VolumeHeader extends StatelessWidget {
-  final double volume;
-  final ValueChanged<double> onVolumeChanged;
-  final VoidCallback? onOptionsPressed;
-
-  const VolumeHeader({
-    super.key,
-    required this.volume,
-    required this.onVolumeChanged,
-    this.onOptionsPressed,
-  });
+  const VolumeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: const Key('interval_timer_home__Container-1'),
       color: AppColors.headerBackgroundDark,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -26,67 +18,77 @@ class VolumeHeader extends StatelessWidget {
         children: [
           // Icône volume
           IconButton(
-            key: const Key('interval_timer_home__IconButton-2'),
-            icon: const Icon(Icons.volume_up),
-            color: AppColors.onPrimary,
-            iconSize: 24,
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(
-              minWidth: 40,
-              minHeight: 40,
-            ),
-            onPressed: () {},
+            key: const Key('interval_timer_home__icon_button_2'),
+            icon: const Icon(Icons.volume_up, color: AppColors.onPrimary),
+            onPressed: () {
+              // Toggle volume control (optionnel - no-op pour l'instant)
+            },
             tooltip: 'Régler le volume',
+            iconSize: 24,
           ),
 
-          // Slider de volume
+          // Slider volume
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: SliderTheme(
-                data: SliderThemeData(
-                  activeTrackColor: AppColors.sliderActive,
-                  inactiveTrackColor: AppColors.sliderInactive,
-                  thumbColor: AppColors.sliderThumb,
-                  trackHeight: 4,
-                  thumbShape: const RoundSliderThumbShape(
-                    enabledThumbRadius: 8,
-                  ),
-                  overlayShape: const RoundSliderOverlayShape(
-                    overlayRadius: 16,
-                  ),
-                ),
+            child: SliderTheme(
+              data: SliderThemeData(
+                activeTrackColor: AppColors.sliderActive,
+                inactiveTrackColor: AppColors.sliderInactive,
+                thumbColor: AppColors.sliderThumb,
+                trackHeight: 4,
+                overlayShape: SliderComponentShape.noOverlay,
+              ),
+              child: Semantics(
+                label: 'Curseur de volume',
                 child: Slider(
-                  key: const Key('interval_timer_home__Slider-3'),
-                  value: volume,
-                  onChanged: onVolumeChanged,
-                  semanticFormatterCallback: (value) {
-                    return '${(value * 100).round()}%';
+                  key: const Key('interval_timer_home__slider_3'),
+                  min: 0.0,
+                  max: 1.0,
+                  value: context.watch<IntervalTimerHomeState>().volume,
+                  onChanged: (value) {
+                    context.read<IntervalTimerHomeState>().updateVolume(value);
                   },
                 ),
               ),
             ),
           ),
 
-          // NOTE: Icon-4 (material.circle thumb) est exclu selon le plan
-          // buildStrategy: rule:slider/normalizeSiblings(drop)
-          // Raison: thumb-like sibling (orphan thumb)
-
-          // Bouton options
+          // Icône menu options
           IconButton(
-            key: const Key('interval_timer_home__IconButton-5'),
-            icon: const Icon(Icons.more_vert),
-            color: AppColors.onPrimary,
-            iconSize: 28,
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(
-              minWidth: 44,
-              minHeight: 44,
-            ),
-            onPressed: onOptionsPressed,
+            key: const Key('interval_timer_home__icon_button_5'),
+            icon: const Icon(Icons.more_vert, color: AppColors.onPrimary),
+            onPressed: () {
+              // Afficher menu options
+              _showOptionsMenu(context);
+            },
             tooltip: 'Plus d\'options',
+            iconSize: 24,
           ),
         ],
+      ),
+    );
+  }
+
+  void _showOptionsMenu(BuildContext context) {
+    // Menu contextuel (placeholder)
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Paramètres'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('À propos'),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
       ),
     );
   }

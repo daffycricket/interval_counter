@@ -1,26 +1,31 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/preset.dart';
 
-/// Gestion de l'état de l'écran d'accueil du minuteur d'intervalles
+/// État de l'écran IntervalTimerHome
 class IntervalTimerHomeState extends ChangeNotifier {
   static const String _repsKey = 'reps';
   static const String _workSecondsKey = 'workSeconds';
   static const String _restSecondsKey = 'restSeconds';
   static const String _volumeKey = 'volume';
-  static const String _quickStartExpandedKey = 'quickStartExpanded';
 
+  // Contraintes
   static const int minReps = 1;
-  static const int maxReps = 999;
-  static const int minSeconds = 0;
-  static const int maxSeconds = 3600;
+  static const int maxReps = 99;
   static const int minWorkSeconds = 1;
+  static const int maxWorkSeconds = 3599; // 59:59
+  static const int minRestSeconds = 0;
+  static const int maxRestSeconds = 3599; // 59:59
+  static const int timeStep = 5; // Incrémentation/décrémentation en secondes
 
+  // Valeurs d'état
   int _reps = 16;
   int _workSeconds = 44;
   int _restSeconds = 15;
   double _volume = 0.62;
   bool _quickStartExpanded = true;
 
+  // Getters
   int get reps => _reps;
   int get workSeconds => _workSeconds;
   int get restSeconds => _restSeconds;
@@ -28,26 +33,17 @@ class IntervalTimerHomeState extends ChangeNotifier {
   bool get quickStartExpanded => _quickStartExpanded;
 
   /// Formatte les secondes en MM:SS
-  String formatSeconds(int seconds) {
-    final int minutes = seconds ~/ 60;
-    final int secs = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')} : '
-        '${secs.toString().padLeft(2, '0')}';
+  String formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')} : ${secs.toString().padLeft(2, '0')}';
   }
 
-  /// Calcule la durée totale de la session en secondes
-  int calculateTotalDuration() {
-    return _reps * (_workSeconds + _restSeconds);
-  }
+  /// Temps de travail formaté
+  String get formattedWorkTime => formatTime(_workSeconds);
 
-  /// Formatte la durée totale en MM:SS
-  String get formattedTotalDuration {
-    final totalSeconds = calculateTotalDuration();
-    final int minutes = totalSeconds ~/ 60;
-    final int seconds = totalSeconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:'
-        '${seconds.toString().padLeft(2, '0')}';
-  }
+  /// Temps de repos formaté
+  String get formattedRestTime => formatTime(_restSeconds);
 
   IntervalTimerHomeState() {
     _loadState();
@@ -61,12 +57,11 @@ class IntervalTimerHomeState extends ChangeNotifier {
       _workSeconds = prefs.getInt(_workSecondsKey) ?? 44;
       _restSeconds = prefs.getInt(_restSecondsKey) ?? 15;
       _volume = prefs.getDouble(_volumeKey) ?? 0.62;
-      _quickStartExpanded = prefs.getBool(_quickStartExpandedKey) ?? true;
 
       // Validation et clamping
       _reps = _reps.clamp(minReps, maxReps);
-      _workSeconds = _workSeconds.clamp(minWorkSeconds, maxSeconds);
-      _restSeconds = _restSeconds.clamp(minSeconds, maxSeconds);
+      _workSeconds = _workSeconds.clamp(minWorkSeconds, maxWorkSeconds);
+      _restSeconds = _restSeconds.clamp(minRestSeconds, maxRestSeconds);
       _volume = _volume.clamp(0.0, 1.0);
 
       notifyListeners();
@@ -83,7 +78,6 @@ class IntervalTimerHomeState extends ChangeNotifier {
       await prefs.setInt(_workSecondsKey, _workSeconds);
       await prefs.setInt(_restSecondsKey, _restSeconds);
       await prefs.setDouble(_volumeKey, _volume);
-      await prefs.setBool(_quickStartExpandedKey, _quickStartExpanded);
     } catch (e) {
       debugPrint('Error saving state: $e');
     }
@@ -109,8 +103,8 @@ class IntervalTimerHomeState extends ChangeNotifier {
 
   /// Incrémente le temps de travail
   void incrementWorkTime() {
-    if (_workSeconds < maxSeconds) {
-      _workSeconds++;
+    if (_workSeconds < maxWorkSeconds) {
+      _workSeconds = (_workSeconds + timeStep).clamp(minWorkSeconds, maxWorkSeconds);
       notifyListeners();
       _saveState();
     }
@@ -119,7 +113,7 @@ class IntervalTimerHomeState extends ChangeNotifier {
   /// Décrémente le temps de travail
   void decrementWorkTime() {
     if (_workSeconds > minWorkSeconds) {
-      _workSeconds--;
+      _workSeconds = (_workSeconds - timeStep).clamp(minWorkSeconds, maxWorkSeconds);
       notifyListeners();
       _saveState();
     }
@@ -127,8 +121,8 @@ class IntervalTimerHomeState extends ChangeNotifier {
 
   /// Incrémente le temps de repos
   void incrementRestTime() {
-    if (_restSeconds < maxSeconds) {
-      _restSeconds++;
+    if (_restSeconds < maxRestSeconds) {
+      _restSeconds = (_restSeconds + timeStep).clamp(minRestSeconds, maxRestSeconds);
       notifyListeners();
       _saveState();
     }
@@ -136,37 +130,47 @@ class IntervalTimerHomeState extends ChangeNotifier {
 
   /// Décrémente le temps de repos
   void decrementRestTime() {
-    if (_restSeconds > minSeconds) {
-      _restSeconds--;
+    if (_restSeconds > minRestSeconds) {
+      _restSeconds = (_restSeconds - timeStep).clamp(minRestSeconds, maxRestSeconds);
       notifyListeners();
       _saveState();
     }
   }
 
   /// Met à jour le volume
-  void onVolumeChanged(double value) {
+  void updateVolume(double value) {
     _volume = value.clamp(0.0, 1.0);
     notifyListeners();
     _saveState();
   }
 
-  /// Bascule l'état d'expansion de la section Démarrage rapide
+  /// Toggle la section de démarrage rapide
   void toggleQuickStartSection() {
     _quickStartExpanded = !_quickStartExpanded;
     notifyListeners();
-    _saveState();
   }
 
-  /// Charge une configuration depuis un préréglage
-  void loadPresetConfig(int reps, int workSeconds, int restSeconds) {
-    _reps = reps.clamp(minReps, maxReps);
-    _workSeconds = workSeconds.clamp(minWorkSeconds, maxSeconds);
-    _restSeconds = restSeconds.clamp(minSeconds, maxSeconds);
+  /// Charge un préréglage
+  void loadPreset(Preset preset) {
+    _reps = preset.reps.clamp(minReps, maxReps);
+    _workSeconds = preset.workSeconds.clamp(minWorkSeconds, maxWorkSeconds);
+    _restSeconds = preset.restSeconds.clamp(minRestSeconds, maxRestSeconds);
     notifyListeners();
     _saveState();
   }
 
-  /// Valide si la configuration actuelle est valide pour démarrer
+  /// Crée un préréglage à partir des valeurs actuelles
+  Preset createPresetFromCurrentValues(String id, String name) {
+    return Preset(
+      id: id,
+      name: name,
+      reps: _reps,
+      workSeconds: _workSeconds,
+      restSeconds: _restSeconds,
+    );
+  }
+
+  /// Valide si les valeurs actuelles permettent de démarrer
   bool get canStart => _reps >= minReps && _workSeconds >= minWorkSeconds;
 }
 
