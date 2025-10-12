@@ -25,5 +25,16 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
   **exclude** those nodes from the build.
 - Write `buildStrategy = rule:slider/normalizeSiblings(drop)` and `reason = "thumb-like sibling near slider"` on the corresponding plan rows.
 
+## Test Generation Plan
+
+Complete **§ Test Generation Plan** from `templates/plan_template.md`:
+- § State Tests: extract all public methods from § 7 (State Model & Actions)
+- § Widget Tests: extract interactive components from § 4 (Widget Breakdown) where key ≠ `—`
+- § Accessibility Tests: extract components with a11y.ariaLabel from § 6 (Interaction Wiring)
+
+If data missing → write `—` and document in § (Risks).
+
+**Purpose:** Machine-readable test requirements for 04_BUILD_SCREEN.prompt Step 10.
+
 ## Failure Policy
 - If a required table cannot be filled, still output the table with `—` and list a **Blocking** item in Risks.

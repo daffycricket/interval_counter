@@ -75,6 +75,94 @@ class ExampleState extends ChangeNotifier {
 
 ---
 
+### Testability & Dependency Injection
+
+✅ **MUST for State classes:**
+- Accept **all external dependencies** via constructor parameters
+  - SharedPreferences, APIs, Services, etc.
+  - Never instantiate dependencies inside State class methods
+- Provide **dual constructors** for flexibility:
+  - Production: `MyState.create()` — instantiates real dependencies
+  - Testing: `MyState(deps)` — accepts mock dependencies
+- Keep logic **pure and synchronous** when possible
+  - Separate async I/O from business logic
+  - Makes unit testing deterministic
+
+**Example testable State:**
+```dart
+class IntervalTimerHomeState extends ChangeNotifier {
+  final SharedPreferences _prefs;
+  
+  // Production constructor (async, instantiates dependencies)
+  static Future<IntervalTimerHomeState> create() async {
+    final prefs = await SharedPreferences.getInstance();
+    return IntervalTimerHomeState(prefs);
+  }
+  
+  // Test constructor (sync, accepts dependencies)
+  IntervalTimerHomeState(this._prefs) {
+    _loadState();
+  }
+  
+  void _loadState() {
+    _reps = _prefs.getInt('reps') ?? 16;
+    // Pure logic, no async, no I/O
+  }
+  
+  void incrementReps() {
+    if (_reps < maxReps) {
+      _reps++;
+      notifyListeners();
+      _saveState();
+    }
+  }
+  
+  Future<void> _saveState() async {
+    await _prefs.setInt('reps', _reps);
+  }
+}
+```
+
+**Example in main.dart:**
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final homeState = await IntervalTimerHomeState.create();
+  
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(value: homeState),
+    ],
+    child: MyApp(),
+  ));
+}
+```
+
+**Example in tests:**
+```dart
+test('loads reps from preferences', () {
+  final mockPrefs = MockSharedPreferences();
+  when(mockPrefs.getInt('reps')).thenReturn(42);
+  
+  final state = IntervalTimerHomeState(mockPrefs);
+  expect(state.reps, 42);
+});
+```
+
+❌ **MUST NOT:**
+- Instantiate dependencies inside State: `SharedPreferences.getInstance()` in methods ❌
+- Use global singletons: `static final prefs = ...` ❌
+- Mix async I/O with business logic in the same method
+- Hard-code dependencies without constructor injection
+
+**Rationale:**
+- ✅ Unit tests can inject mocks (no real file I/O)
+- ✅ Tests run fast and deterministically
+- ✅ State logic is isolated and independently testable
+- ✅ Follows SOLID principles (Dependency Inversion)
+
+---
+
 ### Widget Decomposition
 
 ✅ **MUST:**

@@ -47,6 +47,7 @@ Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consum
 7. **Project Structure**: verify all file paths, state patterns, and naming conventions comply with `PROJECT_CONTRACT.md`.
 8. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
 9. **Emit Report**: concise summary listing generated files + any blocking Risk from `plan.md/Risks` (do not invent new TODOs).
+10. **Generate Tests**: produce comprehensive test suite following `contracts/TEST_CONTRACT.md`. See § Test Generation below.
 
 ## Build guard for orphan thumb
 During build, consult the plan row for each candidate sibling near a `Slider`:
@@ -58,6 +59,159 @@ During build, consult the plan row for each candidate sibling near a `Slider`:
 - Extract small reusable widgets; avoid magic numbers (prefer theme/tokens).
 - Deterministic rendering suitable for golden tests (avoid implicit animations/s randomness unless specified).
 
+## Test Generation (Step 10)
+
+After generating all lib/ files, generate comprehensive test suite:
+
+### 10.1 State Unit Tests (`test/state/{screen}_state_test.dart`)
+
+**For each State class, generate tests covering:**
+- Initial values (defaults + loaded from persistence)
+- Each public method: nominal case + boundary values (min/max)
+- notifyListeners() invocation (use listener mock)
+- Persistence round-trip: save → load → equals
+- Computed properties (getters with logic, formatters)
+- Validation logic (edge cases, malformed data)
+
+**Template structure:**
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+
+void main() {
+  group('MyState', () {
+    late MyState state;
+    late MockSharedPreferences mockPrefs;
+
+    setUp(() {
+      mockPrefs = MockSharedPreferences();
+      state = MyState(mockPrefs);
+    });
+
+    test('initial values are correct', () { /* ... */ });
+    test('methodName - nominal case', () { /* ... */ });
+    test('methodName - boundary min', () { /* ... */ });
+    test('methodName - boundary max', () { /* ... */ });
+    test('methodName calls notifyListeners', () { /* ... */ });
+  });
+}
+```
+
+**Target:** 100% line coverage, 100% branch coverage
+
+---
+
+### 10.2 Model Unit Tests (`test/models/{model}_test.dart`)
+
+**For each Model class, generate tests covering:**
+- Valid JSON → fromJson → toJson → equals original
+- Missing optional fields → default values
+- Invalid types → exception or graceful fallback
+- copyWith with null params → unchanged fields
+- copyWith with values → only specified fields change
+- Equality: same values → equals true, same hashCode
+
+**Target:** 100% line coverage, 100% branch coverage
+
+---
+
+### 10.3 Widget Tests (`test/widgets/{screen}/{widget}_test.dart`)
+
+**For each interactive component in plan.md, generate tests covering:**
+- Widget renders with correct key: `find.byKey(const Key('{screenId}__{compId}'))`
+- Widget displays correct data from State
+- Interaction triggers correct State method (tap, drag, etc.)
+- Enabled/disabled states work correctly
+- Accessibility: semantic labels match design.json a11y.ariaLabel
+
+**Template structure:**
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  group('MyWidget', () {
+    Widget createTestWidget(MyState state) {
+      return ChangeNotifierProvider.value(
+        value: state,
+        child: MaterialApp(home: Scaffold(body: MyWidget())),
+      );
+    }
+
+    testWidgets('renders with correct key', (tester) async { /* ... */ });
+    testWidgets('interaction triggers callback', (tester) async { /* ... */ });
+    testWidgets('has correct semantics', (tester) async { /* ... */ });
+  });
+}
+```
+
+**Target:** ≥90% for generic widgets (lib/widgets/*.dart), ≥70% for screen-specific widgets
+
+---
+
+### 10.4 Screen Integration Test (`test/screens/{screen}_screen_test.dart`)
+
+**For each screen, generate test covering:**
+- All key components present (by Key from plan.md)
+- One critical user flow from spec.md scenarios
+- Navigation triggers if any
+- Provider integration works (State → UI updates)
+
+**Target:** ≥60% line coverage
+
+---
+
+### 10.5 Accessibility Tests (embedded in widget/screen tests)
+
+**For each component with a11y.ariaLabel in design.json:**
+- Verify semantic label matches ariaLabel
+- Verify semantic role (isButton, hasEnabledState, etc.)
+- Verify semantic state (isEnabled, isSelected)
+
+**Example:**
+```dart
+testWidgets('button has correct semantics', (tester) async {
+  await tester.pumpWidget(createTestWidget());
+  
+  final semantics = tester.getSemantics(find.byKey(const Key('home__button_23')));
+  expect(semantics, matchesSemantics(
+    label: 'Commencer l\'entraînement',
+    isButton: true,
+    isEnabled: true,
+  ));
+});
+```
+
+---
+
+### 10.6 Verification & Validation
+
+**After generating all tests:**
+1. Run `flutter test --coverage`
+2. Parse `coverage/lcov.info` to extract coverage metrics
+3. Verify thresholds:
+   - State classes: 100%
+   - Model classes: 100%
+   - Overall: ≥80%
+4. If any threshold not met → emit error listing gaps
+5. Verify G-09 guardrail satisfied
+
+**Output:**
+- All test files under test/ matching lib/ structure
+- test_report.md with:
+  - Coverage metrics per file
+  - Untested components (if any)
+  - Untested State methods (if any)
+  - Pass/fail status
+
+**If tests fail or coverage insufficient:**
+→ Stop build with detailed error
+→ List missing tests or uncovered code
+→ Do not proceed to Step 11 (evaluation)
+
+---
+
 ## Acceptance (auto-verify)
 - [ ] Keys follow `{screenId}__{compId}` on interactive widgets.
 - [ ] Only whitelisted enums used; mapping rules applied as per guide.
@@ -66,3 +220,7 @@ During build, consult the plan row for each candidate sibling near a `Slider`:
 - [ ] Tokens/typography resolved from theme or explicit component styles.
 - [ ] Routes referenced exist and compile.
 - [ ] Build fails on any missing key/token/route or on vocabulary violation.
+- [ ] All tests generated per TEST_CONTRACT.md.
+- [ ] Test coverage ≥80% overall, 100% for State/Model (G-09).
+- [ ] All interactive components have widget tests.
+- [ ] All a11y components have semantic tests.

@@ -238,6 +238,45 @@ Card(
 
 ---
 
+## rule:keys/testable
+
+**For all interactive widgets:**
+- Apply stable key: `Key('{screenId}__{node.id}')`
+- Key must match plan.md component ID
+- Never generate random or dynamic keys
+- Keys enable deterministic testing with find.byKey()
+
+**Interactive components requiring keys:**
+- Button, IconButton, TextButton, ElevatedButton, OutlinedButton
+- TextField, TextFormField
+- Slider
+- Switch, Checkbox, Radio
+- Card (if has onTap/onPressed)
+- InkWell, GestureDetector
+- Any widget with callbacks (onPressed, onChange, onTap, etc.)
+
+**Deterministic Steps:**
+1. Extract `node.id` from design.json component
+2. Extract `screenId` from design.json meta or spec.md
+3. Generate: `key: Key('{screenId}__{node.id}')`
+4. Record in plan.md Widget Breakdown for test generation reference
+5. Never use: `find.text()` or `find.byType()` in tests (fragile, breaks on i18n/refactor)
+6. Always use: `find.byKey(const Key('specific_id'))` in tests (deterministic)
+
+**For non-interactive components:**
+- Keys optional (use only if test needs to verify by key)
+- Text widgets: key if test verifies specific text instance
+- Icon widgets: key if test verifies specific icon instance
+- Container/Padding/Decoration: usually not keyed
+
+**Rationale:**
+- ✅ Tests are deterministic and survive text changes (i18n)
+- ✅ Tests are precise (target specific widget, not first match)
+- ✅ Tests are maintainable (key stays stable, implementation can change)
+- ✅ Aligns with Flutter testing best practices
+
+---
+
 ## Implementation Notes (non-normative)
 - `resolveTextStyle(ref, tokens)` must be a pure function (no runtime randomness).
 - Avoid implicit animations unless specified by `spec.md`.
@@ -247,7 +286,7 @@ Card(
 
 ## Test Hints
 For each rule, provide at least one widget test ensuring:
-- deterministic key,  
+- deterministic key (via rule:keys/testable),  
 - mapping to expected widget class,  
 - correct theme resolution,  
 - behavior hooks present when applicable.

@@ -124,24 +124,57 @@ inputsHash: <sha256(design.json||spec.md)>
 
 ---
 
-# 10. Risks / Unknowns (from spec §11.3)
+# 10. Test Generation Plan
+
+## 10.1 State Tests (`test/state/{screen}_state_test.dart`)
+
+| Method | Test Case | Priority | Coverage Type |
+|--------|-----------|----------|---------------|
+| {methodName} | ... | CRITICAL|HIGH | Unit|Boundary|Integration |
+
+
+**Coverage Target:** 100% lines, 100% branches
+
+---
+
+## 10.2 Widget Tests
+
+| Component Key | Test Case | Expected Behavior |
+|---------------|-----------|-------------------|
+| {screenId}__{compId} | ... | ... |
+
+**Coverage Target:** ≥90% for generic widgets, ≥70% for screen-specific widgets
+
+---
+
+## 10.3 Accessibility Tests
+
+| Component Key | Semantic Label | Role | State |
+|---------------|----------------|------|-------|
+| {screenId}__{compId} | "..." | button, slider ... | enabled |
+
+---
+
+# 11. Risks / Unknowns (from spec §11.3)
 - —
 
 ---
 
-# 11. Check Gates
+# 12. Check Gates
 - Analyzer/lint pass
 - Unique keys check
 - Controlled vocabulary validation
 - A11y labels presence
 - Routes exist and compile
 - Token usage present in theme
+- Test coverage thresholds (State/Model: 100%, Overall: ≥80%)
 
 ---
 
-# 12. Checklist (subset of PR_CHECKLIST)
+# 13. Checklist (subset of PR_CHECKLIST)
 - [ ] Keys assigned on interactive widgets
 - [ ] Texts verbatim + transform
 - [ ] Variants/placement/widthMode valid
 - [ ] Actions wired to state methods
 - [ ] Golden-ready (stable layout, no randoms)
+- [ ] Test generation plan complete (all State methods, interactive components listed)

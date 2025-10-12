@@ -8,3 +8,4 @@
 - **G-06**: File paths and organization must conform to PROJECT_CONTRACT.md.
 - **G-07**: State management must use Provider + ChangeNotifier pattern only.
 - **G-08**: All generated code must follow naming conventions in PROJECT_CONTRACT.md.
+- **G-09**: Test coverage must be ≥ 80% overall AND any State/Model class = 100%.
