@@ -21,6 +21,7 @@ All generated code must be testable and include comprehensive test coverage.
 - **Overall project: ≥80% line coverage**
 
 **MUST generate tests for:**
+- Every component created : states, models, interactive widgets and screens
 - Every public method in State classes
 - Every validation rule in spec.md
 - Every interactive component in plan.md
@@ -53,9 +54,6 @@ test/
       {widget}_test.dart              (≥90% coverage target)
   screens/
     {screen}_screen_test.dart         (≥60% coverage target)
-  goldens/
-    {screen}/
-      {component}.png
 ```
 
 **MUST:**
@@ -388,38 +386,7 @@ void main() {
 
 ---
 
-### 5. Golden Tests (Priority: MEDIUM)
-
-**For components with custom styling, generate:**
-
-✅ **Visual Regression:**
-- Cards with complex layout
-- Custom-styled buttons
-- Typography-heavy components
-
-**Process:**
-1. Generate golden on first build: `flutter test --update-goldens`
-2. Store in `test/goldens/{screen}/`
-3. On subsequent builds: verify no regression
-4. On intentional design change: update golden
-
-**Example:**
-```dart
-testWidgets('preset card matches golden', (tester) async {
-  await tester.pumpWidget(createTestWidget());
-  
-  await expectLater(
-    find.byKey(const Key('home__card_preset_1')),
-    matchesGoldenFile('goldens/home/preset_card.png'),
-  );
-});
-```
-
-**Target:** Cards, custom button variants, headers, complex list items
-
----
-
-### 6. Accessibility Tests (Priority: HIGH)
+### 5. Accessibility Tests (Priority: HIGH)
 
 **For each component with a11y.ariaLabel in design.json:**
 

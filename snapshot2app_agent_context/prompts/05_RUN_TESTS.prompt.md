@@ -10,7 +10,7 @@ You are a **Test Runner**.
 Run the Flutter test suite and report results.
 
 ## Steps
-1. Run in project root:
+1. Run in project root all the following commands:
    - flutter pub get
    - flutter analyze
    - flutter test --reporter expanded --coverage
@@ -18,7 +18,8 @@ Run the Flutter test suite and report results.
 
 2. Outputs:
    - test_report.md (stdout/stderr of test run)
-   - coverage/lcov.info + html report (if generated)
+   - coverage/lcov.info (if generated)
+   - coverage/html/index.html (if generated)
    - .dart_tool/test_results.json (if generated)
 
 3. Routing:
