@@ -27,12 +27,17 @@ This contract ensures deterministic, maintainable, and testable code across all 
 - Theme tokens → `lib/theme/app_{colors|text_styles|...}.dart`
   - Design system tokens
   - Centralized styling constants
+- Internationalization → `lib/l10n/`
+  - ARB files: `app_en.arb`, `app_fr.arb`
+  - Configuration: `l10n.yaml`
+  - Generated classes: `app_localizations.dart`
 
 ❌ **MUST NOT:**
 - Mix screen-specific widgets in generic `lib/widgets/`
 - Create state files outside `lib/state/`
 - Duplicate theme definitions across files
 - Create deeply nested folder structures (max 2 levels in widgets/)
+- Use hardcoded strings in UI (must use AppLocalizations)
 
 ---
 
@@ -312,6 +317,12 @@ When generating or validating code, verify:
    - Test files mirror lib/ structure
    - Tests are organized by type
    - All public widgets have tests
+   
+7. **Internationalization:**
+   - All UI text uses AppLocalizations
+   - ARB files contain all user-facing strings
+   - No hardcoded strings in widgets
+   - English and French locales supported
 
 ---
 
@@ -324,5 +335,6 @@ Generated code that:
 - ✅ Follows all naming conventions
 - ✅ Includes complete model implementations
 - ✅ Has tests organized correctly
+- ✅ Has full internationalization support
 
 Any violation → **FAIL** with specific rule citation.

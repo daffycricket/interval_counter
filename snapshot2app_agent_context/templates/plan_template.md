@@ -163,6 +163,31 @@ inputsHash: <sha256(design.json||spec.md)>
 
 ---
 
+## 2.6 Translations Plan
+
+### ARB Files to Generate
+| File | Locale | Purpose |
+|------|--------|---------|
+| lib/l10n/app_en.arb | en | English translations (default) |
+| lib/l10n/app_fr.arb | fr | French translations |
+
+### Text Extraction from Design
+| Component | Text Content | ARB Key | Description |
+|-----------|--------------|---------|-------------|
+| {componentId} | "{text}" | {keyName} | {description} |
+
+### i18n Configuration
+- File: `lib/l10n/l10n.yaml`
+- Template: `app_en.arb`
+- Output: `app_localizations.dart`
+
+### main.dart Setup
+- Import: `flutter_localizations`
+- Delegates: `AppLocalizations.delegate`, `GlobalMaterialLocalizations.delegate`
+- Supported locales: `[Locale('en'), Locale('fr')]`
+
+---
+
 ## 10.4 Components excluded from tests
 
 | Component | Reason        |

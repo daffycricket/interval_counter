@@ -39,15 +39,16 @@ Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consum
 
 ## Execution Steps (follow in order)
 1. **Scaffold** all files declared in `plan.md/Files to Generate` (widgets, state, routes, themes/tokens, test scaffolds). Use paths *as-is*.
-2. **Widgets rendering**: for each row in `plan.md/Widget Breakdown`, create the corresponding widget and render components using the mapping rules from `UI_MAPPING_GUIDE.md` (containers, Row/Column/Stack, placement, widthMode, typographyRef, icons, sliders, shaped icon buttons, patterns…). Apply keys.
-3. **Layout composition**: implement structure/constraints from `plan.md/Layout Composition` (hierarchy, flex, alignment, maxWidth, scroll). `design.json` is authoritative for these values.
-4. **Interaction wiring**: bind each entry from `plan.md/Interaction Wiring` to concrete functions in the **state layer** (names must match `spec §6` and `plan §7`). Handle navigation exactly as declared (including Back).
-5. **State layer**: implement fields/defaults/persistence and actions/effects from `plan.md/State Model & Actions`. Expose read-only state to widgets; update via the declared actions only.
-6. **Accessibility**: set semantics, aria-like labels, and focus order per `plan.md/Accessibility Plan`.
-7. **Project Structure**: verify all file paths, state patterns, and naming conventions comply with `PROJECT_CONTRACT.md`.
-8. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
-9. **Emit Report**: concise summary listing generated files + any blocking Risk from `plan.md/Risks` (do not invent new TODOs).
-10. **Generate Tests**: produce comprehensive test suite following `contracts/TEST_CONTRACT.md`. See § Test Generation below.
+2. **Internationalization Setup**: generate ARB files and i18n configuration per `plan.md/Translations Plan`. See § i18n Generation below.
+3. **Widgets rendering**: for each row in `plan.md/Widget Breakdown`, create the corresponding widget and render components using the mapping rules from `UI_MAPPING_GUIDE.md` (containers, Row/Column/Stack, placement, widthMode, typographyRef, icons, sliders, shaped icon buttons, patterns…). Apply keys.
+4. **Layout composition**: implement structure/constraints from `plan.md/Layout Composition` (hierarchy, flex, alignment, maxWidth, scroll). `design.json` is authoritative for these values.
+5. **Interaction wiring**: bind each entry from `plan.md/Interaction Wiring` to concrete functions in the **state layer** (names must match `spec §6` and `plan §7`). Handle navigation exactly as declared (including Back).
+6. **State layer**: implement fields/defaults/persistence and actions/effects from `plan.md/State Model & Actions`. Expose read-only state to widgets; update via the declared actions only.
+7. **Accessibility**: set semantics, aria-like labels, and focus order per `plan.md/Accessibility Plan`.
+8. **Project Structure**: verify all file paths, state patterns, and naming conventions comply with `PROJECT_CONTRACT.md`.
+9. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
+10. **Emit Report**: concise summary listing generated files + any blocking Risk from `plan.md/Risks` (do not invent new TODOs).
+11. **Generate Tests**: produce comprehensive test suite following `contracts/TEST_CONTRACT.md`. See § Test Generation below.
 
 ## Build guard for orphan thumb
 During build, consult the plan row for each candidate sibling near a `Slider`:
@@ -226,7 +227,52 @@ testWidgets('button has correct semantics', (tester) async {
 
 ---
 
-### 10.7 Shared Test Helpers (`test/helpers/widget_test_helpers.dart`)
+### 10.7 Internationalization (i18n) Generation
+
+**CRITICAL: Generate i18n files per plan.md § 2.6 Translations Plan**
+
+1. **Create ARB files:**
+   - `lib/l10n/app_en.arb` - English translations (default)
+   - `lib/l10n/app_fr.arb` - French translations
+   - Extract all text content from design.json components and widgets
+
+2. **Create i18n configuration:**
+   - `lib/l10n/l10n.yaml` - Flutter i18n configuration
+
+3. **Setup main.dart for i18n:**
+   - Add `flutter_localizations` import
+   - Add `LocalizationsDelegates` to MaterialApp
+   - Add `supportedLocales: [Locale('en'), Locale('fr')]`
+
+4. **Replace hardcoded strings in widgets:**
+   - Use `AppLocalizations.of(context)!.key` instead of hardcoded text
+   - All user-facing strings must come from ARB files
+
+**Template for ARB files:**
+```json
+{
+  "@@locale": "en",
+  "appTitle": "Interval Counter",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "startButton": "Start",
+  "@startButton": {
+    "description": "Start timer button"
+  }
+}
+```
+
+**Template for l10n.yaml:**
+```yaml
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+```
+
+---
+
+### 10.8 Shared Test Helpers (`test/helpers/widget_test_helpers.dart`)
 
 **Generate once to reduce boilerplate across all widget tests:**
 
@@ -288,3 +334,5 @@ Widget createTestAppWithProviders(List<ChangeNotifier> providers, Widget child) 
 - [ ] All a11y components have semantic tests.
 - [ ] Widget-to-test ratio 1:1 verified (G-11).
 - [ ] Shared test helpers generated to reduce boilerplate.
+- [ ] i18n files generated per plan.md § 2.6 (G-12).
+- [ ] All hardcoded strings replaced with AppLocalizations keys.

@@ -11,3 +11,4 @@
 - **G-09**: Test coverage must be ≥ 80% overall AND any State/Model class = 100%.
 - **G-10**: Test coverage report must be generated in coverage/html
 - **G-11**: Every file in lib/widgets/, lib/screens/, lib/models/, lib/state/ must have corresponding test file. Widget-to-test ratio must be 1:1.
+- **G-12**: All user-facing text must use AppLocalizations. ARB files must be generated for English and French. No hardcoded strings in UI widgets.
