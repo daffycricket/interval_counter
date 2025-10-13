@@ -15,9 +15,8 @@ Run the Flutter test suite and report results.
    - flutter analyze
    - flutter test --reporter expanded --coverage
    
-2. **MANDATORY: Generate HTML coverage report:**
-   - Run: `genhtml coverage/lcov.info --output-directory coverage/html`
-   - If genhtml fails → status = tests_failed, report error
+2. Produce HTML report for test coverage
+   - genhtml coverage/lcov.info --output-directory coverage/html
 
 3. Outputs:
    - test_report.md (stdout/stderr of test run)
@@ -26,7 +25,5 @@ Run the Flutter test suite and report results.
    - .dart_tool/test_results.json (if generated)
 
 4. Routing:
-   - If exit code == 0 → status = tests_passed, proceed to evaluation.
+   - If exit code == 0 → status = tests_passed, proceed to HTML report for test coverage, then evaluation.
    - If exit code != 0 → status = tests_failed, forward test_report.txt to 06_AUTOFIX_TESTS.prompt.
-   - **CRITICAL: Verify coverage/html/index.html exists**
-     - If missing → status = tests_failed, error: "HTML coverage report not generated"
