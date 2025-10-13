@@ -115,38 +115,45 @@ void main() {
 
 ---
 
-### 10.3 Widget Tests (`test/widgets/{screen}/{widget}_test.dart`)
+### 10.3 Widget Tests - ONE FILE PER WIDGET
 
-**For each interactive component in plan.md, generate tests covering:**
-- Widget renders with correct key: `find.byKey(const Key('{screenId}__{compId}'))`
-- Widget displays correct data from State
-- Interaction triggers correct State method (tap, drag, etc.)
-- Enabled/disabled states work correctly
-- Accessibility: semantic labels match design.json a11y.ariaLabel
+**CRITICAL: Generate ONE test file PER widget file from plan.md § 2.1**
 
-**Template structure:**
+For each widget listed in plan.md § 2.1 (Widgets to Generate):
+1. Create corresponding test file mirroring lib/ structure:
+   - lib/widgets/my_widget.dart → test/widgets/my_widget_test.dart
+   - lib/widgets/home/card.dart → test/widgets/home/card_test.dart
+2. In each test file, cover ALL interactive components from that widget
+3. Use shared test helpers to reduce boilerplate
+
+**Template structure (ONE FILE PER WIDGET):**
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
+import 'package:interval_counter/widgets/home/volume_header.dart';
+import 'package:interval_counter/test/helpers/widget_test_helpers.dart';
 
 void main() {
-  group('MyWidget', () {
-    Widget createTestWidget(MyState state) {
-      return ChangeNotifierProvider.value(
-        value: state,
-        child: MaterialApp(home: Scaffold(body: MyWidget())),
-      );
-    }
+  group('VolumeHeader Widget Tests', () {
+    testWidgets('renders with correct keys', (tester) async {
+      final state = createMockState();
+      await tester.pumpWidget(createTestApp(state, VolumeHeader()));
+      
+      expect(find.byKey(const Key('interval_timer_home__Slider-3')), findsOneWidget);
+    });
 
-    testWidgets('renders with correct key', (tester) async { /* ... */ });
-    testWidgets('interaction triggers callback', (tester) async { /* ... */ });
-    testWidgets('has correct semantics', (tester) async { /* ... */ });
+    testWidgets('slider interaction updates state', (tester) async {
+      final state = createMockState();
+      await tester.pumpWidget(createTestApp(state, VolumeHeader()));
+      
+      await tester.drag(find.byKey(const Key('interval_timer_home__Slider-3')), const Offset(100, 0));
+      expect(state.volume, greaterThan(0.62));
+    });
   });
 }
 ```
 
-**Target:** ≥90% for generic widgets (lib/widgets/*.dart), ≥70% for screen-specific widgets
+**Coverage Target:** ≥90% for generic widgets, ≥70% for screen-specific widgets
 
 ---
 
@@ -188,14 +195,21 @@ testWidgets('button has correct semantics', (tester) async {
 ### 10.6 Verification & Validation
 
 **After generating all tests:**
-1. Run `flutter test --coverage`
-2. Parse `coverage/lcov.info` to extract coverage metrics
-3. Verify thresholds:
+0. **Verify 1:1 widget-to-test ratio:**
+   - Count files in lib/widgets/**/*.dart
+   - Count files in test/widgets/**/*_test.dart
+   - IF counts differ → FAIL: "Missing test files. Expected {widget_count}, generated {test_count}"
+   - LIST: Widget files without corresponding test file
+   - STOP BUILD
+1. **Generate shared test helpers** (see step 10.7 below)
+2. Run `flutter test --coverage`
+3. Parse `coverage/lcov.info` to extract coverage metrics
+4. Verify thresholds:
    - State classes: 100%
    - Model classes: 100%
    - Overall: ≥80%
-4. If any threshold not met → emit error listing gaps
-5. Verify G-09 guardrail satisfied
+5. If any threshold not met → emit error listing gaps
+6. Verify G-09 guardrail satisfied
 
 **Output:**
 - All test files under test/ matching lib/ structure
@@ -212,6 +226,54 @@ testWidgets('button has correct semantics', (tester) async {
 
 ---
 
+### 10.7 Shared Test Helpers (`test/helpers/widget_test_helpers.dart`)
+
+**Generate once to reduce boilerplate across all widget tests:**
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:mockito/mockito.dart';
+import 'package:interval_counter/state/interval_timer_home_state.dart';
+
+class MockSharedPreferences extends Mock implements SharedPreferences {}
+
+/// Creates a mock state with default values
+IntervalTimerHomeState createMockState() {
+  final mockPrefs = MockSharedPreferences();
+  when(mockPrefs.getInt(any)).thenReturn(16); // default reps
+  when(mockPrefs.getDouble(any)).thenReturn(0.62); // default volume
+  when(mockPrefs.getStringList(any)).thenReturn([]); // empty presets
+  
+  return IntervalTimerHomeState(mockPrefs);
+}
+
+/// Wraps widget in MaterialApp + Provider for testing
+Widget createTestApp(IntervalTimerHomeState state, Widget child) {
+  return ChangeNotifierProvider.value(
+    value: state,
+    child: MaterialApp(
+      home: Scaffold(body: child),
+    ),
+  );
+}
+
+/// Creates test app with multiple providers if needed
+Widget createTestAppWithProviders(List<ChangeNotifier> providers, Widget child) {
+  return MultiProvider(
+    providers: providers.map((p) => ChangeNotifierProvider.value(value: p)).toList(),
+    child: MaterialApp(home: Scaffold(body: child)),
+  );
+}
+```
+
+**Usage in widget tests:**
+- Import: `import 'package:interval_counter/test/helpers/widget_test_helpers.dart';`
+- Replace boilerplate with: `createMockState()`, `createTestApp()`
+
+---
+
 ## Acceptance (auto-verify)
 - [ ] Keys follow `{screenId}__{compId}` on interactive widgets.
 - [ ] Only whitelisted enums used; mapping rules applied as per guide.
@@ -224,3 +286,5 @@ testWidgets('button has correct semantics', (tester) async {
 - [ ] Test coverage ≥80% overall, 100% for State/Model (G-09).
 - [ ] All interactive components have widget tests.
 - [ ] All a11y components have semantic tests.
+- [ ] Widget-to-test ratio 1:1 verified (G-11).
+- [ ] Shared test helpers generated to reduce boilerplate.

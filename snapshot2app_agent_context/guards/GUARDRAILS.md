@@ -9,3 +9,5 @@
 - **G-07**: State management must use Provider + ChangeNotifier pattern only.
 - **G-08**: All generated code must follow naming conventions in PROJECT_CONTRACT.md.
 - **G-09**: Test coverage must be ≥ 80% overall AND any State/Model class = 100%.
+- **G-10**: Test coverage report must be generated in coverage/html
+- **G-11**: Every file in lib/widgets/, lib/screens/, lib/models/, lib/state/ must have corresponding test file. Widget-to-test ratio must be 1:1.

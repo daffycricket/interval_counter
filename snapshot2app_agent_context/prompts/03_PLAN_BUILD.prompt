@@ -29,8 +29,12 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
 
 Complete **§ Test Generation Plan** from `templates/plan_template.md`:
 - § State Tests: extract all public methods from § 7 (State Model & Actions)
-- § Widget Tests: extract interactive components from § 4 (Widget Breakdown) where key ≠ `—`
+- § Widget Tests: **CRITICAL** - create 1:1 mapping table from § 2.1 (Widgets to Generate) to test files
+  - Each widget in § 2.1 MUST have corresponding row in § 2.5 Widget Tests table
+  - Format: widgetName → test/widgets/{path}_test.dart
+  - Rule: count(§ 2.5 rows) == count(§ 2.1 rows)
 - § Accessibility Tests: extract components with a11y.ariaLabel from § 6 (Interaction Wiring)
+- § Shared Helpers: include test/helpers/widget_test_helpers.dart
 
 If data missing → write `—` and document in § (Risks).
 

@@ -3,6 +3,7 @@
 ## Purpose
 Define mandatory testing standards for generated Flutter code.
 All generated code must be testable and include comprehensive test coverage.
+All new code must be tested.
 
 > **Prerequisites:** Code must be generated according to **PROJECT_CONTRACT.md**, especially the "Testability & Dependency Injection" section.
 
@@ -18,10 +19,11 @@ All generated code must be testable and include comprehensive test coverage.
 - Generic widgets (lib/widgets/*.dart): **≥90% line coverage**
 - Screen-specific widgets (lib/widgets/{screen}/): **≥70% line coverage**
 - Screens (lib/screens/): **≥60% line coverage**
+- All news components must be tested
 - **Overall project: ≥80% line coverage**
 
 **MUST generate tests for:**
-- Every component created : states, models, interactive widgets and screens
+- Every component created : states, models, widgets, screens, and other types of dart and flutter components
 - Every public method in State classes
 - Every validation rule in spec.md
 - Every interactive component in plan.md
@@ -62,12 +64,18 @@ test/
 - Use `setUp()` for common initialization
 - Include stable keys on all testable widgets: `Key('{screenId}__{compId}')`
 - Keep tests deterministic (no random values, no current time dependencies)
+- Test files must mirror lib/ structure 1:1: every .dart file in lib/ must have corresponding *_test.dart file in test/ with identical path structure
 
 **MUST NOT:**
 - Mix test types in the same file (separate unit/widget/integration)
 - Skip test files for public widgets/screens
 - Use hardcoded strings for widget keys (use keys from plan.md)
 - Create tests without clear assertions
+
+**Shared Test Helpers:**
+- Generate `test/helpers/widget_test_helpers.dart` with common setup functions
+- Use `createMockState()`, `createTestApp()` to reduce boilerplate
+- All widget tests must import and use shared helpers
 
 ---
 

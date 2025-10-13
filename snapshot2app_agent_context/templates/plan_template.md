@@ -55,9 +55,18 @@ inputsHash: <sha256(design.json||spec.md)>
 | typo     | titleLarge | yes      | —     |
 
 ## 2.5 Tests (to be generated in steps 05/06)
-| testId | type (widget/golden/unit) | filePath                          | purpose                  | notes |
-|-------|----------------------------|-----------------------------------|--------------------------|-------|
-| T1    | widget                     | test/widgets/xxx/t1_starts.dart   | start button behavior    | —     |
+
+### Widget Tests - 1:1 with § 2.1
+| widgetName           | testFilePath                                | covers (components from that widget) |
+|----------------------|---------------------------------------------|--------------------------------------|
+| (copy from § 2.1)    | test/widgets/{path}_test.dart               | (list component IDs from that widget)|
+
+**Rule:** count(rows above) == count(rows in § 2.1 Widgets)
+
+### Shared Test Helpers
+| filePath                          | purpose                    |
+|-----------------------------------|----------------------------|
+| test/helpers/widget_test_helpers.dart | Common setup functions    |
 
 ---
 
@@ -128,10 +137,9 @@ inputsHash: <sha256(design.json||spec.md)>
 
 ## 10.1 State Tests (`test/state/{screen}_state_test.dart`)
 
-| Method | Test Case | Priority | Coverage Type |
-|--------|-----------|----------|---------------|
-| {methodName} | ... | CRITICAL|HIGH | Unit|Boundary|Integration |
-
+| Component | Method | Test Case | Priority | Coverage Type |
+|-----------|--------|-----------|----------|---------------|
+| {componentName} | {methodName} | ... | CRITICAL|HIGH | Unit|Boundary|Integration |
 
 **Coverage Target:** 100% lines, 100% branches
 
@@ -139,9 +147,9 @@ inputsHash: <sha256(design.json||spec.md)>
 
 ## 10.2 Widget Tests
 
-| Component Key | Test Case | Expected Behavior |
-|---------------|-----------|-------------------|
-| {screenId}__{compId} | ... | ... |
+| Widget | Component Key | Test Case | Expected Behavior |
+|--------|---------------|-----------|-------------------|
+| {widgetName} | {screenId}__{compId} | ... | ... |
 
 **Coverage Target:** ≥90% for generic widgets, ≥70% for screen-specific widgets
 
@@ -149,9 +157,17 @@ inputsHash: <sha256(design.json||spec.md)>
 
 ## 10.3 Accessibility Tests
 
-| Component Key | Semantic Label | Role | State |
-|---------------|----------------|------|-------|
-| {screenId}__{compId} | "..." | button, slider ... | enabled |
+| Widget | Component Key | Semantic Label | Role | State |
+|--------|---------------|----------------|------|-------|
+| {widgetName} | {screenId}__{compId} | "..." | button, slider ... | enabled |
+
+---
+
+## 10.4 Components excluded from tests
+
+| Component | Reason        |
+|-----------|---------------|
+| {componentName} | ...     |
 
 ---
 

@@ -16,6 +16,10 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
 
 ### 2. Check Tests
 - Parse test results from `flutter test`.
+- **Verify 1:1 widget-to-test ratio (G-11):**
+  - Count files in lib/widgets/**/*.dart
+  - Count files in test/widgets/**/*_test.dart
+  - IF counts differ → mark status = **FAILED (missing_test_files)** with details
 - If tests all pass → mark status = **PASSED**.
 - If tests failed but were corrected by Step 6 (Auto-fix):
   - Ensure final run of `flutter test` exit code == 0.
@@ -50,12 +54,13 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
 ## Output: evaluation_report.md
 
 Must include:
-- Final Status: PASSED / PASSED (after auto-fix) / FAILED (tests_failed_after_autofix|low coverage|contract violation).
+- Final Status: PASSED / PASSED (after auto-fix) / FAILED (tests_failed_after_autofix|low coverage|contract violation|missing_test_files).
 - Summary of:
   - Validation status
   - Build status
   - Test results (pass/fail count)
   - Coverage % (if available)
+  - Widget-to-test ratio verification (1:1 check)
   - Auto-fix patches applied (if any)
 - Rationale: explain why the status was assigned.
 
