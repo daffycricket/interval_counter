@@ -80,8 +80,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get emptyPresetsMessage =>
-      'No saved presets.\\nTap + ADD to create one.';
+  String get emptyPresetsMessage => 'No saved presets.\\nTap + ADD to create one.';
 
   @override
   String get presetSavedSnackbar => 'Preset saved';
@@ -93,12 +92,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repsValidationError => 'Repetitions must be between 1 and 99';
 
   @override
-  String get workTimeValidationError =>
-      'Work time must be between 00:05 and 60:00';
+  String get workTimeValidationError => 'Work time must be between 00:05 and 60:00';
 
   @override
-  String get restTimeValidationError =>
-      'Rest time must be between 00:00 and 60:00';
+  String get restTimeValidationError => 'Rest time must be between 00:00 and 60:00';
 
   @override
   String get presetNameEmptyError => 'Preset name cannot be empty';

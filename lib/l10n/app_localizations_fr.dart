@@ -80,8 +80,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get emptyPresetsMessage =>
-      'Aucun préréglage sauvegardé.\\nAppuyez sur + AJOUTER pour créer.';
+  String get emptyPresetsMessage => 'Aucun préréglage sauvegardé.\\nAppuyez sur + AJOUTER pour créer.';
 
   @override
   String get presetSavedSnackbar => 'Préréglage sauvegardé';
@@ -90,20 +89,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get saveFailed => 'Échec de la sauvegarde. Réessayez.';
 
   @override
-  String get repsValidationError =>
-      'Les répétitions doivent être entre 1 et 99';
+  String get repsValidationError => 'Les répétitions doivent être entre 1 et 99';
 
   @override
-  String get workTimeValidationError =>
-      'Le temps de travail doit être entre 00:05 et 60:00';
+  String get workTimeValidationError => 'Le temps de travail doit être entre 00:05 et 60:00';
 
   @override
-  String get restTimeValidationError =>
-      'Le temps de repos doit être entre 00:00 et 60:00';
+  String get restTimeValidationError => 'Le temps de repos doit être entre 00:00 et 60:00';
 
   @override
-  String get presetNameEmptyError =>
-      'Le nom du préréglage ne peut pas être vide';
+  String get presetNameEmptyError => 'Le nom du préréglage ne peut pas être vide';
 
   @override
   String get maxRepsError => 'Maximum 99 répétitions';
