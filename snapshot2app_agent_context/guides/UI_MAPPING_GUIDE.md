@@ -112,7 +112,8 @@ Map to `MainAxisAlignment`:
 - Use a `SliderTheme` where available.  
 - `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` from `node.style` if provided.  
 - Initial `value` from `valueNormalized` in [0,1] when present.
-- Set height of track to 1 `trackHeight: 1`.
+- Set track height to 1 `trackHeight: 1`.
+- Set `trackShape: RectangularSliderTrackShape()`.
 - The thumb must **never** be rendered by a separate Icon/Container.
 - Any visual thumb customization must go through `SliderThemeData` (thumb/track colors, trackHeight).
 - When a sibling matches a likely-thumb pattern (square-ish bbox, diameter within [thumb−2; thumb+6], color in {`sliderThumb`, `onPrimary`, `#FFFFFF`}, within 24 px of the slider end), it must be **ignored** at build time and flagged during validation.

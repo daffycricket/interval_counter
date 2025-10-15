@@ -31,21 +31,30 @@ See `runbooks/` for detailed step-by-step playbooks per tool.
 
 ### Buid screen from scratch (eg, first screen)
 Run 00_ORCHESTRATOR.prompt
-Input: design.json: examples/home/home_design.json
+Input: design.json: sources/home/home_design.json
+Report folder: reports/home
+
+### Build screen, starting at specific step
+#### It allows the user to edit generated files manually before carrying on
+Run 00_ORCHESTRATOR.prompt, starting step 02 and up to the last step
+Inputs:
+ - design.json: sources/home/home_design.json
+ - spec_complement.md: sources/home/home_spec_complement.md
+ - validation_report.md in reports/home
 Report folder: reports/home
 
 ### Build screen, starting at specific step
 #### It allows the user to edit generated files manually before carrying on
 Run 00_ORCHESTRATOR.prompt, starting step 03 and up to the last step
 Inputs:
- - design.json: examples/home/home_design.json
+ - design.json: sources/home/home_design.json
  - validation_report.md ans spec.md in reports/home
 Report folder: reports/home
 
 ### Build new screen, using previous screen generation as reference
 Run 00_ORCHESTRATOR.prompt
 Inputs:
- - design.json: examples/new_preset/preset_editor_design.json
+ - design.json: sources/new_preset/preset_editor_design.json
  - spec.md from home screen in reports/home
 Report folder: reports/new_preset
 

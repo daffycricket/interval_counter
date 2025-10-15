@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/interval_timer_home_screen.dart';
 import 'state/interval_timer_home_state.dart';
 import 'theme/app_colors.dart';
+import 'routes/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Créer le state avec injection de dépendances
-  final homeState = await IntervalTimerHomeState.create();
+  final prefs = await SharedPreferences.getInstance();
+  final homeState = IntervalTimerHomeState(prefs);
 
   runApp(IntervalCounterApp(homeState: homeState));
 }
@@ -51,7 +54,8 @@ class IntervalCounterApp extends StatelessWidget {
           scaffoldBackgroundColor: AppColors.background,
           useMaterial3: true,
         ),
-        home: const IntervalTimerHomeScreen(),
+        initialRoute: AppRoutes.home,
+        onGenerateRoute: AppRoutes.generateRoute,
         debugShowCheckedModeBanner: false,
       ),
     );

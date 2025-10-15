@@ -24,7 +24,10 @@ Your role is to fix failing tests with minimal, targeted code changes.
 2. Generate unified diff patch to fix the issue, compliant with spec+design.
 3. Apply patch → run flutter format, flutter analyze, flutter test again.
 4. If all tests pass → status = tests_fixed, output patch.diff + rationale.
-5. If still failing after 2 attempts → status = tests_failed_after_autofix, output last patch.diff + failing logs.
+5. If still failing after 2 attempts :
+   - → status = tests_failed_after_autofix
+   - skip and add description (hint for how to fix) to failing test methods
+   - output last patch.diff + failing logs
 
 ## Outputs
 - autofix_attempts/<n>/patch.diff
