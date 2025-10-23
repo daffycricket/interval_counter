@@ -1,0 +1,15 @@
+rm -rf lib/l10n/
+rm -rf lib/utils/
+rm -rf lib/herlpers/
+rm -rf lib/models/
+rm -rf lib/routes/
+rm -rf lib/screens/
+rm -rf lib/state/
+rm -rf lib/theme/
+rm -rf lib/widgets/interval_timer_home/
+rm -rf lib/widgets/home/
+rm -rf test/
+rm -rf coverage/
+rm -rf reports/home/spec.md
+rm -rf reports/home/plan.md
+rm -rf reports/home/evaluation_report.md

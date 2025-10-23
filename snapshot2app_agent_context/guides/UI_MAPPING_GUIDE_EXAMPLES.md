@@ -42,7 +42,8 @@ ThemeData buildTheme(DesignTokens t) { // ex.
       activeTrackColor: t.color("sliderActive"),
       inactiveTrackColor: t.color("sliderInactive"),
       thumbColor: t.color("sliderThumb"),
-      trackHeight: t.doubleOr("sliderTrackHeight", 4),
+      trackShape: RectangularSliderTrackShape(),
+      trackHeight: t.doubleOr("sliderTrackHeight", 1),
     ),
     useMaterial3: false,
   );
