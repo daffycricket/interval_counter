@@ -59,3 +59,12 @@ Inputs:
 Refer to code already present in lib/ directory as a reference.
 Report folder: reports/new_preset
 
+### Generate spec, using code already generated as reference
+Run 00_ORCHESTRATOR.prompt, up to step 2 "Generate Specification"
+Inputs:
+ - design.json: sources/workout/workout_design.json
+ - spec_complement.md: sources/workout/workout_spec_complement.md
+Refer to :
+ - code already present in lib/ directory as a reference, especially existing widgets
+ - existing specification if necessary, especially Home spec in reports/home/spec.md
+Report folder: reports/workout
