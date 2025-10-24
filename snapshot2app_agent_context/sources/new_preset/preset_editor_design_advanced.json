@@ -1,0 +1,2161 @@
+{
+  "meta": {
+    "version": "1.0",
+    "screenName": "Interval Timer – Advanced",
+    "snapshotRef": "Screenshot_20250913_145211_Interval Timer.jpg"
+  },
+  "tokens": {
+    "colors": {
+      "primary": "#1E88E5",
+      "onPrimary": "#FFFFFF",
+      "background": "#E6E6E6",
+      "surface": "#FFFFFF",
+      "textPrimary": "#111111",
+      "textSecondary": "#666666",
+      "divider": "#CCCCCC",
+      "accent": "#1E88E5",
+      "sliderActive": "#1E88E5",
+      "sliderInactive": "#BDBDBD",
+      "sliderThumb": "#FFFFFF",
+      "border": "#DDDDDD",
+      "cta": "#1E88E5",
+      "success": "#058C50",
+      "warning": "#A37F04",
+      "info": "#38535F",
+      "headerBackgroundDark": "#38535F",
+      "tabBarBackground": "#899AA2",
+      "cardHeaderBg": "#202020",
+      "presetCardBg": "#FFFFFF",
+      "yellowSectionBg": "#A37F04",
+      "greenSectionBg": "#058C50",
+      "fabBg": "#FFFFFF",
+      "fabIcon": "#111111",
+      "iconDefault": "#111111",
+      "mutedText": "#888888"
+    },
+    "typography": {
+      "fontFamilies": [
+        "Roboto",
+        "sans-serif",
+        "unknown"
+      ],
+      "fontSizes": {
+        "xs": 12,
+        "sm": 14,
+        "md": 16,
+        "lg": 18,
+        "xl": 24
+      },
+      "fontWeights": {
+        "regular": 400,
+        "medium": 500,
+        "bold": 700
+      },
+      "lineHeights": {
+        "sm": 16,
+        "md": 20,
+        "lg": 24
+      }
+    },
+    "spacing": {
+      "xxs": 4,
+      "xs": 8,
+      "sm": 12,
+      "md": 16,
+      "lg": 20,
+      "xl": 24
+    },
+    "radius": {
+      "sm": 4,
+      "md": 8,
+      "lg": 12,
+      "xl": 24
+    },
+    "shadow": {
+      "sm": "0 1px 2px rgba(0,0,0,0.12)",
+      "md": "0 2px 4px rgba(0,0,0,0.18)",
+      "lg": "0 4px 12px rgba(0,0,0,0.22)"
+    }
+  },
+  "screen": {
+    "size": {
+      "width": 921,
+      "height": 2048
+    },
+    "layout": {
+      "orientation": "portrait",
+      "scrollable": true
+    }
+  },
+  "components": [
+    {
+      "id": "Container-1",
+      "type": "Container",
+      "bbox": [
+        0,
+        0,
+        921,
+        80
+      ],
+      "sourceRect": [
+        0,
+        0,
+        921,
+        80
+      ],
+      "style": {
+        "backgroundColor": "#38535F",
+        "paddingX": 16,
+        "paddingY": 12
+      },
+      "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": "sm",
+        "align": "center",
+        "justify": "between"
+      },
+      "group": {
+        "alignment": "center",
+        "distribution": "between",
+        "maxWidth": 921
+      },
+      "children": [
+        {
+          "id": "Text-2",
+          "type": "Text",
+          "bbox": [
+            12,
+            18,
+            80,
+            44
+          ],
+          "sourceRect": [
+            12,
+            18,
+            80,
+            44
+          ],
+          "text": "14:52",
+          "style": {
+            "color": "#FFFFFF",
+            "fontSize": 16,
+            "fontWeight": "medium",
+            "typographyRef": "value"
+          }
+        },
+        {
+          "id": "Container-3",
+          "type": "Container",
+          "bbox": [
+            740,
+            12,
+            169,
+            56
+          ],
+          "sourceRect": [
+            740,
+            12,
+            169,
+            56
+          ],
+          "style": {
+            "backgroundColor": "#38535F"
+          },
+          "layout": {
+            "type": "flex",
+            "direction": "row",
+            "gap": "xs",
+            "align": "center",
+            "justify": "end"
+          },
+          "group": {
+            "alignment": "end",
+            "distribution": "end",
+            "maxWidth": 169
+          },
+          "children": [
+            {
+              "id": "Icon-4",
+              "type": "Icon",
+              "bbox": [
+                740,
+                24,
+                24,
+                24
+              ],
+              "sourceRect": [
+                740,
+                24,
+                24,
+                24
+              ],
+              "iconName": "status.notifications",
+              "style": {
+                "color": "#FFFFFF"
+              }
+            },
+            {
+              "id": "Icon-5",
+              "type": "Icon",
+              "bbox": [
+                770,
+                24,
+                24,
+                24
+              ],
+              "sourceRect": [
+                770,
+                24,
+                24,
+                24
+              ],
+              "iconName": "status.network",
+              "style": {
+                "color": "#FFFFFF"
+              }
+            },
+            {
+              "id": "Text-6",
+              "type": "Text",
+              "bbox": [
+                800,
+                18,
+                40,
+                44
+              ],
+              "sourceRect": [
+                800,
+                18,
+                40,
+                44
+              ],
+              "text": "51%",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 16,
+                "fontWeight": "regular",
+                "typographyRef": "value"
+              }
+            },
+            {
+              "id": "Icon-7",
+              "type": "Icon",
+              "bbox": [
+                842,
+                22,
+                30,
+                30
+              ],
+              "sourceRect": [
+                842,
+                22,
+                30,
+                30
+              ],
+              "iconName": "material.battery",
+              "style": {
+                "color": "#FFFFFF"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Container-8",
+      "type": "Container",
+      "bbox": [
+        0,
+        80,
+        921,
+        180
+      ],
+      "sourceRect": [
+        0,
+        80,
+        921,
+        180
+      ],
+      "style": {
+        "backgroundColor": "#899AA2",
+        "paddingX": 16,
+        "paddingY": 16
+      },
+      "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": "md",
+        "align": "center",
+        "justify": "between"
+      },
+      "group": {
+        "alignment": "center",
+        "distribution": "between",
+        "maxWidth": 921
+      },
+      "children": [
+        {
+          "id": "IconButton-9",
+          "type": "IconButton",
+          "variant": "ghost",
+          "bbox": [
+            16,
+            110,
+            40,
+            40
+          ],
+          "sourceRect": [
+            16,
+            110,
+            40,
+            40
+          ],
+          "iconName": "material.close",
+          "a11y": {
+            "ariaLabel": "Fermer"
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "backgroundColor": "#899AA2"
+          }
+        },
+        {
+          "id": "Container-10",
+          "type": "Container",
+          "bbox": [
+            120,
+            96,
+            440,
+            72
+          ],
+          "sourceRect": [
+            120,
+            96,
+            440,
+            72
+          ],
+          "style": {
+            "backgroundColor": "#899AA2"
+          },
+          "layout": {
+            "type": "flex",
+            "direction": "row",
+            "gap": "lg",
+            "align": "center",
+            "justify": "start"
+          },
+          "group": {
+            "alignment": "start",
+            "distribution": "start",
+            "maxWidth": 440
+          },
+          "children": [
+            {
+              "id": "Button-11",
+              "type": "Button",
+              "variant": "secondary",
+              "bbox": [
+                130,
+                108,
+                120,
+                48
+              ],
+              "sourceRect": [
+                130,
+                108,
+                120,
+                48
+              ],
+              "text": "SIMPLE",
+              "a11y": {
+                "ariaLabel": "Onglet SIMPLE"
+              },
+              "style": {
+                "backgroundColor": "#899AA2",
+                "color": "#FFFFFF",
+                "borderColor": "#FFFFFF",
+                "borderWidth": 1,
+                "radius": "md",
+                "fontSize": 16,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase",
+                "paddingX": 16,
+                "paddingY": 8
+              }
+            },
+            {
+              "id": "Button-12",
+              "type": "Button",
+              "variant": "primary",
+              "bbox": [
+                270,
+                108,
+                180,
+                48
+              ],
+              "sourceRect": [
+                270,
+                108,
+                180,
+                48
+              ],
+              "text": "ADVANCED",
+              "a11y": {
+                "ariaLabel": "Onglet ADVANCED (sélectionné)"
+              },
+              "style": {
+                "backgroundColor": "#899AA2",
+                "color": "#FFFFFF",
+                "borderColor": "#FFFFFF",
+                "borderWidth": 2,
+                "radius": "md",
+                "fontSize": 16,
+                "fontWeight": "bold",
+                "typographyRef": "label",
+                "transform": "uppercase",
+                "paddingX": 16,
+                "paddingY": 8
+              }
+            }
+          ]
+        },
+        {
+          "id": "IconButton-13",
+          "type": "IconButton",
+          "variant": "ghost",
+          "bbox": [
+            800,
+            110,
+            40,
+            40
+          ],
+          "sourceRect": [
+            800,
+            110,
+            40,
+            40
+          ],
+          "iconName": "material.save",
+          "a11y": {
+            "ariaLabel": "Enregistrer le preset"
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "backgroundColor": "#899AA2"
+          }
+        },
+        {
+          "id": "IconButton-14",
+          "type": "IconButton",
+          "variant": "ghost",
+          "bbox": [
+            852,
+            110,
+            40,
+            40
+          ],
+          "sourceRect": [
+            852,
+            110,
+            40,
+            40
+          ],
+          "iconName": "material.more_vert",
+          "a11y": {
+            "ariaLabel": "Plus d’options"
+          },
+          "style": {
+            "color": "#FFFFFF",
+            "backgroundColor": "#899AA2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Text-15",
+      "type": "Text",
+      "bbox": [
+        16,
+        200,
+        200,
+        28
+      ],
+      "sourceRect": [
+        16,
+        200,
+        200,
+        28
+      ],
+      "text": "Nom prédéfini",
+      "style": {
+        "color": "#666666",
+        "fontSize": 14,
+        "fontWeight": "regular",
+        "typographyRef": "muted"
+      }
+    },
+    {
+      "id": "Input-16",
+      "type": "Input",
+      "bbox": [
+        16,
+        232,
+        889,
+        80
+      ],
+      "sourceRect": [
+        16,
+        232,
+        889,
+        80
+      ],
+      "text": "gainage",
+      "a11y": {
+        "ariaLabel": "Champ Nom prédéfini"
+      },
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "color": "#111111",
+        "borderColor": "#DDDDDD",
+        "borderWidth": 1,
+        "radius": "md",
+        "fontSize": 18,
+        "fontWeight": "regular",
+        "typographyRef": "body",
+        "paddingX": 12,
+        "paddingY": 12
+      }
+    },
+    {
+      "id": "Card-17",
+      "type": "Card",
+      "bbox": [
+        16,
+        360,
+        889,
+        770
+      ],
+      "sourceRect": [
+        16,
+        360,
+        889,
+        770
+      ],
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "radius": "md",
+        "paddingX": 0,
+        "paddingY": 0
+      },
+      "layout": {
+        "type": "flex",
+        "direction": "column",
+        "gap": "sm",
+        "align": "start",
+        "justify": "start"
+      },
+      "group": {
+        "alignment": "start",
+        "distribution": "start",
+        "maxWidth": 889
+      },
+      "children": [
+        {
+          "id": "Container-18",
+          "type": "Container",
+          "bbox": [
+            16,
+            360,
+            889,
+            120
+          ],
+          "sourceRect": [
+            16,
+            360,
+            889,
+            120
+          ],
+          "style": {
+            "backgroundColor": "#202020",
+            "paddingX": 24,
+            "paddingY": 20
+          },
+          "layout": {
+            "type": "flex",
+            "direction": "row",
+            "gap": "lg",
+            "align": "center",
+            "justify": "between"
+          },
+          "group": {
+            "alignment": "center",
+            "distribution": "between",
+            "maxWidth": 889
+          },
+          "children": [
+            {
+              "id": "Text-19",
+              "type": "Text",
+              "bbox": [
+                40,
+                395,
+                200,
+                40
+              ],
+              "sourceRect": [
+                40,
+                395,
+                200,
+                40
+              ],
+              "text": "RÉPÉTITIONS",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 20,
+                "fontWeight": "bold",
+                "typographyRef": "title",
+                "transform": "uppercase"
+              }
+            },
+            {
+              "id": "Container-20",
+              "type": "Container",
+              "bbox": [
+                520,
+                392,
+                300,
+                48
+              ],
+              "sourceRect": [
+                520,
+                392,
+                300,
+                48
+              ],
+              "style": {
+                "backgroundColor": "#202020"
+              },
+              "layout": {
+                "type": "flex",
+                "direction": "row",
+                "gap": "md",
+                "align": "center",
+                "justify": "end"
+              },
+              "group": {
+                "alignment": "end",
+                "distribution": "end",
+                "maxWidth": 300
+              },
+              "children": [
+                {
+                  "id": "IconButton-21",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    540,
+                    396,
+                    44,
+                    44
+                  ],
+                  "sourceRect": [
+                    540,
+                    396,
+                    44,
+                    44
+                  ],
+                  "iconName": "material.remove",
+                  "a11y": {
+                    "ariaLabel": "Diminuer répétitions"
+                  },
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#202020"
+                  }
+                },
+                {
+                  "id": "Text-22",
+                  "type": "Text",
+                  "bbox": [
+                    600,
+                    396,
+                    40,
+                    44
+                  ],
+                  "sourceRect": [
+                    600,
+                    396,
+                    40,
+                    44
+                  ],
+                  "text": "1",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 24,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "IconButton-23",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    652,
+                    396,
+                    44,
+                    44
+                  ],
+                  "sourceRect": [
+                    652,
+                    396,
+                    44,
+                    44
+                  ],
+                  "iconName": "material.add",
+                  "a11y": {
+                    "ariaLabel": "Augmenter répétitions"
+                  },
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#202020"
+                  }
+                },
+                {
+                  "id": "IconButton-24",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    844,
+                    396,
+                    44,
+                    44
+                  ],
+                  "sourceRect": [
+                    844,
+                    396,
+                    44,
+                    44
+                  ],
+                  "iconName": "material.more_vert",
+                  "a11y": {
+                    "ariaLabel": "Options répétitions"
+                  },
+                  "placement": "end",
+                  "widthMode": "intrinsic",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#202020"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "Container-25",
+          "type": "Container",
+          "bbox": [
+            16,
+            480,
+            889,
+            534
+          ],
+          "sourceRect": [
+            16,
+            480,
+            889,
+            534
+          ],
+          "style": {
+            "backgroundColor": "#A37F04",
+            "paddingX": 32,
+            "paddingY": 28
+          },
+          "layout": {
+            "type": "flex",
+            "direction": "column",
+            "gap": "md",
+            "align": "start",
+            "justify": "start"
+          },
+          "group": {
+            "alignment": "start",
+            "distribution": "start",
+            "maxWidth": 889
+          },
+          "children": [
+            {
+              "id": "Text-26",
+              "type": "Text",
+              "bbox": [
+                40,
+                508,
+                180,
+                36
+              ],
+              "sourceRect": [
+                40,
+                508,
+                180,
+                36
+              ],
+              "text": "PRÉPARER",
+              "style": {
+                "color": "#111111",
+                "fontSize": 18,
+                "fontWeight": "bold",
+                "typographyRef": "title",
+                "transform": "uppercase"
+              }
+            },
+            {
+              "id": "Divider-27",
+              "type": "Divider",
+              "bbox": [
+                40,
+                544,
+                760,
+                2
+              ],
+              "sourceRect": [
+                40,
+                544,
+                760,
+                2
+              ],
+              "style": {
+                "backgroundColor": "#CCCCCC"
+              }
+            },
+            {
+              "id": "Container-28",
+              "type": "Container",
+              "bbox": [
+                40,
+                560,
+                760,
+                120
+              ],
+              "sourceRect": [
+                40,
+                560,
+                760,
+                120
+              ],
+              "style": {
+                "backgroundColor": "#A37F04"
+              },
+              "layout": {
+                "type": "flex",
+                "direction": "row",
+                "gap": "lg",
+                "align": "center",
+                "justify": "start"
+              },
+              "group": {
+                "alignment": "start",
+                "distribution": "start",
+                "maxWidth": 760
+              },
+              "children": [
+                {
+                  "id": "Text-29",
+                  "type": "Text",
+                  "bbox": [
+                    40,
+                    570,
+                    80,
+                    28
+                  ],
+                  "sourceRect": [
+                    40,
+                    570,
+                    80,
+                    28
+                  ],
+                  "text": "TIME",
+                  "style": {
+                    "color": "#111111",
+                    "fontSize": 18,
+                    "fontWeight": "bold",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "Text-30",
+                  "type": "Text",
+                  "bbox": [
+                    130,
+                    572,
+                    90,
+                    26
+                  ],
+                  "sourceRect": [
+                    130,
+                    572,
+                    90,
+                    26
+                  ],
+                  "text": "REPS",
+                  "style": {
+                    "color": "#666666",
+                    "fontSize": 18,
+                    "fontWeight": "medium",
+                    "typographyRef": "muted",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "IconButton-31",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    210,
+                    610,
+                    48,
+                    48
+                  ],
+                  "sourceRect": [
+                    210,
+                    610,
+                    48,
+                    48
+                  ],
+                  "iconName": "material.remove",
+                  "a11y": {
+                    "ariaLabel": "Diminuer temps"
+                  },
+                  "style": {
+                    "color": "#111111",
+                    "backgroundColor": "#A37F04"
+                  }
+                },
+                {
+                  "id": "Text-32",
+                  "type": "Text",
+                  "bbox": [
+                    270,
+                    606,
+                    200,
+                    56
+                  ],
+                  "sourceRect": [
+                    270,
+                    606,
+                    200,
+                    56
+                  ],
+                  "text": "00 : 05",
+                  "style": {
+                    "color": "#111111",
+                    "fontSize": 36,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "IconButton-33",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    490,
+                    610,
+                    48,
+                    48
+                  ],
+                  "sourceRect": [
+                    490,
+                    610,
+                    48,
+                    48
+                  ],
+                  "iconName": "material.add",
+                  "a11y": {
+                    "ariaLabel": "Augmenter temps"
+                  },
+                  "style": {
+                    "color": "#111111",
+                    "backgroundColor": "#A37F04"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "Container-34",
+              "type": "Container",
+              "bbox": [
+                40,
+                692,
+                760,
+                120
+              ],
+              "sourceRect": [
+                40,
+                692,
+                760,
+                120
+              ],
+              "style": {
+                "backgroundColor": "#A37F04"
+              },
+              "layout": {
+                "type": "flex",
+                "direction": "row",
+                "gap": "md",
+                "align": "center",
+                "justify": "between"
+              },
+              "group": {
+                "alignment": "between",
+                "distribution": "between",
+                "maxWidth": 760
+              },
+              "children": [
+                {
+                  "id": "Container-35",
+                  "type": "Container",
+                  "bbox": [
+                    40,
+                    704,
+                    220,
+                    96
+                  ],
+                  "sourceRect": [
+                    40,
+                    704,
+                    220,
+                    96
+                  ],
+                  "style": {
+                    "backgroundColor": "#A37F04"
+                  },
+                  "layout": {
+                    "type": "flex",
+                    "direction": "row",
+                    "gap": "sm",
+                    "align": "center",
+                    "justify": "start"
+                  },
+                  "group": {
+                    "alignment": "start",
+                    "distribution": "start",
+                    "maxWidth": 220
+                  },
+                  "children": [
+                    {
+                      "id": "Text-36",
+                      "type": "Text",
+                      "bbox": [
+                        40,
+                        712,
+                        90,
+                        28
+                      ],
+                      "sourceRect": [
+                        40,
+                        712,
+                        90,
+                        28
+                      ],
+                      "text": "COLOR",
+                      "style": {
+                        "color": "#111111",
+                        "fontSize": 18,
+                        "fontWeight": "bold",
+                        "typographyRef": "label",
+                        "transform": "uppercase"
+                      }
+                    },
+                    {
+                      "id": "IconButton-37",
+                      "type": "IconButton",
+                      "variant": "ghost",
+                      "bbox": [
+                        136,
+                        704,
+                        48,
+                        48
+                      ],
+                      "sourceRect": [
+                        136,
+                        704,
+                        48,
+                        48
+                      ],
+                      "iconName": "material.colorize",
+                      "a11y": {
+                        "ariaLabel": "Choisir couleur"
+                      },
+                      "style": {
+                        "color": "#111111",
+                        "backgroundColor": "#A37F04"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "Container-38",
+                  "type": "Container",
+                  "bbox": [
+                    520,
+                    704,
+                    280,
+                    96
+                  ],
+                  "sourceRect": [
+                    520,
+                    704,
+                    280,
+                    96
+                  ],
+                  "style": {
+                    "backgroundColor": "#A37F04"
+                  },
+                  "layout": {
+                    "type": "flex",
+                    "direction": "row",
+                    "gap": "md",
+                    "align": "center",
+                    "justify": "end"
+                  },
+                  "group": {
+                    "alignment": "end",
+                    "distribution": "end",
+                    "maxWidth": 280
+                  },
+                  "children": [
+                    {
+                      "id": "IconButton-39",
+                      "type": "IconButton",
+                      "variant": "ghost",
+                      "bbox": [
+                        540,
+                        704,
+                        48,
+                        48
+                      ],
+                      "sourceRect": [
+                        540,
+                        704,
+                        48,
+                        48
+                      ],
+                      "iconName": "material.content_copy",
+                      "a11y": {
+                        "ariaLabel": "Dupliquer étape"
+                      },
+                      "style": {
+                        "color": "#111111",
+                        "backgroundColor": "#A37F04"
+                      }
+                    },
+                    {
+                      "id": "IconButton-40",
+                      "type": "IconButton",
+                      "variant": "ghost",
+                      "bbox": [
+                        600,
+                        704,
+                        48,
+                        48
+                      ],
+                      "sourceRect": [
+                        600,
+                        704,
+                        48,
+                        48
+                      ],
+                      "iconName": "material.delete",
+                      "a11y": {
+                        "ariaLabel": "Supprimer étape"
+                      },
+                      "style": {
+                        "color": "#111111",
+                        "backgroundColor": "#A37F04"
+                      }
+                    },
+                    {
+                      "id": "IconButton-41",
+                      "type": "IconButton",
+                      "variant": "ghost",
+                      "bbox": [
+                        660,
+                        704,
+                        48,
+                        48
+                      ],
+                      "sourceRect": [
+                        660,
+                        704,
+                        48,
+                        48
+                      ],
+                      "iconName": "material.settings",
+                      "a11y": {
+                        "ariaLabel": "Paramètres de l’étape"
+                      },
+                      "style": {
+                        "color": "#111111",
+                        "backgroundColor": "#A37F04"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "Text-42",
+              "type": "Text",
+              "bbox": [
+                790,
+                940,
+                100,
+                32
+              ],
+              "sourceRect": [
+                790,
+                940,
+                100,
+                32
+              ],
+              "text": "00:05",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 18,
+                "fontWeight": "medium",
+                "typographyRef": "value"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Button-43",
+      "type": "Button",
+      "variant": "cta",
+      "bbox": [
+        390,
+        1040,
+        141,
+        141
+      ],
+      "sourceRect": [
+        390,
+        1040,
+        141,
+        141
+      ],
+      "text": "",
+      "a11y": {
+        "ariaLabel": "Ajouter une étape"
+      },
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "color": "#111111",
+        "radius": "xl",
+        "shadow": "md",
+        "borderWidth": 0,
+        "paddingX": 0,
+        "paddingY": 0
+      },
+      "leadingIcon": {
+        "type": "Icon",
+        "iconName": "material.add",
+        "style": {
+          "color": "#111111"
+        }
+      },
+      "placement": "center",
+      "widthMode": "intrinsic"
+    },
+    {
+      "id": "Card-44",
+      "type": "Card",
+      "bbox": [
+        16,
+        1160,
+        889,
+        710
+      ],
+      "sourceRect": [
+        16,
+        1160,
+        889,
+        710
+      ],
+      "style": {
+        "backgroundColor": "#FFFFFF",
+        "radius": "md"
+      },
+      "layout": {
+        "type": "flex",
+        "direction": "column",
+        "gap": "sm",
+        "align": "start",
+        "justify": "start"
+      },
+      "group": {
+        "alignment": "start",
+        "distribution": "start",
+        "maxWidth": 889
+      },
+      "children": [
+        {
+          "id": "Container-45",
+          "type": "Container",
+          "bbox": [
+            16,
+            1160,
+            889,
+            120
+          ],
+          "sourceRect": [
+            16,
+            1160,
+            889,
+            120
+          ],
+          "style": {
+            "backgroundColor": "#202020",
+            "paddingX": 24,
+            "paddingY": 20
+          },
+          "layout": {
+            "type": "flex",
+            "direction": "row",
+            "gap": "lg",
+            "align": "center",
+            "justify": "between"
+          },
+          "group": {
+            "alignment": "center",
+            "distribution": "between",
+            "maxWidth": 889
+          },
+          "children": [
+            {
+              "id": "Text-46",
+              "type": "Text",
+              "bbox": [
+                40,
+                1196,
+                220,
+                40
+              ],
+              "sourceRect": [
+                40,
+                1196,
+                220,
+                40
+              ],
+              "text": "RÉPÉTITIONS",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 20,
+                "fontWeight": "bold",
+                "typographyRef": "title",
+                "transform": "uppercase"
+              }
+            },
+            {
+              "id": "Container-47",
+              "type": "Container",
+              "bbox": [
+                520,
+                1188,
+                320,
+                52
+              ],
+              "sourceRect": [
+                520,
+                1188,
+                320,
+                52
+              ],
+              "style": {
+                "backgroundColor": "#202020"
+              },
+              "layout": {
+                "type": "flex",
+                "direction": "row",
+                "gap": "md",
+                "align": "center",
+                "justify": "end"
+              },
+              "group": {
+                "alignment": "end",
+                "distribution": "end",
+                "maxWidth": 320
+              },
+              "children": [
+                {
+                  "id": "IconButton-48",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    540,
+                    1192,
+                    44,
+                    44
+                  ],
+                  "sourceRect": [
+                    540,
+                    1192,
+                    44,
+                    44
+                  ],
+                  "iconName": "material.remove",
+                  "a11y": {
+                    "ariaLabel": "Diminuer répétitions"
+                  },
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#202020"
+                  }
+                },
+                {
+                  "id": "Text-49",
+                  "type": "Text",
+                  "bbox": [
+                    600,
+                    1192,
+                    60,
+                    44
+                  ],
+                  "sourceRect": [
+                    600,
+                    1192,
+                    60,
+                    44
+                  ],
+                  "text": "20",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 24,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "IconButton-50",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    664,
+                    1192,
+                    44,
+                    44
+                  ],
+                  "sourceRect": [
+                    664,
+                    1192,
+                    44,
+                    44
+                  ],
+                  "iconName": "material.add",
+                  "a11y": {
+                    "ariaLabel": "Augmenter répétitions"
+                  },
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#202020"
+                  }
+                },
+                {
+                  "id": "IconButton-51",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    844,
+                    1192,
+                    44,
+                    44
+                  ],
+                  "sourceRect": [
+                    844,
+                    1192,
+                    44,
+                    44
+                  ],
+                  "iconName": "material.more_vert",
+                  "a11y": {
+                    "ariaLabel": "Options répétitions"
+                  },
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#202020"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "Container-52",
+          "type": "Container",
+          "bbox": [
+            16,
+            1280,
+            889,
+            540
+          ],
+          "sourceRect": [
+            16,
+            1280,
+            889,
+            540
+          ],
+          "style": {
+            "backgroundColor": "#058C50",
+            "paddingX": 32,
+            "paddingY": 28
+          },
+          "layout": {
+            "type": "flex",
+            "direction": "column",
+            "gap": "md",
+            "align": "start",
+            "justify": "start"
+          },
+          "group": {
+            "alignment": "start",
+            "distribution": "start",
+            "maxWidth": 889
+          },
+          "children": [
+            {
+              "id": "Text-53",
+              "type": "Text",
+              "bbox": [
+                40,
+                1308,
+                160,
+                36
+              ],
+              "sourceRect": [
+                40,
+                1308,
+                160,
+                36
+              ],
+              "text": "TRAVAIL",
+              "style": {
+                "color": "#111111",
+                "fontSize": 18,
+                "fontWeight": "bold",
+                "typographyRef": "title",
+                "transform": "uppercase"
+              }
+            },
+            {
+              "id": "Divider-54",
+              "type": "Divider",
+              "bbox": [
+                40,
+                1344,
+                760,
+                2
+              ],
+              "sourceRect": [
+                40,
+                1344,
+                760,
+                2
+              ],
+              "style": {
+                "backgroundColor": "#CCCCCC"
+              }
+            },
+            {
+              "id": "Container-55",
+              "type": "Container",
+              "bbox": [
+                40,
+                1364,
+                760,
+                120
+              ],
+              "sourceRect": [
+                40,
+                1364,
+                760,
+                120
+              ],
+              "style": {
+                "backgroundColor": "#058C50"
+              },
+              "layout": {
+                "type": "flex",
+                "direction": "row",
+                "gap": "lg",
+                "align": "center",
+                "justify": "start"
+              },
+              "group": {
+                "alignment": "start",
+                "distribution": "start",
+                "maxWidth": 760
+              },
+              "children": [
+                {
+                  "id": "Text-56",
+                  "type": "Text",
+                  "bbox": [
+                    40,
+                    1372,
+                    80,
+                    28
+                  ],
+                  "sourceRect": [
+                    40,
+                    1372,
+                    80,
+                    28
+                  ],
+                  "text": "TIME",
+                  "style": {
+                    "color": "#111111",
+                    "fontSize": 18,
+                    "fontWeight": "bold",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "Text-57",
+                  "type": "Text",
+                  "bbox": [
+                    130,
+                    1374,
+                    90,
+                    26
+                  ],
+                  "sourceRect": [
+                    130,
+                    1374,
+                    90,
+                    26
+                  ],
+                  "text": "REPS",
+                  "style": {
+                    "color": "#666666",
+                    "fontSize": 18,
+                    "fontWeight": "medium",
+                    "typographyRef": "muted",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "IconButton-58",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    210,
+                    1410,
+                    48,
+                    48
+                  ],
+                  "sourceRect": [
+                    210,
+                    1410,
+                    48,
+                    48
+                  ],
+                  "iconName": "material.remove",
+                  "a11y": {
+                    "ariaLabel": "Diminuer temps travail"
+                  },
+                  "style": {
+                    "color": "#111111",
+                    "backgroundColor": "#058C50"
+                  }
+                },
+                {
+                  "id": "Text-59",
+                  "type": "Text",
+                  "bbox": [
+                    270,
+                    1406,
+                    210,
+                    56
+                  ],
+                  "sourceRect": [
+                    270,
+                    1406,
+                    210,
+                    56
+                  ],
+                  "text": "00 : 40",
+                  "style": {
+                    "color": "#111111",
+                    "fontSize": 36,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "IconButton-60",
+                  "type": "IconButton",
+                  "variant": "ghost",
+                  "bbox": [
+                    500,
+                    1410,
+                    48,
+                    48
+                  ],
+                  "sourceRect": [
+                    500,
+                    1410,
+                    48,
+                    48
+                  ],
+                  "iconName": "material.add",
+                  "a11y": {
+                    "ariaLabel": "Augmenter temps travail"
+                  },
+                  "style": {
+                    "color": "#111111",
+                    "backgroundColor": "#058C50"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "qa": {
+    "inventory": [
+      {
+        "idx": 1,
+        "roughType": "Container",
+        "roughText": "Status bar background"
+      },
+      {
+        "idx": 2,
+        "roughType": "Text",
+        "roughText": "14:52"
+      },
+      {
+        "idx": 3,
+        "roughType": "Container",
+        "roughText": "Right status icons group"
+      },
+      {
+        "idx": 4,
+        "roughType": "Icon",
+        "roughText": "notifications icon"
+      },
+      {
+        "idx": 5,
+        "roughType": "Icon",
+        "roughText": "network icon"
+      },
+      {
+        "idx": 6,
+        "roughType": "Text",
+        "roughText": "51%"
+      },
+      {
+        "idx": 7,
+        "roughType": "Icon",
+        "roughText": "battery icon"
+      },
+      {
+        "idx": 8,
+        "roughType": "Container",
+        "roughText": "App header / tabs bar"
+      },
+      {
+        "idx": 9,
+        "roughType": "IconButton",
+        "roughText": "close"
+      },
+      {
+        "idx": 10,
+        "roughType": "Container",
+        "roughText": "tabs group"
+      },
+      {
+        "idx": 11,
+        "roughType": "Button",
+        "roughText": "SIMPLE"
+      },
+      {
+        "idx": 12,
+        "roughType": "Button",
+        "roughText": "ADVANCED"
+      },
+      {
+        "idx": 13,
+        "roughType": "IconButton",
+        "roughText": "save"
+      },
+      {
+        "idx": 14,
+        "roughType": "IconButton",
+        "roughText": "more"
+      },
+      {
+        "idx": 15,
+        "roughType": "Text",
+        "roughText": "Nom prédéfini"
+      },
+      {
+        "idx": 16,
+        "roughType": "Input",
+        "roughText": "gainage"
+      },
+      {
+        "idx": 17,
+        "roughType": "Card",
+        "roughText": "Card 1 (Préparer)"
+      },
+      {
+        "idx": 18,
+        "roughType": "Container",
+        "roughText": "Header Répétitions 1"
+      },
+      {
+        "idx": 19,
+        "roughType": "Text",
+        "roughText": "RÉPÉTITIONS"
+      },
+      {
+        "idx": 20,
+        "roughType": "Container",
+        "roughText": "Rep controls 1"
+      },
+      {
+        "idx": 21,
+        "roughType": "IconButton",
+        "roughText": "-"
+      },
+      {
+        "idx": 22,
+        "roughType": "Text",
+        "roughText": "1"
+      },
+      {
+        "idx": 23,
+        "roughType": "IconButton",
+        "roughText": "+"
+      },
+      {
+        "idx": 24,
+        "roughType": "IconButton",
+        "roughText": "more"
+      },
+      {
+        "idx": 25,
+        "roughType": "Container",
+        "roughText": "Yellow section"
+      },
+      {
+        "idx": 26,
+        "roughType": "Text",
+        "roughText": "PRÉPARER"
+      },
+      {
+        "idx": 27,
+        "roughType": "Divider",
+        "roughText": "divider line"
+      },
+      {
+        "idx": 28,
+        "roughType": "Container",
+        "roughText": "TIME/REPS row"
+      },
+      {
+        "idx": 29,
+        "roughType": "Text",
+        "roughText": "TIME"
+      },
+      {
+        "idx": 30,
+        "roughType": "Text",
+        "roughText": "REPS"
+      },
+      {
+        "idx": 31,
+        "roughType": "IconButton",
+        "roughText": "time -"
+      },
+      {
+        "idx": 32,
+        "roughType": "Text",
+        "roughText": "00 : 05"
+      },
+      {
+        "idx": 33,
+        "roughType": "IconButton",
+        "roughText": "time +"
+      },
+      {
+        "idx": 34,
+        "roughType": "Container",
+        "roughText": "COLOR + actions row"
+      },
+      {
+        "idx": 35,
+        "roughType": "Container",
+        "roughText": "COLOR left group"
+      },
+      {
+        "idx": 36,
+        "roughType": "Text",
+        "roughText": "COLOR"
+      },
+      {
+        "idx": 37,
+        "roughType": "IconButton",
+        "roughText": "colorize"
+      },
+      {
+        "idx": 38,
+        "roughType": "Container",
+        "roughText": "Actions right group"
+      },
+      {
+        "idx": 39,
+        "roughType": "IconButton",
+        "roughText": "copy"
+      },
+      {
+        "idx": 40,
+        "roughType": "IconButton",
+        "roughText": "delete"
+      },
+      {
+        "idx": 41,
+        "roughType": "IconButton",
+        "roughText": "settings"
+      },
+      {
+        "idx": 42,
+        "roughType": "Text",
+        "roughText": "00:05 (small bottom-right)"
+      },
+      {
+        "idx": 43,
+        "roughType": "Button",
+        "roughText": "FAB +"
+      },
+      {
+        "idx": 44,
+        "roughType": "Card",
+        "roughText": "Card 2 (Travail)"
+      },
+      {
+        "idx": 45,
+        "roughType": "Container",
+        "roughText": "Header Répétitions 2"
+      },
+      {
+        "idx": 46,
+        "roughType": "Text",
+        "roughText": "RÉPÉTITIONS"
+      },
+      {
+        "idx": 47,
+        "roughType": "Container",
+        "roughText": "Rep controls 2"
+      },
+      {
+        "idx": 48,
+        "roughType": "IconButton",
+        "roughText": "-"
+      },
+      {
+        "idx": 49,
+        "roughType": "Text",
+        "roughText": "20"
+      },
+      {
+        "idx": 50,
+        "roughType": "IconButton",
+        "roughText": "+"
+      },
+      {
+        "idx": 51,
+        "roughType": "IconButton",
+        "roughText": "more"
+      },
+      {
+        "idx": 52,
+        "roughType": "Container",
+        "roughText": "Green section"
+      },
+      {
+        "idx": 53,
+        "roughType": "Text",
+        "roughText": "TRAVAIL"
+      },
+      {
+        "idx": 54,
+        "roughType": "Divider",
+        "roughText": "divider line"
+      },
+      {
+        "idx": 55,
+        "roughType": "Container",
+        "roughText": "TIME/REPS row"
+      },
+      {
+        "idx": 56,
+        "roughType": "Text",
+        "roughText": "TIME"
+      },
+      {
+        "idx": 57,
+        "roughType": "Text",
+        "roughText": "REPS"
+      },
+      {
+        "idx": 58,
+        "roughType": "IconButton",
+        "roughText": "time -"
+      },
+      {
+        "idx": 59,
+        "roughType": "Text",
+        "roughText": "00 : 40"
+      },
+      {
+        "idx": 60,
+        "roughType": "IconButton",
+        "roughText": "time +"
+      }
+    ],
+    "countsByType": {
+      "Text": 20,
+      "Button": 3,
+      "Icon": 4,
+      "IconButton": 18,
+      "Slider": 0,
+      "Container": 11,
+      "Card": 2,
+      "Placeholder": 0,
+      "Divider": 2,
+      "Input": 1
+    },
+    "textCoverage": {
+      "found": [
+        "14:52",
+        "51%",
+        "SIMPLE",
+        "ADVANCED",
+        "Nom prédéfini",
+        "gainage",
+        "RÉPÉTITIONS",
+        "1",
+        "PRÉPARER",
+        "TIME",
+        "REPS",
+        "00 : 05",
+        "COLOR",
+        "00:05",
+        "RÉPÉTITIONS",
+        "20",
+        "TRAVAIL",
+        "00 : 40"
+      ],
+      "missing": []
+    },
+    "colorsUsed": [
+      {
+        "hex": "#38535F",
+        "token": "headerBackgroundDark"
+      },
+      {
+        "hex": "#899AA2",
+        "token": "tabBarBackground"
+      },
+      {
+        "hex": "#E6E6E6",
+        "token": "background"
+      },
+      {
+        "hex": "#FFFFFF",
+        "token": "surface"
+      },
+      {
+        "hex": "#202020",
+        "token": "cardHeaderBg"
+      },
+      {
+        "hex": "#A37F04",
+        "token": "yellowSectionBg"
+      },
+      {
+        "hex": "#058C50",
+        "token": "greenSectionBg"
+      },
+      {
+        "hex": "#111111",
+        "token": "textPrimary"
+      },
+      {
+        "hex": "#666666",
+        "token": "textSecondary"
+      },
+      {
+        "hex": "#CCCCCC",
+        "token": "divider"
+      }
+    ],
+    "missingAtoms": [],
+    "coverageRatio": 1,
+    "checklist": [
+      "every visual element in snapshot has a component with bbox",
+      "all texts copied verbatim",
+      "colors extracted as hex",
+      "interactive elements have a11y.ariaLabel",
+      "no invented components",
+      "units are px integers",
+      "all groups represented as Container/Card with styles",
+      "all groups include explicit layout"
+    ],
+    "semanticChecklist": [
+      "group alignment encoded when visually centered",
+      "non-fullwidth actions have placement and widthMode",
+      "icon+label actions encoded as composed buttons (leadingIcon+text)",
+      "uppercase labels use style.transform",
+      "variants map to semantic color tokens (no stray hex)"
+    ],
+    "assumptions": [
+      {
+        "note": "Couleurs estimées par échantillonnage de zones du snapshot (status bar ~#38535F, jaune ~#A37F04, vert ~#058C50, fond ~#E6E6E6).",
+        "confidence": 0.85
+      },
+      {
+        "note": "BBoxes approximés aux repères visuels (sans grille ni mesures sources). bbox == sourceRect partout.",
+        "confidence": 0.8
+      },
+      {
+        "note": "Icônes exactes du status bar (notifications, network, battery) et de certaines actions sont déduites du design Android standard ; noms iconName qualifiés au plus proche.",
+        "confidence": 0.75
+      },
+      {
+        "note": "Les onglets sont modélisés en Buttons (secondary vs primary) pour refléter l’état sélectionné.",
+        "confidence": 0.9
+      },
+      {
+        "note": "Le bouton central + est un FAB circulaire superposé entre cartes ; modélisé comme Button avec leadingIcon.",
+        "confidence": 0.9
+      },
+      {
+        "note": "Typographies mappées vers des refs génériques (title/value/label).",
+        "confidence": 0.8
+      }
+    ],
+    "openQuestions": [],
+    "confidenceGlobal": 0.83
+  }
+}

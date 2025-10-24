@@ -1,5 +1,3 @@
-## v3
-
 Tu es un extracteur UI strict. À partir du snapshot fourni, produis **UN SEUL** fichier JSON `design.json` au format **mini-Figma enrichi**.
 
 ---
