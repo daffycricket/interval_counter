@@ -1,0 +1,413 @@
+{
+  "meta": {
+    "version": "1.0",
+    "screenName": "Workout",
+    "snapshotRef": "Screenshot_20250913_145402_Interval Timer.jpg"
+  },
+  "tokens": {
+    "colors": {
+      "primary": "#586E7C",
+      "onPrimary": "#FFFFFF",
+      "background": "#E6B300",
+      "surface": "#E6B300",
+      "textPrimary": "#111111",
+      "textSecondary": "#F0D27A",
+      "divider": "#000000",
+      "accent": "#586E7C",
+      "sliderActive": "#111111",
+      "sliderInactive": "#333333",
+      "sliderThumb": "#111111",
+      "border": "#586E7C",
+      "cta": "#586E7C",
+      "success": "#2E7D32",
+      "warning": "#FFC107",
+      "info": "#0288D1",
+      "headerBackgroundDark": "#E6B300",
+      "ghostButtonBg": "#586E7C"
+    },
+    "typography": {
+      "fontFamilies": ["Roboto", "sans-serif", "unknown"],
+      "fontSizes": { "xs": 12, "sm": 14, "md": 16, "lg": 24, "xl": 64 },
+      "fontWeights": { "regular": 400, "medium": 500, "bold": 700 },
+      "lineHeights": { "sm": 16, "md": 20, "lg": 28 }
+    },
+    "spacing": { "xxs": 4, "xs": 8, "sm": 12, "md": 16, "lg": 24, "xl": 32 },
+    "radius": { "sm": 4, "md": 8, "lg": 16, "xl": 28 },
+    "shadow": {
+      "sm": "0 1px 2px rgba(0,0,0,0.15)",
+      "md": "0 2px 6px rgba(0,0,0,0.2)",
+      "lg": "0 6px 18px rgba(0,0,0,0.25)"
+    }
+  },
+  "screen": {
+    "size": { "width": 921, "height": 2048 },
+    "layout": { "orientation": "portrait", "scrollable": false }
+  },
+  "components": [
+    {
+      "id": "Container-1",
+      "type": "Container",
+      "bbox": [0, 0, 921, 64],
+      "sourceRect": [0, 0, 921, 64],
+      "style": { "backgroundColor": "#E6B300", "paddingX": 16, "paddingY": 8 },
+      "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": "sm",
+        "align": "center",
+        "justify": "between"
+      },
+      "group": { "alignment": "center", "distribution": "between" },
+      "children": ["Text-2", "Container-3"]
+    },
+    {
+      "id": "Text-2",
+      "type": "Text",
+      "bbox": [12, 12, 80, 40],
+      "sourceRect": [12, 12, 80, 40],
+      "text": "14:54",
+      "style": {
+        "color": "#111111",
+        "fontSize": 24,
+        "fontWeight": "medium",
+        "typographyRef": "title",
+        "transform": "none",
+        "lineHeight": 28
+      }
+    },
+    {
+      "id": "Container-3",
+      "type": "Container",
+      "bbox": [760, 8, 149, 48],
+      "sourceRect": [760, 8, 149, 48],
+      "style": { "backgroundColor": "#E6B300", "paddingX": 0, "paddingY": 0 },
+      "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": "xs",
+        "align": "center",
+        "justify": "end"
+      },
+      "group": { "alignment": "end", "distribution": "end" },
+      "children": ["Text-4", "Icon-5", "Placeholder-6"]
+    },
+    {
+      "id": "Text-4",
+      "type": "Text",
+      "bbox": [760, 16, 44, 24],
+      "sourceRect": [760, 16, 44, 24],
+      "text": "50%",
+      "style": {
+        "color": "#111111",
+        "fontSize": 16,
+        "fontWeight": "regular",
+        "typographyRef": "label",
+        "transform": "none",
+        "lineHeight": 20
+      },
+      "placement": "end",
+      "widthMode": "intrinsic"
+    },
+    {
+      "id": "Icon-5",
+      "type": "Icon",
+      "bbox": [810, 12, 28, 40],
+      "sourceRect": [810, 12, 28, 40],
+      "iconName": "material.battery_full",
+      "style": { "color": "#111111" }
+    },
+    {
+      "id": "Placeholder-6",
+      "type": "Placeholder",
+      "bbox": [842, 12, 67, 40],
+      "sourceRect": [842, 12, 67, 40],
+      "text": "other status icons (wifi/bluetooth)",
+      "style": { "color": "#111111" }
+    },
+    {
+      "id": "IconButton-7",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [20, 96, 44, 44],
+      "sourceRect": [20, 96, 44, 44],
+      "iconName": "material.volume_up",
+      "a11y": { "ariaLabel": "Régler le volume" },
+      "style": {
+        "backgroundColor": "#E6B300",
+        "color": "#111111",
+        "radius": "sm"
+      }
+    },
+    {
+      "id": "Slider-8",
+      "type": "Slider",
+      "bbox": [80, 104, 760, 28],
+      "sourceRect": [80, 104, 760, 28],
+      "style": {
+        "activeTrack": "#111111",
+        "inactiveTrack": "#333333",
+        "thumbColor": "#111111",
+        "trackHeight": 4
+      },
+      "valueNormalized": 0.95,
+      "children": ["Icon-9"]
+    },
+    {
+      "id": "Icon-9",
+      "type": "Icon",
+      "bbox": [828, 110, 16, 16],
+      "sourceRect": [828, 110, 16, 16],
+      "iconName": "material.circle",
+      "style": { "color": "#111111" }
+    },
+    {
+      "id": "IconButton-10",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [80, 224, 48, 48],
+      "sourceRect": [80, 224, 48, 48],
+      "iconName": "material.skip_previous",
+      "a11y": { "ariaLabel": "Reculer" },
+      "style": {
+        "backgroundColor": "#E6B300",
+        "color": "#111111",
+        "radius": "sm"
+      }
+    },
+    {
+      "id": "Button-11",
+      "type": "Button",
+      "variant": "secondary",
+      "bbox": [140, 184, 640, 96],
+      "sourceRect": [140, 184, 640, 96],
+      "text": "Maintenir pour sortir",
+      "a11y": { "ariaLabel": "Maintenir pour sortir" },
+      "style": {
+        "backgroundColor": "#586E7C",
+        "color": "#CCDDE7",
+        "fontSize": 24,
+        "fontWeight": "medium",
+        "typographyRef": "title",
+        "transform": "none",
+        "paddingX": 24,
+        "paddingY": 16,
+        "radius": "xl",
+        "borderWidth": 0
+      }
+    },
+    {
+      "id": "IconButton-12",
+      "type": "IconButton",
+      "variant": "ghost",
+      "bbox": [864, 224, 48, 48],
+      "sourceRect": [864, 224, 48, 48],
+      "iconName": "material.play_arrow",
+      "a11y": { "ariaLabel": "Lecture" },
+      "style": {
+        "backgroundColor": "#E6B300",
+        "color": "#111111",
+        "radius": "sm"
+      }
+    },
+    {
+      "id": "Text-13",
+      "type": "Text",
+      "bbox": [40, 680, 841, 420],
+      "sourceRect": [40, 680, 841, 420],
+      "text": "00:05",
+      "style": {
+        "color": "#111111",
+        "fontSize": 400,
+        "fontWeight": "bold",
+        "typographyRef": "value",
+        "transform": "none",
+        "lineHeight": 420
+      },
+      "group": { "alignment": "center", "distribution": "around" }
+    },
+    {
+      "id": "Text-14",
+      "type": "Text",
+      "bbox": [20, 1220, 880, 180],
+      "sourceRect": [20, 1220, 880, 180],
+      "text": "PRÉPARER",
+      "style": {
+        "color": "#F0D27A",
+        "fontSize": 160,
+        "fontWeight": "bold",
+        "typographyRef": "titleLarge",
+        "transform": "uppercase",
+        "lineHeight": 170
+      }
+    },
+    {
+      "id": "IconButton-15",
+      "type": "IconButton",
+      "variant": "secondary",
+      "bbox": [812, 1768, 120, 120],
+      "sourceRect": [812, 1768, 120, 120],
+      "iconName": "material.pause",
+      "a11y": { "ariaLabel": "Pause" },
+      "style": {
+        "backgroundColor": "#536F7B",
+        "color": "#FFFFFF",
+        "radius": "lg",
+        "shadow": "lg"
+      }
+    },
+    {
+      "id": "Container-16",
+      "type": "Container",
+      "bbox": [0, 1992, 921, 56],
+      "sourceRect": [0, 1992, 921, 56],
+      "style": { "backgroundColor": "#1A1A1A", "paddingX": 48, "paddingY": 8 },
+      "layout": {
+        "type": "flex",
+        "direction": "row",
+        "gap": "lg",
+        "align": "center",
+        "justify": "between"
+      },
+      "group": { "alignment": "center", "distribution": "between" },
+      "children": ["Icon-17", "Icon-18", "Icon-19"]
+    },
+    {
+      "id": "Icon-17",
+      "type": "Icon",
+      "bbox": [200, 1996, 40, 40],
+      "sourceRect": [200, 1996, 40, 40],
+      "iconName": "android.back",
+      "style": { "color": "#FFFFFF" }
+    },
+    {
+      "id": "Icon-18",
+      "type": "Icon",
+      "bbox": [440, 1996, 40, 40],
+      "sourceRect": [440, 1996, 40, 40],
+      "iconName": "android.home",
+      "style": { "color": "#FFFFFF" }
+    },
+    {
+      "id": "Icon-19",
+      "type": "Icon",
+      "bbox": [700, 1996, 40, 40],
+      "sourceRect": [700, 1996, 40, 40],
+      "iconName": "android.overview",
+      "style": { "color": "#FFFFFF" }
+    }
+  ],
+  "qa": {
+    "inventory": [
+      {
+        "idx": 1,
+        "roughType": "Container",
+        "roughText": "status bar background"
+      },
+      { "idx": 2, "roughType": "Text", "roughText": "14:54" },
+      {
+        "idx": 3,
+        "roughType": "Container",
+        "roughText": "status icons cluster"
+      },
+      { "idx": 4, "roughType": "Text", "roughText": "50%" },
+      { "idx": 5, "roughType": "Icon", "roughText": "battery" },
+      {
+        "idx": 6,
+        "roughType": "Placeholder",
+        "roughText": "other status icons"
+      },
+      { "idx": 7, "roughType": "IconButton", "roughText": "volume" },
+      { "idx": 8, "roughType": "Slider", "roughText": "volume slider" },
+      { "idx": 9, "roughType": "Icon", "roughText": "slider thumb" },
+      { "idx": 10, "roughType": "IconButton", "roughText": "skip previous" },
+      {
+        "idx": 11,
+        "roughType": "Button",
+        "roughText": "Maintenir pour sortir"
+      },
+      { "idx": 12, "roughType": "IconButton", "roughText": "play" },
+      { "idx": 13, "roughType": "Text", "roughText": "00:05" },
+      { "idx": 14, "roughType": "Text", "roughText": "PRÉPARER" },
+      { "idx": 15, "roughType": "IconButton", "roughText": "pause FAB" },
+      { "idx": 16, "roughType": "Container", "roughText": "system nav bar" },
+      { "idx": 17, "roughType": "Icon", "roughText": "back" },
+      { "idx": 18, "roughType": "Icon", "roughText": "home" },
+      { "idx": 19, "roughType": "Icon", "roughText": "overview" }
+    ],
+    "countsByType": {
+      "Text": 4,
+      "Button": 1,
+      "Icon": 7,
+      "IconButton": 4,
+      "Slider": 1,
+      "Container": 3,
+      "Card": 0,
+      "Placeholder": 1
+    },
+    "textCoverage": {
+      "found": ["14:54", "50%", "Maintenir pour sortir", "00:05", "PRÉPARER"],
+      "missing": []
+    },
+    "colorsUsed": [
+      { "hex": "#E6B300", "token": "background" },
+      { "hex": "#111111", "token": "textPrimary" },
+      { "hex": "#586E7C", "token": "primary" },
+      { "hex": "#CCDDE7", "token": "onPrimary" },
+      { "hex": "#F0D27A", "token": "textSecondary" },
+      { "hex": "#333333", "token": "sliderInactive" },
+      { "hex": "#536F7B", "token": "cta" },
+      { "hex": "#FFFFFF", "token": "onPrimary" }
+    ],
+    "missingAtoms": [],
+    "coverageRatio": 1.0,
+    "checklist": [
+      "every visual element in snapshot has a component with bbox",
+      "all texts copied verbatim",
+      "colors extracted as hex",
+      "interactive elements have a11y.ariaLabel",
+      "no invented components",
+      "units are px integers",
+      "all groups represented as Container/Card with styles",
+      "all groups include explicit layout"
+    ],
+    "semanticChecklist": [
+      "group alignment encoded when visually centered",
+      "non-fullwidth actions have placement and widthMode",
+      "icon+label actions encoded as composed buttons (leadingIcon+text)",
+      "uppercase labels use style.transform",
+      "variants map to semantic color tokens (no stray hex)"
+    ],
+    "assumptions": [
+      {
+        "note": "Background yellow measured close to RGB(230,179,0) → #E6B300.",
+        "confidence": 0.9
+      },
+      {
+        "note": "Main text color approximated to near-black #111111 as sampling on glyphs is difficult due to anti-aliasing.",
+        "confidence": 0.75
+      },
+      {
+        "note": "Secondary large label 'PRÉPARER' appears as low-opacity light overlay; encoded as #F0D27A.",
+        "confidence": 0.7
+      },
+      {
+        "note": "Status bar icons (wifi/bluetooth/etc.) not uniquely identifiable; grouped as Placeholder.",
+        "confidence": 0.65
+      },
+      {
+        "note": "Slider value estimated from thumb near extreme right ≈ 0.95.",
+        "confidence": 0.8
+      },
+      {
+        "note": "FAB circle measured around RGB(83,111,123) → #536F7B; encoded as variant secondary.",
+        "confidence": 0.85
+      },
+      {
+        "note": "BBoxes are approximated by visual inspection; sourceRect equals bbox throughout.",
+        "confidence": 0.8
+      }
+    ],
+    "openQuestions": [],
+    "confidenceGlobal": 0.8
+  }
+}
