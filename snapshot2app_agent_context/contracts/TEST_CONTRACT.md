@@ -29,7 +29,6 @@ All new code must be tested.
 - Every interactive component in plan.md
 - All serialization (toJson/fromJson) in Models
 - All navigation triggers
-- All accessibility labels from design.json
 
 **FAIL immediately if:**
 - Any State class < 100% coverage (blocks build)
@@ -40,9 +39,7 @@ All new code must be tested.
 
 ---
 
-## Test Organization
-
-### File Structure
+## Test Organization and file structure
 
 **MUST mirror lib/ structure:**
 ```
@@ -261,9 +258,7 @@ void main() {
 - Widget updates when State changes (via Provider)
 - Enabled/disabled states work correctly
 
-✅ **Accessibility:**
-- Semantic labels present and correct
-- Semantic roles correct (button, slider, etc.)
+❌ **Do not create semantic tests**
 
 **Example test structure:**
 ```dart
@@ -394,45 +389,6 @@ void main() {
 
 ---
 
-### 5. Accessibility Tests (Priority: HIGH)
-
-**For each component with a11y.ariaLabel in design.json:**
-
-✅ **Semantic Labels:**
-- Verify label matches ariaLabel from design.json
-- Verify label is localized if applicable
-
-✅ **Semantic Roles:**
-- Button → isButton: true
-- Slider → hasEnabledState: true, valueIndicator
-- TextField → isTextField: true
-
-✅ **Semantic States:**
-- Enabled/disabled state correct
-- Selected state correct (if applicable)
-
-**Example:**
-```dart
-testWidgets('start button has correct semantics', (tester) async {
-  await tester.pumpWidget(createTestWidget());
-  
-  final semantics = tester.getSemantics(
-    find.byKey(const Key('home__button_start'))
-  );
-  
-  expect(
-    semantics,
-    matchesSemantics(
-      label: 'Commencer l\'entraînement',
-      isButton: true,
-      isEnabled: true,
-    ),
-  );
-});
-```
-
----
-
 ## Test Generation Process
 
 ### In 04_BUILD_SCREEN.prompt, Step 10:
@@ -456,9 +412,6 @@ testWidgets('start button has correct semantics', (tester) async {
 5. **Generate Screen integration test**:
    - Verify all key components present
    - Test one critical flow
-6. **Generate Accessibility tests**:
-   - Extract a11y.ariaLabel from design.json
-   - Generate semantic verification tests
 
 **Verification:**
 - Run `flutter test --coverage`
@@ -477,8 +430,7 @@ Before marking tests as complete:
 - [ ] All interactive components (from plan.md) have widget tests
 - [ ] Screen integration test covers main flow
 - [ ] Golden tests exist for styled components (if applicable)
-- [ ] A11y tests verify semantic labels
-- [ ] `flutter test --coverage` succeeds (exit code 0)
+- [ ] `flutter test --coverage/lcov.info --output-directory coverage/html` succeeds (exit code 0)
 - [ ] Coverage thresholds met:
   - [ ] State: 100%
   - [ ] Model: 100%
@@ -497,7 +449,6 @@ Before marking tests as complete:
 - State coverage == 100%
 - Model coverage == 100%
 - All plan.md interactive components tested
-- All a11y components have semantic tests
 - G-09 guardrail satisfied
 
 ❌ **FAIL** if:
@@ -506,7 +457,6 @@ Before marking tests as complete:
 - Coverage < thresholds
 - Untested State methods
 - Untested interactive components
-- Missing a11y tests for labeled components
 
 ---
 
@@ -522,6 +472,13 @@ Before marking tests as complete:
 → Tests will fail
 → Fix code first (not tests)
 → Re-run test generation
+
+---
+
+## Best practices
+**Use specific test data** - avoid duplicate values that can cause test ambiguity
+- **Set proper locale** - always use `locale: const Locale('fr')` for French localization in tests
+**Avoid fragile tests**: No tests for framework-generated semantics
 
 ---
 
@@ -541,3 +498,9 @@ Before marking tests as complete:
 - Navigation logic
 - Validation logic
 
+---
+
+## See Also
+- `contracts/PROJECT_CONTRACT.md` — Architecture patterns
+- `guides/BEST_PRACTICES.md` — Common pitfalls to avoid
+- `guides/UI_MAPPING_GUIDE.md` — UI rendering rules

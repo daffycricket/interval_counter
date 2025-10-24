@@ -7,6 +7,7 @@ import '../widgets/home/presets_header.dart';
 import '../widgets/home/preset_card.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../routes/app_routes.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Écran principal de l'application
@@ -93,7 +94,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: PresetsHeader(
                 onEdit: homeState.editPresets,
-                onAdd: () => _showAddPresetDialog(context, homeState),
+                onAdd: () => _navigateToPresetEditor(context),
               ),
             ),
 
@@ -136,20 +137,22 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  /// Navigation vers l'écran d'édition de préréglage (nouveau préréglage)
+  void _navigateToPresetEditor(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      AppRoutes.presetEditor,
+      arguments: {
+        'isEditMode': false,
+      },
+    );
+  }
+
   /// Affiche le dialog de sauvegarde de préréglage
   void _showSavePresetDialog(BuildContext context, HomeState homeState) {
     _showPresetDialog(
       context: context,
       title: AppLocalizations.of(context)!.savePresetLabel,
-      onSave: (name) => homeState.savePreset(name),
-    );
-  }
-
-  /// Affiche le dialog d'ajout de préréglage
-  void _showAddPresetDialog(BuildContext context, HomeState homeState) {
-    _showPresetDialog(
-      context: context,
-      title: AppLocalizations.of(context)!.addPresetLabel,
       onSave: (name) => homeState.savePreset(name),
     );
   }

@@ -197,6 +197,157 @@ void main() {
       expect(string, contains('10'));
       expect(string, contains('30'));
     });
+
+    // Tests pour les nouveaux champs (prepareSeconds, cooldownSeconds)
+    
+    test('creates preset with prepareSeconds and cooldownSeconds', () {
+      const preset = Preset(
+        id: 'test-id',
+        name: 'Advanced',
+        prepareSeconds: 10,
+        repetitions: 15,
+        workSeconds: 45,
+        restSeconds: 20,
+        cooldownSeconds: 30,
+      );
+
+      expect(preset.prepareSeconds, 10);
+      expect(preset.cooldownSeconds, 30);
+    });
+
+    test('uses default values for prepareSeconds and cooldownSeconds', () {
+      const preset = Preset(
+        id: 'test-id',
+        name: 'Basic',
+        repetitions: 10,
+        workSeconds: 30,
+        restSeconds: 10,
+      );
+
+      expect(preset.prepareSeconds, 0);
+      expect(preset.cooldownSeconds, 0);
+    });
+
+    test('calculates total duration with prepare and cooldown', () {
+      const preset = Preset(
+        id: 'test-id',
+        name: 'Full',
+        prepareSeconds: 10,
+        repetitions: 5,
+        workSeconds: 40,
+        restSeconds: 20,
+        cooldownSeconds: 30,
+      );
+
+      // 10 (prepare) + 5 * (40 + 20) (work/rest) + 30 (cooldown) = 10 + 300 + 30 = 340
+      expect(preset.totalDurationSeconds, 340);
+    });
+
+    test('fromJson handles missing prepareSeconds and cooldownSeconds', () {
+      final json = {
+        'id': 'legacy-id',
+        'name': 'Legacy Preset',
+        'repetitions': 15,
+        'workSeconds': 45,
+        'restSeconds': 15,
+      };
+
+      final preset = Preset.fromJson(json);
+
+      expect(preset.id, 'legacy-id');
+      expect(preset.prepareSeconds, 0);
+      expect(preset.cooldownSeconds, 0);
+    });
+
+    test('fromJson parses prepareSeconds and cooldownSeconds', () {
+      final json = {
+        'id': 'new-id',
+        'name': 'New Preset',
+        'prepareSeconds': 5,
+        'repetitions': 10,
+        'workSeconds': 40,
+        'restSeconds': 20,
+        'cooldownSeconds': 30,
+      };
+
+      final preset = Preset.fromJson(json);
+
+      expect(preset.prepareSeconds, 5);
+      expect(preset.cooldownSeconds, 30);
+    });
+
+    test('toJson includes prepareSeconds and cooldownSeconds', () {
+      const preset = Preset(
+        id: 'test-id',
+        name: 'Complete',
+        prepareSeconds: 5,
+        repetitions: 12,
+        workSeconds: 35,
+        restSeconds: 10,
+        cooldownSeconds: 25,
+      );
+
+      final json = preset.toJson();
+
+      expect(json['prepareSeconds'], 5);
+      expect(json['cooldownSeconds'], 25);
+    });
+
+    test('copyWith works with prepareSeconds and cooldownSeconds', () {
+      const preset = Preset(
+        id: 'test-id',
+        name: 'Original',
+        prepareSeconds: 5,
+        repetitions: 10,
+        workSeconds: 30,
+        restSeconds: 10,
+        cooldownSeconds: 20,
+      );
+
+      final modified = preset.copyWith(
+        prepareSeconds: 10,
+        cooldownSeconds: 30,
+      );
+
+      expect(modified.prepareSeconds, 10);
+      expect(modified.cooldownSeconds, 30);
+      expect(modified.repetitions, preset.repetitions);
+    });
+
+    test('equality includes prepareSeconds and cooldownSeconds', () {
+      const preset1 = Preset(
+        id: 'same-id',
+        name: 'Test',
+        prepareSeconds: 5,
+        repetitions: 10,
+        workSeconds: 30,
+        restSeconds: 10,
+        cooldownSeconds: 20,
+      );
+
+      const preset2 = Preset(
+        id: 'same-id',
+        name: 'Test',
+        prepareSeconds: 5,
+        repetitions: 10,
+        workSeconds: 30,
+        restSeconds: 10,
+        cooldownSeconds: 20,
+      );
+
+      const preset3 = Preset(
+        id: 'same-id',
+        name: 'Test',
+        prepareSeconds: 10, // Different
+        repetitions: 10,
+        workSeconds: 30,
+        restSeconds: 10,
+        cooldownSeconds: 20,
+      );
+
+      expect(preset1, equals(preset2));
+      expect(preset1, isNot(equals(preset3)));
+    });
   });
 }
 

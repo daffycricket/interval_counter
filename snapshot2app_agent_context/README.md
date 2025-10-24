@@ -5,7 +5,7 @@ generate a Flutter app **screen-by-screen** from:
 - a design file (`design.json`, *mini‑Figma enriched*) and
 - a functional spec (`spec.md`).
 
-This pack contains: prompts, mapping guides, evaluation rubrics, runbooks, CI templates, and guardrails.
+This pack contains: prompts, mapping guides, best practices, evaluation rubrics, runbooks, CI templates, and guardrails.
 It **does not** contain generated Flutter code. Agents will consume these files and produce code in the project
 workspace under `lib/`, `test/`, etc.
 
@@ -54,7 +54,8 @@ Report folder: reports/home
 ### Build new screen, using previous screen generation as reference
 Run 00_ORCHESTRATOR.prompt
 Inputs:
- - design.json: sources/new_preset/preset_editor_design.json
- - spec.md from home screen in reports/home
+ - design.json: sources/new_preset/preset_editor_design_simple.json
+ - spec_complement.md: sources/new_preset/preset_editor_design_simple_spec_complement.md
+Refer to code already present in lib/ directory as a reference.
 Report folder: reports/new_preset
 

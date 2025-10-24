@@ -26,6 +26,20 @@
   "addPresetLabel": "Ajouter un préréglage",
   "presetNamePrompt": "Nom du préréglage",
   "cancelButton": "ANNULER",
-  "okButton": "OK"
+  "okButton": "OK",
+  "simpleModeButton": "SIMPLE",
+  "advancedModeButton": "ADVANCED",
+  "closeButtonLabel": "Fermer",
+  "saveButtonLabel": "Enregistrer",
+  "simpleModeLabel": "Mode simple",
+  "advancedModeLabel": "Mode avancé",
+  "presetNamePlaceholder": "Nom prédéfini",
+  "presetNameLabel": "Nom prédéfini",
+  "prepareLabel": "PRÉPARER",
+  "cooldownLabel": "REFROIDIR",
+  "decreasePrepareLabel": "Diminuer préparer",
+  "increasePrepareLabel": "Augmenter préparer",
+  "decreaseCooldownLabel": "Diminuer refroidir",
+  "increaseCooldownLabel": "Augmenter refroidir"
 }
 

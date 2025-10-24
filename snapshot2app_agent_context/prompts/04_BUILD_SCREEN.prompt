@@ -6,6 +6,7 @@ Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consum
 - `spec.md` — authoritative for **interactions/state/navigation/a11y**
 - `guides/UI_MAPPING_GUIDE.md` — mapping rules for rendering primitives
 - `guides/UI_MAPPING_GUIDE_EXAMPLES.md` — implementation examples
+- `guides/BEST_PRACTICES.md` — common pitfalls and technical best practices
 - `contracts/PROJECT_CONTRACT.md` — code organization & architecture patterns
 - `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `GUARDRAILS.md`
 
@@ -59,6 +60,7 @@ During build, consult the plan row for each candidate sibling near a `Slider`:
 - Null-safety, no dead code, no unused imports.
 - Extract small reusable widgets; avoid magic numbers (prefer theme/tokens).
 - Deterministic rendering suitable for golden tests (avoid implicit animations/s randomness unless specified).
+- Follow best practices from `guides/BEST_PRACTICES.md` (avoid common pitfalls).
 
 ## Test Generation (Step 10)
 

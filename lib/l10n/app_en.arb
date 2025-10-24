@@ -107,6 +107,62 @@
   "okButton": "OK",
   "@okButton": {
     "description": "OK button text"
+  },
+  "simpleModeButton": "SIMPLE",
+  "@simpleModeButton": {
+    "description": "Simple mode button text"
+  },
+  "advancedModeButton": "ADVANCED",
+  "@advancedModeButton": {
+    "description": "Advanced mode button text"
+  },
+  "closeButtonLabel": "Close",
+  "@closeButtonLabel": {
+    "description": "Close button semantic label"
+  },
+  "saveButtonLabel": "Save",
+  "@saveButtonLabel": {
+    "description": "Save button semantic label"
+  },
+  "simpleModeLabel": "Simple mode",
+  "@simpleModeLabel": {
+    "description": "Simple mode button semantic label"
+  },
+  "advancedModeLabel": "Advanced mode",
+  "@advancedModeLabel": {
+    "description": "Advanced mode button semantic label"
+  },
+  "presetNamePlaceholder": "Preset name",
+  "@presetNamePlaceholder": {
+    "description": "Preset name input placeholder"
+  },
+  "presetNameLabel": "Preset name",
+  "@presetNameLabel": {
+    "description": "Preset name input semantic label"
+  },
+  "prepareLabel": "PREPARE",
+  "@prepareLabel": {
+    "description": "Prepare time label"
+  },
+  "cooldownLabel": "COOLDOWN",
+  "@cooldownLabel": {
+    "description": "Cooldown time label"
+  },
+  "decreasePrepareLabel": "Decrease prepare time",
+  "@decreasePrepareLabel": {
+    "description": "Decrease prepare button semantic label"
+  },
+  "increasePrepareLabel": "Increase prepare time",
+  "@increasePrepareLabel": {
+    "description": "Increase prepare button semantic label"
+  },
+  "decreaseCooldownLabel": "Decrease cooldown time",
+  "@decreaseCooldownLabel": {
+    "description": "Decrease cooldown button semantic label"
+  },
+  "increaseCooldownLabel": "Increase cooldown time",
+  "@increaseCooldownLabel": {
+    "description": "Increase cooldown button semantic label"
   }
 }
 

@@ -7,6 +7,7 @@ Your role is to fix failing tests with minimal, targeted code changes.
 - failing_test_output.txt (from 05_RUN_TESTS.prompt)
 - design.json, spec.md, plan.md
 - guides/UI_MAPPING_GUIDE.md
+- guides/BEST_PRACTICES.md
 - guards/GUARDRAILS.md
 - rubrics/PR_CHECKLIST.md
 

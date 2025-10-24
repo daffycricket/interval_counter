@@ -39,6 +39,8 @@ This contract ensures deterministic, maintainable, and testable code across all 
 - Create deeply nested folder structures (max 2 levels in widgets/)
 - Use hardcoded strings in UI (must use AppLocalizations)
 
+**See also:** `guides/BEST_PRACTICES.md` for common pitfalls to avoid.
+
 ---
 
 ### State Management Pattern

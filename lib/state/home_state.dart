@@ -167,14 +167,33 @@ class HomeState extends ChangeNotifier {
 
     final preset = Preset.create(
       name: name.trim(),
+      prepareSeconds: 0,
       repetitions: _reps,
       workSeconds: _workSeconds,
       restSeconds: _restSeconds,
+      cooldownSeconds: 0,
     );
 
     _presets.add(preset);
     notifyListeners();
     _saveState();
+  }
+
+  /// Ajoute un préréglage directement (utilisé par PresetEditor)
+  void addPresetDirect(Preset preset) {
+    _presets.add(preset);
+    notifyListeners();
+    _saveState();
+  }
+
+  /// Met à jour un préréglage existant
+  void updatePreset(Preset preset) {
+    final index = _presets.indexWhere((p) => p.id == preset.id);
+    if (index != -1) {
+      _presets[index] = preset;
+      notifyListeners();
+      _saveState();
+    }
   }
 
   /// Supprime un préréglage par son ID
