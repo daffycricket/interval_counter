@@ -23,10 +23,7 @@ void main() {
       locale: const Locale('fr'),
       home: Scaffold(
         appBar: PresetEditorHeader(
-          viewMode: viewMode,
           onClose: onClose ?? () {},
-          onSwitchToSimple: onSwitchToSimple ?? () {},
-          onSwitchToAdvanced: onSwitchToAdvanced ?? () {},
           onSave: onSave ?? () {},
         ),
       ),
