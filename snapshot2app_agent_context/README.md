@@ -87,3 +87,17 @@ Refer to :
  - code already present in lib/ directory as a reference, especially existing widgets, styles and theme
  - existing specification if necessary, especially Home spec in reports/home/spec.md
 Report folder: reports/workout
+
+
+### Generate spec, using code already generated as reference
+Run 00_ORCHESTRATOR.prompt starting step 2 "Generate spec" up to the last step
+For plan, build and test steps, keep existing workout layouts and views (screen, widgets), refactor state and business logic to match ARCHITECTURE_CONTRACT.md.
+Inputs:
+ - design.json: sources/workout/workout_design.json
+ - spec_complement.md: sources/workout/workout_spec_complement.md
+ - existing workout screen code and workout widgets in lib/screens and lib/widgets/workout
+Refer to :
+ - code already present in lib/ directory as a reference, especially existing widgets, styles and theme
+ - existing specification if necessary, especially Home spec in reports/home/spec.md
+Report folder: reports/workout_refacor
+If steps or actions are note clear, please ask me 2 to 5 questions before starting.

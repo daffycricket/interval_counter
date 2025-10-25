@@ -23,7 +23,12 @@ Une fois le temps terminé, l'écran passe à l'étape d'après dans le pré-ré
 **Règles de gestion**
 - L'étape "Repos" de la dernière répétition n'est pas exécutée, l'écran passe directement dans l'étape "Refroidissement" s'il y en a une.
 - Si une étape est à zéro secondes dans le préréglage, l'étape n'est pas affichée, l'écran passe directement à l'étape d'après.
-- Lors des 3 dernières secondes d'une étape, l'appli émét un bip sonore à chaque seconde.
+- Lors des 3 dernières secondes d'une étape, l'appli émét un bip sonore à chaque seconde, donc à : 
+  - 00:05 => pas de bip sonore
+  - 00:04 => pas de bip sonore
+  - 00:02 => bip sonore
+  - 00:01 => bip sonore
+  - 00:00 => bip sonore
 
 **Exemple pour le préréglage suivant : 5/3x(40/20)/10** 
   - 5 secondes de préparation
@@ -57,12 +62,13 @@ L'écran passe dans les étapes suivantes :
 
 ## Règles de gestion visuelles
 **Disparation de boutons et d'éléments interactifs"**
-Au bout d'une seconde, les éléments suivant disparaissent : 
+Au lancement de l'écran, tous les éléments interactifs - boutons, fab, slider - sont affichés.
+Au bout de 1500 ms, les éléments interactifs suivants disparaissent : 
   - le slider de volume, tout en haut de l'écran.
   - la ligne de contrôles : bouton précédent / bouton "Maintenir pour sortir" / bouton suivant.
   - le fab de pause en bas à droite.
 Ils ne réapparaissent pas lorsque l'écran change d'étape.
-Ils réapparaissent si l'utilisateur tap n'importe où sur l'écran, puis redisparaissent au bout d'une seconde.
+Ils réapparaissent si l'utilisateur tap n'importe où sur l'écran, puis redisparaissent au bout de 1500 ms.
 
 **Détails visuels généraux**
 - Chaque étape a une couleur de fond distincte.
@@ -76,7 +82,7 @@ Ils réapparaissent si l'utilisateur tap n'importe où sur l'écran, puis redisp
 - Aucun compteur de répétition au-dessus du chrono
 
 **Détails visuels de l'étape "Travail"**
-- Fond vert
+- Fond vert / Color(0xFF4CD27E)
 - Libellé "TRAVAIL" (en majuscules)
 - Compteur de répétition présent au-dessus du chrono
 
@@ -86,7 +92,7 @@ Ils réapparaissent si l'utilisateur tap n'importe où sur l'écran, puis redisp
 - Compteur de répétition présent au-dessus du chrono
 
 **Détails visuels de l'étape "Refroidissement"**
-- Fond jaune
+- Fond violet
 - Libellé "REFROIDIR" (en majuscules)
 - Aucun compteur de répétition au-dessus du chrono
 
@@ -118,3 +124,11 @@ Le slider contrôle le volume du bip sonore :
 
 **Tap sur bouton back**
 Le tap sur le bouton back ferme l'écran instantanément, la home se réaffiche.
+
+## Compléments techniques pour la génération
+
+### Couleurs à utiliser pour les 
+  workColor = Color(0xFF4CD27E); // Vert pour Travail
+  restColor = Color(0xFF2196F3); // Bleu pour Repos
+  prepareColor = Color(0xFFFFCC00); // Jaune pour Préparation
+  cooldownColor = Color.fromARGB(255, 203, 128, 216); // Violet pour Refroidissement

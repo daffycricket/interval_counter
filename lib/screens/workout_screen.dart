@@ -98,14 +98,7 @@ class _WorkoutScreenContent extends StatelessWidget {
                     child: const NavigationControls(),
                   ),
                   
-                  // const SizedBox(height: 24),
                   WorkoutDisplay(),
-                  // Affichage principal (chronomètre et étape)
-                  // const Expanded(
-                  //   child: Center(
-                  //     child: WorkoutDisplay(),
-                  //   ),
-                  // ),
                   
                   const SizedBox(height: 80), // Espace pour le FAB
                 ],

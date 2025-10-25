@@ -47,7 +47,7 @@ class AppColors {
   static const Color workColor = Color(0xFF4CD27E); // Vert pour Travail
   static const Color restColor = Color(0xFF2196F3); // Bleu pour Repos
   static const Color prepareColor = Color(0xFFFFCC00); // Jaune pour Préparation
-  static const Color cooldownColor = Color(0xFFFFCC00); // Jaune pour Refroidissement
-  static const Color ghostButtonBg = Color(0xFF555555); // Gris foncé pour boutons ghost
+  static const Color cooldownColor = Color.fromARGB(255, 203, 128, 216); // Violet pour Refroidissement
+  static const Color ghostButtonBg = Color.fromARGB(255, 85, 85, 85); // Gris foncé pour boutons ghost
 }
 
