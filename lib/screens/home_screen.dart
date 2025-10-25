@@ -8,6 +8,7 @@ import '../widgets/home/preset_card.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../routes/app_routes.dart';
+import '../models/preset.dart';
 import 'package:interval_counter/l10n/app_localizations.dart';
 
 /// Écran principal de l'application
@@ -122,8 +123,12 @@ class HomeScreen extends StatelessWidget {
                   return PresetCard(
                     preset: preset,
                     onTap: () {
-                      // TODO: Charger le préréglage dans Quick Start
-                      debugPrint('Preset tapped: ${preset.name}');
+                      // Lancer la session directement avec ce préréglage
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.workout,
+                        arguments: preset,
+                      );
                     },
                     onDelete: () => homeState.deletePreset(preset.id),
                   );
@@ -210,21 +215,21 @@ class HomeScreen extends StatelessWidget {
 
   /// Lance l'intervalle avec les paramètres actuels
   void _startInterval(BuildContext context, HomeState homeState) {
-    // TODO: Navigation vers écran Timer avec paramètres
-    debugPrint('Starting interval: '
-        'reps=${homeState.reps}, '
-        'work=${homeState.workSeconds}s, '
-        'rest=${homeState.restSeconds}s');
-
-    // Pour le moment, on affiche juste un message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Interval: ${homeState.reps} reps, '
-          '${homeState.formattedWorkTime} work, '
-          '${homeState.formattedRestTime} rest',
-        ),
-      ),
+    // Créer un preset temporaire avec les paramètres du Quick Start
+    final preset = Preset.create(
+      name: 'Quick Start',
+      prepareSeconds: 5,
+      repetitions: homeState.reps,
+      workSeconds: homeState.workSeconds,
+      restSeconds: homeState.restSeconds,
+      cooldownSeconds: 0, // Pas de refroidissement pour le Quick Start
+    );
+    
+    // Navigation vers l'écran Workout
+    Navigator.pushNamed(
+      context,
+      AppRoutes.workout,
+      arguments: preset,
     );
   }
 }

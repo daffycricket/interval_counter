@@ -40,6 +40,16 @@
   "decreasePrepareLabel": "Diminuer préparer",
   "increasePrepareLabel": "Augmenter préparer",
   "decreaseCooldownLabel": "Diminuer refroidir",
-  "increaseCooldownLabel": "Augmenter refroidir"
+  "increaseCooldownLabel": "Augmenter refroidir",
+  "workoutExitButton": "Maintenir pour sortir",
+  "workoutStepWork": "TRAVAIL",
+  "workoutStepRest": "REPOS",
+  "workoutStepPrepare": "PRÉPARER",
+  "workoutStepCooldown": "REFROIDIR",
+  "workoutToggleSound": "Activer ou désactiver le son",
+  "workoutPrevious": "Précédent",
+  "workoutNext": "Suivant",
+  "workoutPause": "Mettre en pause",
+  "workoutResume": "Reprendre"
 }
 

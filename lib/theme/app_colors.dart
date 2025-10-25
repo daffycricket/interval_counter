@@ -42,5 +42,12 @@ class AppColors {
   static const Color success = Color(0xFF4CAF50);
   static const Color warning = Color(0xFFFFC107);
   static const Color info = Color(0xFF2196F3);
+  
+  // Workout Screen - Couleurs des étapes
+  static const Color workColor = Color(0xFF4CD27E); // Vert pour Travail
+  static const Color restColor = Color(0xFF2196F3); // Bleu pour Repos
+  static const Color prepareColor = Color(0xFFFFCC00); // Jaune pour Préparation
+  static const Color cooldownColor = Color(0xFFFFCC00); // Jaune pour Refroidissement
+  static const Color ghostButtonBg = Color(0xFF555555); // Gris foncé pour boutons ghost
 }
 

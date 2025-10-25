@@ -163,6 +163,46 @@
   "increaseCooldownLabel": "Increase cooldown time",
   "@increaseCooldownLabel": {
     "description": "Increase cooldown button semantic label"
+  },
+  "workoutExitButton": "Hold to exit",
+  "@workoutExitButton": {
+    "description": "Long-press to exit workout button"
+  },
+  "workoutStepWork": "WORK",
+  "@workoutStepWork": {
+    "description": "Work step label"
+  },
+  "workoutStepRest": "REST",
+  "@workoutStepRest": {
+    "description": "Rest step label"
+  },
+  "workoutStepPrepare": "PREPARE",
+  "@workoutStepPrepare": {
+    "description": "Prepare step label"
+  },
+  "workoutStepCooldown": "COOLDOWN",
+  "@workoutStepCooldown": {
+    "description": "Cooldown step label"
+  },
+  "workoutToggleSound": "Toggle sound on or off",
+  "@workoutToggleSound": {
+    "description": "Toggle sound button semantic label"
+  },
+  "workoutPrevious": "Previous",
+  "@workoutPrevious": {
+    "description": "Previous step button semantic label"
+  },
+  "workoutNext": "Next",
+  "@workoutNext": {
+    "description": "Next step button semantic label"
+  },
+  "workoutPause": "Pause",
+  "@workoutPause": {
+    "description": "Pause button semantic label"
+  },
+  "workoutResume": "Resume",
+  "@workoutResume": {
+    "description": "Resume button semantic label"
   }
 }
 

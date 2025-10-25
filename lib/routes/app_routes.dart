@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/home_screen.dart';
 import '../screens/preset_editor_screen.dart';
+import '../screens/workout_screen.dart';
 import '../state/home_state.dart';
 import '../state/preset_editor_state.dart';
+import '../models/preset.dart';
 
 /// Gestionnaire de routes de l'application
 class AppRoutes {
@@ -12,7 +14,7 @@ class AppRoutes {
 
   // Noms de routes
   static const String home = '/';
-  static const String timer = '/timer';
+  static const String workout = '/workout';
   static const String presetEditor = '/preset_editor';
 
   /// Génère les routes de l'application
@@ -24,14 +26,10 @@ class AppRoutes {
           settings: settings,
         );
 
-      case timer:
-        // TODO: Implémenter l'écran Timer
+      case workout:
+        final preset = settings.arguments as Preset;
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(
-              child: Text('Timer Screen - À implémenter'),
-            ),
-          ),
+          builder: (_) => WorkoutScreen(preset: preset),
           settings: settings,
         );
 

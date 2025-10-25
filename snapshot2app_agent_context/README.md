@@ -68,3 +68,22 @@ Refer to :
  - code already present in lib/ directory as a reference, especially existing widgets
  - existing specification if necessary, especially Home spec in reports/home/spec.md
 Report folder: reports/workout
+
+### Start with build plan up to the build phase, using code already generated as reference
+Run 00_ORCHESTRATOR.prompt, from step 2 "Generate Specification" up to step 4 "Build Screen"
+Inputs:
+ - design.json: sources/workout/workout_design.json
+ - spec.md: reports/workout/spec.md
+Refer to code already present in lib/ directory as a reference, especially existing widgets, styles and theme
+Report folder: reports/workout
+
+
+### Generate spec, using code already generated as reference
+Run 00_ORCHESTRATOR.prompt
+Inputs:
+ - design.json: sources/workout/workout_design.json
+ - spec_complement.md: sources/workout/workout_spec_complement.md
+Refer to :
+ - code already present in lib/ directory as a reference, especially existing widgets, styles and theme
+ - existing specification if necessary, especially Home spec in reports/home/spec.md
+Report folder: reports/workout
