@@ -7,7 +7,29 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
 ## Inputs
 - `design.json`
 - `spec.md`
-- `UI_MAPPING_GUIDE.md`, `BEST_PRACTICES.md`, `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `PROJECT_CONTRACT.md`, `GUARDRAILS.md`
+- `UI_MAPPING_GUIDE.md`, `BEST_PRACTICES.md`, `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `PROJECT_CONTRACT.md`, `ARCHITECTURE_CONTRACT.md`, `GUARDRAILS.md`
+
+## Service Dependency Analysis
+
+**Before planning widgets, analyze State dependencies:**
+
+1. **Scan spec.md for external dependencies:**
+   - Timers/periodic tasks → need `TickerService` interface
+   - Audio/sounds/haptics → need `AudioService`/`HapticsService` interface
+   - Persistence → need `PreferencesRepository` interface (if not mockable)
+   - HTTP/API calls → need `ApiClient` interface
+   - Platform channels → need service abstraction
+
+2. **Identify complex business logic (>50 lines):**
+   - State transitions, calculations, validations
+   - Extract to domain classes in `lib/domain/`
+
+3. **Output in plan.md § 2.2.1:**
+   - List service interfaces to generate
+   - List implementations to generate
+   - List domain classes to extract
+
+**See:** `ARCHITECTURE_CONTRACT.md` for patterns and rules.
 
 ## Output
 - A single Markdown file `plan.md` **strictly following** `templates/plan_template.md`.
@@ -28,6 +50,8 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
 ## Test Generation Plan
 
 Complete **§ Test Generation Plan** from `templates/plan_template.md`:
+- § Domain Tests: list all domain classes from § 2.2.1 with 100% coverage requirement
+- § Service Tests: list all service implementations with ≥80% coverage requirement
 - § State Tests: extract all public methods from § 7 (State Model & Actions)
 - § Widget Tests: **CRITICAL** - create 1:1 mapping table from § 2.1 (Widgets to Generate) to test files
   - Each widget in § 2.1 MUST have corresponding row in § 2.5 Widget Tests table

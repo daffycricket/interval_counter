@@ -5,7 +5,7 @@ Define mandatory testing standards for generated Flutter code.
 All generated code must be testable and include comprehensive test coverage.
 All new code must be tested.
 
-> **Prerequisites:** Code must be generated according to **PROJECT_CONTRACT.md**, especially the "Testability & Dependency Injection" section.
+> **Prerequisites:** Code must be generated according to **PROJECT_CONTRACT.md** (Testability & Dependency Injection) and **ARCHITECTURE_CONTRACT.md** (domain layer, service interfaces, State as coordinator).
 
 ---
 
@@ -158,7 +158,76 @@ void main() {
 
 ---
 
-### 2. Model Unit Tests (Priority: CRITICAL)
+### 2. Domain Unit Tests (Priority: CRITICAL)
+
+**For each Domain class in lib/domain/, generate tests for:**
+
+✅ **Pure Business Logic:**
+- All calculations, validators, state transitions
+- Boundary conditions, edge cases
+- No side effects (no I/O, no async)
+
+✅ **Performance:**
+- Tests must be ultra-fast (<1ms per test)
+- No Flutter dependencies (pure Dart)
+
+**Example test structure:**
+```dart
+import 'package:test/test.dart';
+import 'package:interval_counter/domain/workout_engine.dart';
+
+void main() {
+  group('WorkoutEngine', () {
+    test('tick decrements remaining time', () {
+      final engine = WorkoutEngine(preset: testPreset);
+      final initial = engine.remainingTime;
+      
+      engine.tick();
+      
+      expect(engine.remainingTime, initial - 1);
+    });
+    
+    test('shouldPlayBeep is true when time <= 3', () {
+      final engine = WorkoutEngine(preset: testPreset);
+      engine.remainingTime = 3;
+      
+      expect(engine.shouldPlayBeep, true);
+    });
+  });
+}
+```
+
+**Coverage Target:** 100% lines, 100% branches
+
+---
+
+### 3. Service Implementation Tests (Priority: HIGH)
+
+**For each service implementation in lib/services/impl/, generate tests for:**
+
+✅ **Integration with real dependencies:**
+- Test actual behavior (e.g., Timer fires, Sound plays)
+- Mock external systems only (filesystem, network)
+
+✅ **Interface compliance:**
+- Verify all interface methods implemented
+- Verify contract behavior
+
+**Example:**
+```dart
+testWidgets('SystemAudioService plays sound', (tester) async {
+  final service = SystemAudioService();
+  
+  // Test doesn't crash (actual sound requires device)
+  expect(() => service.playBeep(), returnsNormally);
+});
+```
+
+**Coverage Target:** ≥80% lines
+
+---
+
+### 4. Model Unit Tests (Priority: CRITICAL)
 
 **For each Model class, generate tests for:**
 
@@ -242,7 +311,7 @@ void main() {
 
 ---
 
-### 3. Widget Tests (Priority: HIGH)
+### 5. Widget Tests (Priority: HIGH)
 
 **For each interactive component in plan.md, generate:**
 
@@ -324,7 +393,7 @@ void main() {
 
 ---
 
-### 4. Screen Integration Tests (Priority: MEDIUM)
+### 6. Screen Integration Tests (Priority: MEDIUM)
 
 **For each screen, generate:**
 
@@ -396,20 +465,27 @@ void main() {
 **After generating all lib/ files:**
 
 1. **Parse plan.md § Test Generation Plan** (if present)
-2. **Generate State tests** for each State class:
+2. **Generate Domain tests** for each Domain class (lib/domain/):
+   - Pure Dart tests (no Flutter)
+   - 100% coverage required
+   - Ultra-fast tests
+3. **Generate Service tests** for each service implementation (lib/services/impl/):
+   - Integration tests with real dependencies
+   - ≥80% coverage
+4. **Generate State tests** for each State class:
    - Extract all public methods
    - Generate test for each method (nominal + boundaries)
    - Generate persistence tests
    - Generate notifyListeners tests
-3. **Generate Model tests** for each Model class:
+5. **Generate Model tests** for each Model class:
    - Generate fromJson/toJson round-trip tests
    - Generate copyWith tests
    - Generate equality tests
-4. **Generate Widget tests** for interactive components:
+6. **Generate Widget tests** for interactive components:
    - Extract from plan.md widget breakdown
    - Filter components with keys
    - Generate render + interaction tests
-5. **Generate Screen integration test**:
+7. **Generate Screen integration test**:
    - Verify all key components present
    - Test one critical flow
 
@@ -425,6 +501,8 @@ void main() {
 
 Before marking tests as complete:
 
+- [ ] All Domain classes have tests (100% coverage)
+- [ ] All Service implementations have tests (≥80% coverage)
 - [ ] All State methods have tests (100% coverage)
 - [ ] All Models have serialization tests (100% coverage)
 - [ ] All interactive components (from plan.md) have widget tests
@@ -432,8 +510,10 @@ Before marking tests as complete:
 - [ ] Golden tests exist for styled components (if applicable)
 - [ ] `flutter test --coverage/lcov.info --output-directory coverage/html` succeeds (exit code 0)
 - [ ] Coverage thresholds met:
+  - [ ] Domain: 100%
   - [ ] State: 100%
   - [ ] Model: 100%
+  - [ ] Services: ≥80%
   - [ ] Overall: ≥80%
 - [ ] No untested public methods in State
 - [ ] test_report.md generated with coverage stats
@@ -463,6 +543,7 @@ Before marking tests as complete:
 ## Assumptions
 
 **Tests assume the generated code follows:**
+- ✅ ARCHITECTURE_CONTRACT.md (domain layer, service interfaces, State as coordinator)
 - ✅ PROJECT_CONTRACT.md State pattern (DI, getters, notifyListeners)
 - ✅ PROJECT_CONTRACT.md Widget pattern (keys, callbacks via params)
 - ✅ PROJECT_CONTRACT.md Testability rules (dual constructors, pure logic)

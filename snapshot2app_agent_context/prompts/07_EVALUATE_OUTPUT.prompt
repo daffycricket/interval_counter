@@ -35,13 +35,29 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
   - If coverage < 60% → status = **FAILED (low coverage)**.
   - Otherwise include coverage % in the evaluation report.
 
-### 4. Accessibility
+### 4. Architecture Compliance (CRITICAL)
+
+Verify `ARCHITECTURE_CONTRACT.md` compliance:
+- [ ] No `Timer.periodic()`, `SystemSound.play()`, or platform channels in State files
+- [ ] All external dependencies injected via constructor (no instantiation in methods)
+- [ ] Service interfaces exist in `lib/services/`
+- [ ] Service implementations in `lib/services/impl/`
+- [ ] Complex logic (>50 lines) extracted to `lib/domain/` (pure Dart)
+- [ ] Domain classes have no Flutter imports (except `foundation`)
+- [ ] State classes are <200 lines
+- [ ] State classes have ≤5 dependencies
+
+**IF violations detected:**
+- status = **FAILED (architecture_violation)**
+- List file:line of each violation with rule reference (G-13 to G-17)
+
+### 5. Accessibility
 - Verify that all interactive components (`Button`, `IconButton`, `Slider`, inputs) have `a11y.ariaLabel`.
 
-### 5. Determinism
+### 6. Determinism
 - Verify that all widgets include deterministic keys: `Key('<screenName>__<id>')`.
 
-### 6. Project Structure & Maintainability
+### 7. Project Structure & Maintainability
 - Verify compliance with contracts/PROJECT_CONTRACT.md:
   - File paths match declared structure
   - State classes are ChangeNotifier subclasses
@@ -54,10 +70,11 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
 ## Output: evaluation_report.md
 
 Must include:
-- Final Status: PASSED / PASSED (after auto-fix) / FAILED (tests_failed_after_autofix|low coverage|contract violation|missing_test_files).
+- Final Status: PASSED / PASSED (after auto-fix) / FAILED (tests_failed_after_autofix|low coverage|contract violation|architecture_violation|missing_test_files).
 - Summary of:
   - Validation status
   - Build status
+  - Architecture compliance (G-13 to G-17)
   - Test results (pass/fail count)
   - Coverage % (if available)
   - Widget-to-test ratio verification (1:1 check)

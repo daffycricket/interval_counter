@@ -23,9 +23,9 @@ Output: validated, built, tested, and evaluated Flutter application files.
 - Output: plan.md
 
 ### Step 4 — Build Screen (Flutter code)
-- Input: design.json, spec.md, plan.md, guides/UI_MAPPING_GUIDE.md, guides/BEST_PRACTICES.md, prompts/04_BUILD_SCREEN.prompt
+- Input: design.json, spec.md, plan.md, guides/UI_MAPPING_GUIDE.md, guides/BEST_PRACTICES.md, contracts/ARCHITECTURE_CONTRACT.md, prompts/04_BUILD_SCREEN.prompt
 - Output: Flutter files under lib/, test/, integration_test/
-- Must respect: variants, placement, widthMode, group alignment, tokens, typography, a11y, keys.
+- Must respect: variants, placement, widthMode, group alignment, tokens, typography, a11y, keys, Clean Architecture (domain/services/state layers).
 
 ### Step 5 — Run Tests
 - Action: run 05_RUN_TESTS.prompt

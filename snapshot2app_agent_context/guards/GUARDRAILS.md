@@ -12,3 +12,8 @@
 - **G-10**: Test coverage report must be generated in coverage/html
 - **G-11**: Every file in lib/widgets/, lib/screens/, lib/models/, lib/state/ must have corresponding test file. Widget-to-test ratio must be 1:1.
 - **G-12**: All user-facing text must use AppLocalizations. ARB files must be generated for English and French. No hardcoded strings in UI widgets.
+- **G-13**: State classes MUST NOT call Timer.periodic(), SystemSound.play(), or platform channels directly. Use service interfaces.
+- **G-14**: Non-mockable dependencies (Timer, SystemSound, platform channels) MUST be abstracted via interfaces in lib/services/.
+- **G-15**: Business logic >50 lines OR complex calculations MUST be extracted to lib/domain/ classes (pure Dart).
+- **G-16**: State classes MUST have ≤5 constructor dependencies. If >5, split into multiple services.
+- **G-17**: lib/domain/ code MUST be pure Dart (no package:flutter imports except foundation for @immutable).

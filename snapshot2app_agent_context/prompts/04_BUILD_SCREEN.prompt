@@ -8,6 +8,7 @@ Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consum
 - `guides/UI_MAPPING_GUIDE_EXAMPLES.md` — implementation examples
 - `guides/BEST_PRACTICES.md` — common pitfalls and technical best practices
 - `contracts/PROJECT_CONTRACT.md` — code organization & architecture patterns
+- `contracts/ARCHITECTURE_CONTRACT.md` — Clean Architecture & layered design
 - `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `GUARDRAILS.md`
 
 ## Objectives
@@ -39,12 +40,44 @@ Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consum
   - `golden_toolkit`, `golden_tests`, or any codegen dependency.
 
 ## Execution Steps (follow in order)
+
+### Step 0 — Dependency & Domain Extraction (before widgets)
+
+**Input:** `plan.md § 2.2.1 Service Dependencies`, `spec.md`
+
+**Generate in order:**
+
+1. **Domain Classes** (`lib/domain/`):
+   - Pure Dart business logic (no Flutter imports except `foundation`)
+   - Extract from State logic: calculations, state machines, validators
+   - Example: `WorkoutEngine`, `TimerCalculator`, `PresetValidator`
+   - Keep classes focused (SRP): one engine/calculator/validator per domain concept
+
+2. **Service Interfaces** (`lib/services/`):
+   - Abstract classes for non-mockable dependencies
+   - Methods needed by State (from plan.md § 2.2.1)
+   - Examples: `TickerService`, `AudioService`, `PreferencesRepository`, `ApiClient`
+
+3. **Service Implementations** (`lib/services/impl/`):
+   - Concrete implementations using Flutter/Dart APIs
+   - One file per service: `{service_name}_impl.dart`
+   - Examples: `DartTickerService`, `SystemAudioService`, `SharedPrefsRepository`
+
+4. **Verify Architecture:**
+   - State will inject interfaces only (not implementations)
+   - Domain classes have no Flutter dependencies
+   - State delegates to domain + services (thin coordinator)
+
+**See:** `ARCHITECTURE_CONTRACT.md` for detailed patterns.
+
+---
+
 1. **Scaffold** all files declared in `plan.md/Files to Generate` (widgets, state, routes, themes/tokens, test scaffolds). Use paths *as-is*.
 2. **Internationalization Setup**: generate ARB files and i18n configuration per `plan.md/Translations Plan`. See § i18n Generation below.
 3. **Widgets rendering**: for each row in `plan.md/Widget Breakdown`, create the corresponding widget and render components using the mapping rules from `UI_MAPPING_GUIDE.md` (containers, Row/Column/Stack, placement, widthMode, typographyRef, icons, sliders, shaped icon buttons, patterns…). Apply keys.
 4. **Layout composition**: implement structure/constraints from `plan.md/Layout Composition` (hierarchy, flex, alignment, maxWidth, scroll). `design.json` is authoritative for these values.
 5. **Interaction wiring**: bind each entry from `plan.md/Interaction Wiring` to concrete functions in the **state layer** (names must match `spec §6` and `plan §7`). Handle navigation exactly as declared (including Back).
-6. **State layer**: implement fields/defaults/persistence and actions/effects from `plan.md/State Model & Actions`. Expose read-only state to widgets; update via the declared actions only.
+6. **State layer**: implement as **thin coordinator** per `ARCHITECTURE_CONTRACT.md`. State injects service interfaces + domain classes. Delegate business logic to domain, I/O to services. State <200 lines, ≤5 dependencies.
 7. **Accessibility**: set semantics, aria-like labels, and focus order per `plan.md/Accessibility Plan`.
 8. **Project Structure**: verify all file paths, state patterns, and naming conventions comply with `PROJECT_CONTRACT.md`.
 9. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
@@ -66,7 +99,50 @@ During build, consult the plan row for each candidate sibling near a `Slider`:
 
 After generating all lib/ files, generate comprehensive test suite:
 
-### 10.1 State Unit Tests (`test/state/{screen}_state_test.dart`)
+### 10.1 Domain Unit Tests (`test/domain/{feature}_test.dart`)
+
+**For each Domain class, generate tests covering:**
+- Pure business logic (calculations, state transitions, validations)
+- Boundary conditions, edge cases
+- No side effects (no I/O, no async unless business requirement)
+- Tests must be ultra-fast (<1ms per test)
+- Use `package:test` for pure Dart tests (no Flutter)
+
+**Template structure:**
+```dart
+import 'package:test/test.dart';
+import 'package:interval_counter/domain/workout_engine.dart';
+
+void main() {
+  group('WorkoutEngine', () {
+    test('tick decrements remaining time', () {
+      final engine = WorkoutEngine(preset: testPreset);
+      final initial = engine.remainingTime;
+      
+      engine.tick();
+      
+      expect(engine.remainingTime, initial - 1);
+    });
+  });
+}
+```
+
+**Target:** 100% line coverage, 100% branch coverage
+
+---
+
+### 10.2 Service Implementation Tests (`test/services/impl/{service}_impl_test.dart`)
+
+**For each service implementation, generate tests covering:**
+- Integration with real dependencies (Timer fires, etc.)
+- Interface compliance (all methods implemented)
+- Mock only external systems (filesystem, network)
+
+**Target:** ≥80% line coverage
+
+---
+
+### 10.3 State Unit Tests (`test/state/{screen}_state_test.dart`)
 
 **For each State class, generate tests covering:**
 - Initial values (defaults + loaded from persistence)
@@ -104,7 +180,7 @@ void main() {
 
 ---
 
-### 10.2 Model Unit Tests (`test/models/{model}_test.dart`)
+### 10.4 Model Unit Tests (`test/models/{model}_test.dart`)
 
 **For each Model class, generate tests covering:**
 - Valid JSON → fromJson → toJson → equals original
@@ -118,7 +194,7 @@ void main() {
 
 ---
 
-### 10.3 Widget Tests - ONE FILE PER WIDGET
+### 10.5 Widget Tests - ONE FILE PER WIDGET
 
 **CRITICAL: Generate ONE test file PER widget file from plan.md § 2.1**
 
@@ -160,7 +236,7 @@ void main() {
 
 ---
 
-### 10.4 Screen Integration Test (`test/screens/{screen}_screen_test.dart`)
+### 10.6 Screen Integration Test (`test/screens/{screen}_screen_test.dart`)
 
 **For each screen, generate test covering:**
 - All key components present (by Key from plan.md)
@@ -172,7 +248,7 @@ void main() {
 
 ---
 
-### 10.5 Accessibility Tests (embedded in widget/screen tests)
+### 10.7 Accessibility Tests (embedded in widget/screen tests)
 
 **For each component with a11y.ariaLabel in design.json:**
 - Verify semantic label matches ariaLabel
@@ -195,7 +271,7 @@ testWidgets('button has correct semantics', (tester) async {
 
 ---
 
-### 10.6 Verification & Validation
+### 10.8 Verification & Validation
 
 **After generating all tests:**
 0. **Verify 1:1 widget-to-test ratio:**
@@ -204,12 +280,14 @@ testWidgets('button has correct semantics', (tester) async {
    - IF counts differ → FAIL: "Missing test files. Expected {widget_count}, generated {test_count}"
    - LIST: Widget files without corresponding test file
    - STOP BUILD
-1. **Generate shared test helpers** (see step 10.7 below)
+1. **Generate shared test helpers** (see step 10.9 below)
 2. Run `flutter test --coverage`
 3. Parse `coverage/lcov.info` to extract coverage metrics
 4. Verify thresholds:
+   - Domain classes: 100%
    - State classes: 100%
    - Model classes: 100%
+   - Service implementations: ≥80%
    - Overall: ≥80%
 5. If any threshold not met → emit error listing gaps
 6. Verify G-09 guardrail satisfied
@@ -229,7 +307,7 @@ testWidgets('button has correct semantics', (tester) async {
 
 ---
 
-### 10.7 Internationalization (i18n) Generation
+### 10.9 Internationalization (i18n) Generation
 
 **CRITICAL: Generate i18n files per plan.md § 2.6 Translations Plan**
 
@@ -274,7 +352,7 @@ output-localization-file: app_localizations.dart
 
 ---
 
-### 10.8 Shared Test Helpers (`test/helpers/widget_test_helpers.dart`)
+### 10.10 Shared Test Helpers (`test/helpers/widget_test_helpers.dart`)
 
 **Generate once to reduce boilerplate across all widget tests:**
 
@@ -331,7 +409,7 @@ Widget createTestAppWithProviders(List<ChangeNotifier> providers, Widget child) 
 - [ ] Routes referenced exist and compile.
 - [ ] Build fails on any missing key/token/route or on vocabulary violation.
 - [ ] All tests generated per TEST_CONTRACT.md.
-- [ ] Test coverage ≥80% overall, 100% for State/Model (G-09).
+- [ ] Test coverage ≥80% overall, 100% for Domain/State/Model (G-09).
 - [ ] All interactive components have widget tests.
 - [ ] All a11y components have semantic tests.
 - [ ] Widget-to-test ratio 1:1 verified (G-11).

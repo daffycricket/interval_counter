@@ -43,6 +43,20 @@ inputsHash: <sha256(design.json||spec.md)>
 |----------------------------------|--------------------|-------------------------------------|-------------|-------|
 | lib/state/xxx_screen_state.dart  | ChangeNotifier     | timerState,durationSecs;startTimer  | non         | —     |
 
+## 2.2.1 Service Dependencies
+
+**Service Interfaces & Implementations:**
+| interfacePath                      | implPath                                          | reason                          | methods                 |
+|------------------------------------|---------------------------------------------------|---------------------------------|-------------------------|
+| lib/services/audio_service.dart    | lib/services/impl/system_audio_service.dart       | Non-mockable SystemSound        | playBeep(), setVolume() |
+| —                                  | —                                                 | —                               | —                       |
+
+**Domain Classes (Pure Business Logic):**
+| domainPath                         | purpose                         | extracted from (State logic)    |
+|------------------------------------|--------------------------------|---------------------------------|
+| lib/domain/workout_engine.dart     | Timer progression logic         | WorkoutState tick/nextStep      |
+| —                                  | —                               | —                               |
+
 ## 2.3 Routes
 | routeName      | filePath                       | params       | created/uses | notes |
 |----------------|--------------------------------|--------------|-------------|-------|

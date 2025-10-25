@@ -86,8 +86,10 @@ class ExampleState extends ChangeNotifier {
 
 ✅ **MUST for State classes:**
 - Accept **all external dependencies** via constructor parameters
-  - SharedPreferences, APIs, Services, etc.
+  - **Mockable dependencies** (SharedPreferences with setMockInitialValues) → inject directly
+  - **Non-mockable dependencies** (Timer, SystemSound, platform channels) → inject via service interface
   - Never instantiate dependencies inside State class methods
+- See `ARCHITECTURE_CONTRACT.md` for service interface pattern
 - Provide **dual constructors** for flexibility:
   - Production: `MyState.create()` — instantiates real dependencies
   - Testing: `MyState(deps)` — accepts mock dependencies
@@ -98,34 +100,37 @@ class ExampleState extends ChangeNotifier {
 **Example testable State:**
 ```dart
 class IntervalTimerHomeState extends ChangeNotifier {
-  final SharedPreferences _prefs;
+  final PreferencesRepository _prefs;  // Interface (not concrete class)
+  final AudioService _audio;           // Service interface
   
   // Production constructor (async, instantiates dependencies)
   static Future<IntervalTimerHomeState> create() async {
-    final prefs = await SharedPreferences.getInstance();
-    return IntervalTimerHomeState(prefs);
+    final prefsRepo = SharedPrefsRepository(await SharedPreferences.getInstance());
+    final audio = SystemAudioService();
+    return IntervalTimerHomeState(prefsRepo, audio);
   }
   
   // Test constructor (sync, accepts dependencies)
-  IntervalTimerHomeState(this._prefs) {
+  IntervalTimerHomeState(this._prefs, this._audio) {
     _loadState();
   }
   
   void _loadState() {
-    _reps = _prefs.getInt('reps') ?? 16;
+    _reps = _prefs.get<int>('reps') ?? 16;
     // Pure logic, no async, no I/O
   }
   
   void incrementReps() {
     if (_reps < maxReps) {
       _reps++;
+      _audio.playBeep();
       notifyListeners();
       _saveState();
     }
   }
   
   Future<void> _saveState() async {
-    await _prefs.setInt('reps', _reps);
+    await _prefs.set('reps', _reps);
   }
 }
 ```
@@ -148,10 +153,11 @@ void main() async {
 **Example in tests:**
 ```dart
 test('loads reps from preferences', () {
-  final mockPrefs = MockSharedPreferences();
-  when(mockPrefs.getInt('reps')).thenReturn(42);
+  final mockPrefs = MockPreferencesRepository();
+  final mockAudio = MockAudioService();
+  when(mockPrefs.get<int>('reps')).thenReturn(42);
   
-  final state = IntervalTimerHomeState(mockPrefs);
+  final state = IntervalTimerHomeState(mockPrefs, mockAudio);
   expect(state.reps, 42);
 });
 ```
@@ -159,6 +165,7 @@ test('loads reps from preferences', () {
 ❌ **MUST NOT:**
 - Instantiate dependencies inside State: `SharedPreferences.getInstance()` in methods ❌
 - Use global singletons: `static final prefs = ...` ❌
+- Call `Timer.periodic()`, `SystemSound.play()`, platform channels directly ❌
 - Mix async I/O with business logic in the same method
 - Hard-code dependencies without constructor injection
 
