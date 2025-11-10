@@ -28,9 +28,14 @@ class NavigationControls extends StatelessWidget {
           // Bouton "Maintenir pour sortir"
           GestureDetector(
             key: const Key('workout__button-1'),
+            behavior: HitTestBehavior.opaque,
             onLongPress: () {
               // Long-press pour sortir
               state.exitWorkout();
+            },
+            onTap: () {
+              // Tap pour sortir
+              //state.exitWorkout();
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),

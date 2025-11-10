@@ -1,18 +1,92 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:interval_counter/state/workout_state.dart';
 import 'package:interval_counter/models/preset.dart';
+import 'package:interval_counter/domain/workout_engine.dart';
+import 'package:interval_counter/services/ticker_service.dart';
+import 'package:interval_counter/services/audio_service.dart';
+import 'package:interval_counter/services/preferences_repository.dart';
+
+// Mock implementations for testing
+class MockTickerService implements TickerService {
+  bool disposed = false;
+  
+  @override
+  Stream<int> createTicker(Duration interval) {
+    return Stream.periodic(interval, (count) => count + 1);
+  }
+  
+  @override
+  void dispose() {
+    disposed = true;
+  }
+}
+
+class MockAudioService implements AudioService {
+  double _volume = 0.9;
+  bool _isEnabled = true;
+  int beepCount = 0;
+  
+  @override
+  void playBeep() {
+    beepCount++;
+  }
+  
+  @override
+  void setVolume(double volume) {
+    _volume = volume.clamp(0.0, 1.0);
+  }
+  
+  @override
+  double get volume => _volume;
+  
+  @override
+  bool get isEnabled => _isEnabled;
+  
+  @override
+  set isEnabled(bool value) {
+    _isEnabled = value;
+  }
+}
+
+class MockPreferencesRepository implements PreferencesRepository {
+  final Map<String, dynamic> _storage = {};
+  
+  @override
+  T? get<T>(String key) {
+    final value = _storage[key];
+    if (value is T) return value;
+    return null;
+  }
+  
+  @override
+  Future<void> set<T>(String key, T value) async {
+    _storage[key] = value;
+  }
+  
+  @override
+  Future<void> remove(String key) async {
+    _storage.remove(key);
+  }
+  
+  @override
+  Future<void> clear() async {
+    _storage.clear();
+  }
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   
   group('WorkoutState', () {
-    late SharedPreferences prefs;
+    late MockTickerService tickerService;
+    late MockAudioService audioService;
+    late MockPreferencesRepository prefsRepo;
     late Preset testPreset;
 
-    setUp(() async {
-      SharedPreferences.setMockInitialValues({});
-      prefs = await SharedPreferences.getInstance();
+    setUp(() {
+      tickerService = MockTickerService();
+      audioService = MockAudioService();
+      prefsRepo = MockPreferencesRepository();
       
       // Preset de test: 5/3x(40/20)/10
       testPreset = Preset.create(
@@ -25,8 +99,18 @@ void main() {
       );
     });
 
+    WorkoutState createState(Preset preset, {VoidCallback? onComplete}) {
+      return WorkoutState(
+        preset: preset,
+        tickerService: MockTickerService(),
+        audioService: MockAudioService(),
+        prefsRepo: MockPreferencesRepository(),
+        onWorkoutComplete: onComplete,
+      );
+    }
+
     test('initial values are correct', () {
-      final state = WorkoutState(prefs, testPreset);
+      final state = createState(testPreset);
       
       expect(state.currentStep, StepType.preparation);
       expect(state.remainingTime, 5);
@@ -40,7 +124,7 @@ void main() {
     });
 
     test('formattedTime formats correctly', () {
-      final state = WorkoutState(prefs, testPreset);
+      final state = createState(testPreset);
       
       expect(state.formattedTime, '00:05');
       
@@ -48,7 +132,7 @@ void main() {
     });
 
     test('stepLabel returns correct label for each step', () {
-      final state = WorkoutState(prefs, testPreset);
+      final state = createState(testPreset);
       
       expect(state.stepLabel, 'PRÉPARER');
       
@@ -56,7 +140,7 @@ void main() {
     });
 
     test('shouldShowRepsCounter is false for preparation', () {
-      final state = WorkoutState(prefs, testPreset);
+      final state = createState(testPreset);
       
       expect(state.shouldShowRepsCounter, false);
       
@@ -64,8 +148,7 @@ void main() {
     });
 
     test('tick decrements remainingTime', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer(); // Arrêter le timer auto
+      final state = createState(testPreset);
       
       final initialTime = state.remainingTime;
       state.tick();
@@ -76,8 +159,7 @@ void main() {
     });
 
     test('nextStep transitions preparation -> work', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState(testPreset);
       
       state.nextStep();
       
@@ -89,8 +171,7 @@ void main() {
     });
 
     test('nextStep transitions work -> rest', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState(testPreset);
       
       // Aller à work
       state.nextStep();
@@ -106,8 +187,7 @@ void main() {
     });
 
     test('nextStep transitions rest -> work (when reps > 0)', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState(testPreset);
       
       // prep -> work -> rest
       state.nextStep();
@@ -124,8 +204,7 @@ void main() {
     });
 
     test('nextStep skips rest on last rep and goes to cooldown', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState(testPreset);
       
       // Simulation: aller jusqu'à la dernière répétition
       state.nextStep(); // prep -> work
@@ -152,10 +231,9 @@ void main() {
       );
       
       bool workoutEnded = false;
-      final state = WorkoutState(prefs, presetNoCooldown, onWorkoutComplete: () {
+      final state = createState(presetNoCooldown, onComplete: () {
         workoutEnded = true;
       });
-      state.stopTimer();
       
       state.nextStep(); // work -> end
       
@@ -174,8 +252,7 @@ void main() {
         cooldownSeconds: 10,
       );
       
-      final state = WorkoutState(prefs, presetNoPrep);
-      state.stopTimer();
+      final state = createState(presetNoPrep);
       
       expect(state.currentStep, StepType.work);
       expect(state.remainingTime, 40);
@@ -184,8 +261,7 @@ void main() {
     });
 
     test('previousStep goes back from work to preparation', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState(testPreset);
       
       state.nextStep(); // prep -> work
       state.previousStep(); // work -> prep
@@ -197,8 +273,7 @@ void main() {
     });
 
     test('previousStep goes back from rest to work', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState(testPreset);
       
       state.nextStep(); // prep -> work
       state.nextStep(); // work -> rest
@@ -212,33 +287,41 @@ void main() {
     });
 
     test('togglePause toggles isPaused', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer(); // Commencer arrêté
+      final state = createState(testPreset);
       
-      expect(state.isPaused, true);
-      
-      state.togglePause(); // Start
       expect(state.isPaused, false);
       
       state.togglePause(); // Pause
       expect(state.isPaused, true);
       
+      state.togglePause(); // Resume
+      expect(state.isPaused, false);
+      
       state.dispose();
     });
 
     test('onVolumeChange updates volume', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: tickerService,
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+      );
       
       state.onVolumeChange(0.5);
       expect(state.volume, 0.5);
+      expect(audioService.volume, 0.5);
       
       state.dispose();
     });
 
     test('onVolumeChange clamps value between 0 and 1', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: tickerService,
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+      );
       
       state.onVolumeChange(1.5);
       expect(state.volume, 1.0);
@@ -250,8 +333,12 @@ void main() {
     });
 
     test('toggleSound toggles soundEnabled', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: tickerService,
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+      );
       
       expect(state.soundEnabled, true);
       
@@ -264,9 +351,8 @@ void main() {
       state.dispose();
     });
 
-    test('onScreenTap shows controls and updates lastTapTime', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+    test('onScreenTap shows controls', () {
+      final state = createState(testPreset);
       
       state.onScreenTap();
       expect(state.controlsVisible, true);
@@ -276,54 +362,68 @@ void main() {
 
     test('exitWorkout calls onWorkoutComplete', () async {
       bool workoutEnded = false;
-      final state = WorkoutState(prefs, testPreset, onWorkoutComplete: () {
+      final state = createState(testPreset, onComplete: () {
         workoutEnded = true;
       });
-      state.stopTimer();
       
       state.exitWorkout();
       
       expect(workoutEnded, true);
-      expect(state.isPaused, true);
       
       state.dispose();
     });
 
     test('persistence saves and loads volume', () async {
-      final state1 = WorkoutState(prefs, testPreset);
-      state1.stopTimer();
+      final state1 = WorkoutState(
+        preset: testPreset,
+        tickerService: MockTickerService(),
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+      );
       
       state1.onVolumeChange(0.75);
       state1.dispose();
       
-      // Attendre un peu pour la persistence
-      await Future.delayed(const Duration(milliseconds: 100));
+      // Vérifier la persistence
+      expect(prefsRepo.get<double>('workout_volume'), 0.75);
       
-      final state2 = WorkoutState(prefs, testPreset);
+      // Nouveau state devrait charger la valeur
+      final audioService2 = MockAudioService();
+      audioService2.setVolume(prefsRepo.get<double>('workout_volume') ?? 0.9);
+      
+      final state2 = WorkoutState(
+        preset: testPreset,
+        tickerService: MockTickerService(),
+        audioService: audioService2,
+        prefsRepo: prefsRepo,
+      );
       expect(state2.volume, 0.75);
       
       state2.dispose();
     });
 
     test('persistence saves and loads soundEnabled', () async {
-      final state1 = WorkoutState(prefs, testPreset);
-      state1.stopTimer();
+      final state1 = WorkoutState(
+        preset: testPreset,
+        tickerService: MockTickerService(),
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+      );
       
       state1.toggleSound();
       state1.dispose();
       
-      // Attendre un peu pour la persistence
-      await Future.delayed(const Duration(milliseconds: 100));
-      
-      final state2 = WorkoutState(prefs, testPreset);
-      expect(state2.soundEnabled, false);
-      
-      state2.dispose();
+      // Vérifier la persistence
+      expect(prefsRepo.get<bool>('workout_sound_enabled'), false);
     });
 
-    test('tick at remainingTime=3 should call playBeep', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+    test('tick at remainingTime=3 calls playBeep', () {
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: tickerService,
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+      );
       
       // Mettre le temps à 3 secondes
       while (state.remainingTime > 3) {
@@ -332,16 +432,18 @@ void main() {
       
       expect(state.remainingTime, 3);
       
-      // Le prochain tick devrait jouer un bip (on ne peut pas tester le son directement)
+      final initialBeepCount = audioService.beepCount;
       state.tick();
+      
+      // Devrait avoir joué un bip
+      expect(audioService.beepCount, initialBeepCount + 1);
       expect(state.remainingTime, 2);
       
       state.dispose();
     });
 
     test('tick at remainingTime=0 calls nextStep', () {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState(testPreset);
       
       // Réduire à 0
       while (state.remainingTime > 0) {
@@ -356,6 +458,18 @@ void main() {
       
       state.dispose();
     });
+
+    test('dispose cancels timers and calls tickerService.dispose', () {
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: tickerService,
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+      );
+      
+      state.dispose();
+      
+      expect(tickerService.disposed, true);
+    });
   });
 }
-

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:interval_counter/services/impl/beep_audio_service.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/preset.dart';
 import '../state/workout_state.dart';
 import '../theme/app_colors.dart';
@@ -7,6 +9,8 @@ import '../widgets/workout/volume_controls.dart';
 import '../widgets/workout/navigation_controls.dart';
 import '../widgets/workout/workout_display.dart';
 import '../widgets/workout/pause_button.dart';
+import '../services/impl/system_ticker_service.dart';
+import '../services/impl/shared_prefs_repository.dart';
 
 /// Écran principal de la session d'entraînement
 class WorkoutScreen extends StatelessWidget {
@@ -20,13 +24,7 @@ class WorkoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<WorkoutState>(
-      future: WorkoutState.create(
-        preset,
-        onWorkoutComplete: () {
-          // Retour à l'écran Home
-          Navigator.of(context).pop();
-        },
-      ),
+      future: _createWorkoutState(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Scaffold(
@@ -43,10 +41,67 @@ class WorkoutScreen extends StatelessWidget {
       },
     );
   }
+  
+  /// Crée le WorkoutState avec injection de dépendances
+  Future<WorkoutState> _createWorkoutState() async {
+    // Instancier les services concrets
+    final tickerService = SystemTickerService();
+    final audioService = BeepAudioService();
+    await audioService.initialize();
+    final prefs = await SharedPreferences.getInstance();
+    final prefsRepo = SharedPrefsRepository(prefs);
+    return WorkoutState(preset: preset, tickerService: tickerService, audioService: audioService, prefsRepo: prefsRepo, onWorkoutComplete: () {});
+  }
 }
 
-class _WorkoutScreenContent extends StatelessWidget {
+class _WorkoutScreenContent extends StatefulWidget {
   const _WorkoutScreenContent();
+  
+  @override
+  State<_WorkoutScreenContent> createState() => _WorkoutScreenContentState();
+}
+
+class _WorkoutScreenContentState extends State<_WorkoutScreenContent> {
+  late final WorkoutState _workoutState;
+
+  @override
+  void initState() {
+    super.initState();
+    _workoutState = context.read<WorkoutState>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _workoutState.addListener(_checkWorkoutComplete);
+    });    
+  }
+  
+  void _checkWorkoutComplete() {
+    print('🔵 _checkWorkoutComplete() called - isExiting=${_workoutState.isExiting}');  // 🆕 Debug
+  
+    // fin manuelle de la session
+    if (_workoutState.isExiting) {
+      print('✅ Navigation pop!');  // 🆕 Debug
+      _workoutState.removeListener(_checkWorkoutComplete);
+  
+      if(mounted) {
+        Navigator.of(context).pop();
+      }
+      return;
+    }
+    // fin naturelle de la session
+    if (_workoutState.currentStep == StepType.cooldown && _workoutState.remainingTime == 0) {
+      _workoutState.removeListener(_checkWorkoutComplete);
+      // Session terminée, retour à Home
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    }
+  }
+  
+  @override
+  void dispose() {
+    _workoutState.removeListener(_checkWorkoutComplete);
+    _workoutState.dispose();
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -68,7 +123,12 @@ class _WorkoutScreenContent extends StatelessWidget {
         backgroundColor = AppColors.cooldownColor;
         break;
     }
-    
+
+    if (state.isPaused) {
+      final hsl = HSLColor.fromColor(backgroundColor);
+      backgroundColor = hsl.withLightness(hsl.lightness * 0.4).toColor();
+    }
+
     return Scaffold(
       backgroundColor: backgroundColor,
       body: GestureDetector(
@@ -98,7 +158,11 @@ class _WorkoutScreenContent extends StatelessWidget {
                     child: const NavigationControls(),
                   ),
                   
-                  WorkoutDisplay(),
+                  const Spacer(),
+                  
+                  const WorkoutDisplay(),
+                  
+                  const Spacer(),
                   
                   const SizedBox(height: 80), // Espace pour le FAB
                 ],
@@ -118,4 +182,3 @@ class _WorkoutScreenContent extends StatelessWidget {
     );
   }
 }
-

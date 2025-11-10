@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:interval_counter/widgets/workout/pause_button.dart';
 import 'package:interval_counter/state/workout_state.dart';
 import 'package:interval_counter/models/preset.dart';
+import '../../helpers/mock_services.dart';
 
 void main() {
   group('PauseButton Widget Tests', () {
-    late SharedPreferences prefs;
     late Preset testPreset;
 
-    setUp(() async {
-      SharedPreferences.setMockInitialValues({});
-      prefs = await SharedPreferences.getInstance();
-      
+    setUp(() {
       testPreset = Preset.create(
         name: 'Test',
         prepareSeconds: 5,
@@ -24,6 +20,15 @@ void main() {
         cooldownSeconds: 10,
       );
     });
+    
+    WorkoutState createState() {
+      return WorkoutState(
+        preset: testPreset,
+        tickerService: MockTickerService(),
+        audioService: MockAudioService(),
+        prefsRepo: MockPreferencesRepository(),
+      );
+    }
 
     Widget createTestWidget(WorkoutState state) {
       return ChangeNotifierProvider.value(
@@ -37,8 +42,7 @@ void main() {
     }
 
     testWidgets('renders with correct key', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState();
       
       await tester.pumpWidget(createTestWidget(state));
       
@@ -48,8 +52,7 @@ void main() {
     });
 
     testWidgets('shows play icon when paused', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer(); // Start paused
+      final state = createState(); // Start paused
       
       await tester.pumpWidget(createTestWidget(state));
       
@@ -59,9 +62,8 @@ void main() {
     });
 
     testWidgets('shows pause icon when playing', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
-      state.startTimer(); // Start playing
+      final state = createState();
+      // State starts with timer running (not paused)
       
       await tester.pumpWidget(createTestWidget(state));
       await tester.pump();
@@ -72,18 +74,11 @@ void main() {
     });
 
     testWidgets('tap toggles pause state', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
-      
-      expect(state.isPaused, true);
-      
-      await tester.pumpWidget(createTestWidget(state));
-      
-      await tester.tap(find.byKey(const Key('workout__iconbutton-4')));
-      await tester.pump();
+      final state = createState();
       
       expect(state.isPaused, false);
-      expect(find.byIcon(Icons.pause), findsOneWidget);
+      
+      await tester.pumpWidget(createTestWidget(state));
       
       await tester.tap(find.byKey(const Key('workout__iconbutton-4')));
       await tester.pump();
@@ -91,12 +86,17 @@ void main() {
       expect(state.isPaused, true);
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
       
+      await tester.tap(find.byKey(const Key('workout__iconbutton-4')));
+      await tester.pump();
+      
+      expect(state.isPaused, false);
+      expect(find.byIcon(Icons.pause), findsOneWidget);
+      
       state.dispose();
     });
 
     testWidgets('FAB has correct background color', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createState();
       
       await tester.pumpWidget(createTestWidget(state));
       

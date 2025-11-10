@@ -1,246 +1,130 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/preset.dart';
+import '../domain/workout_engine.dart';
+import '../services/ticker_service.dart';
+import '../services/audio_service.dart';
+import '../services/preferences_repository.dart';
 
-/// Type d'étape dans la session d'entraînement
-enum StepType {
-  preparation,
-  work,
-  rest,
-  cooldown,
-}
+// Exporter StepType pour rétro-compatibilité
+export '../domain/workout_engine.dart' show StepType;
 
-/// État de l'écran Workout
-/// Gère le timer, les transitions d'étapes et les contrôles
+/// État de l'écran Workout - Thin Coordinator.
+/// Orchestrer le domain logic (WorkoutEngine) et les services externes.
+/// Conforme à ARCHITECTURE_CONTRACT.md.
 class WorkoutState extends ChangeNotifier {
-  final SharedPreferences _prefs;
-  final Preset preset;
+  // Dependencies injectées (interfaces)
+  final TickerService _tickerService;
+  final AudioService _audioService;
+  final PreferencesRepository _prefsRepo;
   
   // Clés de persistance
   static const String _keyVolume = 'workout_volume';
   static const String _keySoundEnabled = 'workout_sound_enabled';
   
-  // État privé
-  StepType _currentStep = StepType.preparation;
-  int _remainingTime = 0;
-  int _remainingReps = 0;
-  bool _isPaused = false;
-  double _volume = 0.9;
-  bool _soundEnabled = true;
+  // Domain engine
+  WorkoutEngine _engine;
+  
+  // État UI local
   bool _controlsVisible = true;
-  DateTime? _lastTapTime;
-  Timer? _timer;
   Timer? _controlsHideTimer;
+  bool _isExiting = false;
+  
+  // Subscription au ticker
+  StreamSubscription<int>? _tickerSubscription;
   
   // Callback pour navigation
   final VoidCallback? onWorkoutComplete;
   
-  // Getters publics
-  StepType get currentStep => _currentStep;
-  int get remainingTime => _remainingTime;
-  int get remainingReps => _remainingReps;
-  bool get isPaused => _isPaused;
-  double get volume => _volume;
-  bool get soundEnabled => _soundEnabled;
+  // --- Getters publics (délégués à l'engine ou local) ---
+  
+  StepType get currentStep => _engine.currentStep;
+  int get remainingTime => _engine.remainingTime;
+  int get remainingReps => _engine.remainingReps;
+  bool get isPaused => _engine.isPaused;
+  double get volume => _audioService.volume;
+  //bool get soundEnabled => _audioService.isEnabled;
   bool get controlsVisible => _controlsVisible;
+  bool get isExiting => _isExiting;
   
   /// Formatte le temps restant en MM:SS
   String get formattedTime {
-    final minutes = _remainingTime ~/ 60;
-    final seconds = _remainingTime % 60;
+    final minutes = _engine.remainingTime ~/ 60;
+    final seconds = _engine.remainingTime % 60;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
   
-  /// Retourne le libellé de l'étape actuelle
-  String get stepLabel {
-    switch (_currentStep) {
-      case StepType.preparation:
-        return 'PRÉPARER';
-      case StepType.work:
-        return 'TRAVAIL';
-      case StepType.rest:
-        return 'REPOS';
-      case StepType.cooldown:
-        return 'REFROIDIR';
-    }
-  }
-  
   /// Indique si le compteur de répétitions doit être affiché
-  bool get shouldShowRepsCounter {
-    return _currentStep == StepType.work || _currentStep == StepType.rest;
-  }
+  bool get shouldShowRepsCounter => _engine.shouldShowRepsCounter;
   
-  /// Constructeur de production (async, instantie les dépendances)
-  static Future<WorkoutState> create(Preset preset, {VoidCallback? onWorkoutComplete}) async {
-    final prefs = await SharedPreferences.getInstance();
-    return WorkoutState(prefs, preset, onWorkoutComplete: onWorkoutComplete);
-  }
+  // --- Constructeur ---
   
-  /// Constructeur de test (sync, accepte les dépendances)
-  WorkoutState(this._prefs, this.preset, {this.onWorkoutComplete}) {
+  /// Constructeur avec injection de dépendances (testable).
+  WorkoutState({
+    required Preset preset,
+    required TickerService tickerService,
+    required AudioService audioService,
+    required PreferencesRepository prefsRepo,
+    this.onWorkoutComplete,
+  })  : _tickerService = tickerService,
+        _audioService = audioService,
+        _prefsRepo = prefsRepo,
+        _engine = WorkoutEngine.fromPreset(preset) {
     _loadState();
-    _initializeWorkout();
-    startTimer();
+    _startTicker();
+    _scheduleControlsAutoHide();
   }
   
-  /// Charge l'état depuis SharedPreferences
+  // --- Méthodes privées ---
+  
+  /// Charge l'état persisté
   void _loadState() {
-    _volume = _prefs.getDouble(_keyVolume) ?? 0.9;
-    _soundEnabled = _prefs.getBool(_keySoundEnabled) ?? true;
+    //final volume = _prefsRepo.get<double>(_keyVolume) ?? 0.9;
+    //final soundEnabled = _prefsRepo.get<bool>(_keySoundEnabled) ?? true;
     
-    // Valider les valeurs
-    _volume = _volume.clamp(0.0, 1.0);
+    //_audioService.setVolume(volume);
+    //_audioService.isEnabled = soundEnabled;
   }
   
-  /// Sauvegarde l'état dans SharedPreferences
-  Future<void> _saveState() async {
-    await _prefs.setDouble(_keyVolume, _volume);
-    await _prefs.setBool(_keySoundEnabled, _soundEnabled);
-  }
-  
-  /// Initialise la session d'entraînement
-  void _initializeWorkout() {
-    _remainingReps = preset.repetitions;
+  /// Démarre le ticker
+  void _startTicker() {
+    _tickerSubscription?.cancel();
     
-    // Déterminer l'étape initiale
-    if (preset.prepareSeconds > 0) {
-      _currentStep = StepType.preparation;
-      _remainingTime = preset.prepareSeconds;
-    } else if (preset.workSeconds > 0) {
-      _currentStep = StepType.work;
-      _remainingTime = preset.workSeconds;
-    } else {
-      // Pas d'étape valide
-      _currentStep = StepType.work;
-      _remainingTime = 0;
-    }
+    final stream = _tickerService.createTicker(const Duration(seconds: 1));
+    _tickerSubscription = stream.listen((_) => tick());
   }
   
-  /// Démarre le timer
-  void startTimer() {
-    if (_timer != null && _timer!.isActive) {
-      return;
-    }
-    
-    _isPaused = false;
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) => tick());
-    notifyListeners();
+  /// Arrête le ticker
+  void _stopTicker() {
+    _tickerSubscription?.cancel();
+    _tickerSubscription = null;
   }
   
-  /// Arrête le timer
-  void stopTimer() {
-    _timer?.cancel();
-    _timer = null;
-    _isPaused = true;
-    notifyListeners();
-  }
-  
-  /// Tick du timer (appelé chaque seconde)
-  void tick() {
-    if (_remainingTime > 0) {
-      _remainingTime--;
-      
-      // Émettre un bip lors des 3 dernières secondes
-      if (_remainingTime <= 3 && _remainingTime > 0) {
-        playBeep();
-      }
-      
+  /// Schedule le masquage automatique des contrôles après 1500ms
+  void _scheduleControlsAutoHide() {
+    _controlsHideTimer?.cancel();
+    _controlsHideTimer = Timer(const Duration(milliseconds: 1500), () {
+      _controlsVisible = false;
       notifyListeners();
-    } else {
-      // Temps écoulé, passer à l'étape suivante
-      nextStep();
-    }
+    });
   }
   
-  /// Passe à l'étape suivante
-  void nextStep() {
-    switch (_currentStep) {
-      case StepType.preparation:
-        // Préparation → Travail
-        _currentStep = StepType.work;
-        _remainingTime = preset.workSeconds;
-        break;
-        
-      case StepType.work:
-        // Travail → Repos (sauf dernière répétition)
-        _remainingReps--;
-        if (_remainingReps > 0 && preset.restSeconds > 0) {
-          _currentStep = StepType.rest;
-          _remainingTime = preset.restSeconds;
-        } else {
-          // Dernière répétition ou pas de repos → Refroidissement
-          _goToCooldownOrEnd();
-        }
-        break;
-        
-      case StepType.rest:
-        // Repos → Travail
-        if (_remainingReps > 0) {
-          _currentStep = StepType.work;
-          _remainingTime = preset.workSeconds;
-        } else {
-          _goToCooldownOrEnd();
-        }
-        break;
-        
-      case StepType.cooldown:
-        // Refroidissement → Fin
-        _endWorkout();
-        return;
+  // --- Actions publiques ---
+  
+  /// Tick du timer : délègue au domain engine
+  void tick() {
+    // Jouer un bip si nécessaire (avant le tick)
+    if (_engine.shouldPlayBeep) {
+      _audioService.playBeep();
     }
     
-    notifyListeners();
-  }
-  
-  /// Va à l'étape de refroidissement ou termine
-  void _goToCooldownOrEnd() {
-    if (preset.cooldownSeconds > 0) {
-      _currentStep = StepType.cooldown;
-      _remainingTime = preset.cooldownSeconds;
-    } else {
+    // Déléguer le tick au domain engine
+    _engine = _engine.tick();
+    
+    // Vérifier si la session est terminée
+    if (_engine.isComplete) {
       _endWorkout();
-    }
-  }
-  
-  /// Termine la session
-  void _endWorkout() {
-    stopTimer();
-    onWorkoutComplete?.call();
-  }
-  
-  /// Revient à l'étape précédente
-  void previousStep() {
-    switch (_currentStep) {
-      case StepType.preparation:
-        // Déjà au début
-        _remainingTime = preset.prepareSeconds;
-        break;
-        
-      case StepType.work:
-        if (preset.prepareSeconds > 0) {
-          _currentStep = StepType.preparation;
-          _remainingTime = preset.prepareSeconds;
-          _remainingReps = preset.repetitions;
-        } else {
-          // Recommencer le travail
-          _remainingTime = preset.workSeconds;
-        }
-        break;
-        
-      case StepType.rest:
-        _currentStep = StepType.work;
-        _remainingTime = preset.workSeconds;
-        _remainingReps++;
-        break;
-        
-      case StepType.cooldown:
-        // Retour à la dernière répétition de travail
-        _currentStep = StepType.work;
-        _remainingTime = preset.workSeconds;
-        _remainingReps = 1;
-        break;
+      return;
     }
     
     notifyListeners();
@@ -248,75 +132,80 @@ class WorkoutState extends ChangeNotifier {
   
   /// Toggle pause/lecture
   void togglePause() {
-    if (_isPaused) {
-      startTimer();
+    _engine = _engine.togglePause();
+    
+    if (_engine.isPaused) {
+      _stopTicker();
     } else {
-      stopTimer();
+      _startTicker();
     }
+    
+    notifyListeners();
+  }
+  
+  /// Passe à l'étape suivante
+  void nextStep() {
+    _engine = _engine.nextStep();
+    
+    // Vérifier si la session est terminée
+    if (_engine.isComplete) {
+      _endWorkout();
+      return;
+    }
+    
+    notifyListeners();
+  }
+  
+  /// Revient à l'étape précédente
+  void previousStep() {
+    _engine = _engine.previousStep();
+    notifyListeners();
   }
   
   /// Met à jour le volume
   void onVolumeChange(double value) {
-    _volume = value.clamp(0.0, 1.0);
+    _audioService.setVolume(value);
     notifyListeners();
-    _saveState();
+    _prefsRepo.set(_keyVolume, 0.9);
   }
   
   /// Toggle son activé/désactivé
   void toggleSound() {
-    _soundEnabled = !_soundEnabled;
-    notifyListeners();
-    _saveState();
+    //_audioService.isEnabled = !_audioService.isEnabled;
+    //notifyListeners();
+    //_prefsRepo.set(_keySoundEnabled, _audioService.isEnabled);
   }
   
   /// Gère le tap sur l'écran
   void onScreenTap() {
-    _lastTapTime = DateTime.now();
     _controlsVisible = true;
     notifyListeners();
     
-    // Masquer les contrôles après 1 seconde
-    _controlsHideTimer?.cancel();
-    _controlsHideTimer = Timer(const Duration(seconds: 1), hideControlsAfterDelay);
-  }
-  
-  /// Masque les contrôles après le délai
-  void hideControlsAfterDelay() {
-    if (_lastTapTime != null && 
-        DateTime.now().difference(_lastTapTime!).inSeconds >= 1) {
-      _controlsVisible = false;
-      notifyListeners();
-    }
-  }
-  
-  /// Démarre le masquage automatique des contrôles
-  void startAutoHideControls() {
-    _controlsHideTimer?.cancel();
-    _controlsHideTimer = Timer(const Duration(seconds: 1), () {
-      _controlsVisible = false;
-      notifyListeners();
-    });
-  }
-  
-  /// Émet un bip sonore
-  void playBeep() {
-    if (_soundEnabled && _volume > 0) {
-      // Jouer un son système simple
-      SystemSound.play(SystemSoundType.click);
-    }
+    // Re-scheduler le masquage automatique
+    _scheduleControlsAutoHide();
   }
   
   /// Quitte la session d'entraînement
   void exitWorkout() {
-    stopTimer();
+    print('🔴 exitWorkout() called - _isExiting = true');  // 🆕 Debug
+    _isExiting = true;
+    _stopTicker();
+    notifyListeners();
+    onWorkoutComplete?.call();
+  }
+  
+  /// Termine la session
+  void _endWorkout() {
+    _stopTicker();
     onWorkoutComplete?.call();
   }
   
   @override
   void dispose() {
-    _timer?.cancel();
+    _stopTicker();
     _controlsHideTimer?.cancel();
+    _tickerService.dispose();
+    _audioService.dispose();
     super.dispose();
   }
 }
-

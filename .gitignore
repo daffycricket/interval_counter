@@ -99,6 +99,8 @@ junit.xml
 **/GeneratedPluginRegistrant.java
 **/GeneratedPluginRegistrant.swift
 **/GeneratedPluginRegistrant.m
+**/generated_plugin_registrant.cc
+**/generated_plugins.cmake
 
 # Temporary files
 *.tmp

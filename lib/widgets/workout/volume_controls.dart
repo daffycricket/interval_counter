@@ -19,7 +19,7 @@ class VolumeControls extends StatelessWidget {
           IconButton(
             key: const Key('workout__iconbutton-1'),
             icon: Icon(
-              state.soundEnabled ? Icons.volume_up : Icons.volume_off,
+              Icons.volume_up,
               color: Colors.black,
             ),
             onPressed: state.toggleSound,

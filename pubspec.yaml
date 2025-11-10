@@ -27,13 +27,16 @@ dependencies:
   collection: ^1.18.0
   uuid: ^4.2.2
 
+  # Audio
+  audioplayers: ^6.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^5.0.0
 
 flutter:
-
   uses-material-design: true
   generate: true
+  assets:
+    - assets/sounds/beep500ms.mp3
