@@ -49,12 +49,13 @@
   - **WHY**: Too many responsibilities, hard to maintain
   - ✅ **DO**: Split into domain classes + service interfaces
 
+- ❌ **DON'T** return localized strings from State getters
+  - **WHY**: Breaks i18n, couples state to UI, makes tests require BuildContext
+  - ✅ **DO**: Return enums/types from State, translate in Widget layer
+
 ## When to Update This File
 - After fixing a recurring error during orchestration
 - After discovering a Flutter-specific pitfall
 - After identifying a pattern that breaks tests
 
 ---
-
-*Last updated: 2025-10-24*
-

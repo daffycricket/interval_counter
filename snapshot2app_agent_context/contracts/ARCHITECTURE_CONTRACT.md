@@ -140,7 +140,84 @@ class WorkoutState extends ChangeNotifier {
 
 ---
 
-## 4. Layer Separation
+## 4. Localization in State
+
+### Core Rule
+**State classes MUST NOT return localized strings.**
+
+❌ **PROHIBITED:**
+```dart
+class MyCustomState extends ChangeNotifier {
+  String get specificLabel {
+    switch (currentStatus) {
+      case StatusType.active: return 'ACTIF'; // Hardcoded French!
+    }
+  }
+}
+```
+
+✅ **CORRECT:**
+```dart
+// State returns enum/primitive
+class MyCustomState extends ChangeNotifier {
+  StatusType get currentStatus => _engine.currentStatus;
+}
+
+// Widget translates
+class MyCustomWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<MyCustomState>();
+    final l10n = AppLocalizations.of(context)!;
+    
+    return Text(_getLabel(state.currentStatus, l10n));
+  }
+  
+  String _getLabel(StatusType status, AppLocalizations l10n) {
+    switch (status) {
+      case StatusType.active: return l10n.statusActive;
+      case StatusType.inactive: return l10n.statusInactive;
+    }
+  }
+}
+
+// OR using extension for reusability:
+extension StatusTypeLocalization on StatusType {
+  String localize(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      StatusType.active => l10n.statusActive,
+      StatusType.inactive => l10n.statusInactive,
+    };
+  }
+}
+// Usage: Text(state.currentStatus.localize(context))
+```
+
+### Test Impact
+```dart
+// State tests: no i18n needed ✅
+test('currentStatus returns correct enum', () {
+  final state = MyCustomState(config: testConfig);
+  expect(state.currentStatus, StatusType.active); // No BuildContext!
+});
+
+// Widget tests: include i18n setup
+testWidgets('displays translated label', (tester) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: [Locale('fr')],
+      home: MyCustomWidget(),
+    ),
+  );
+  expect(find.text('ACTIF'), findsOneWidget);
+});
+```
+
+---
+
+## 5. Layer Separation
 
 ### Domain Layer
 - **Path:** `lib/domain/`
@@ -164,7 +241,7 @@ class WorkoutState extends ChangeNotifier {
 
 ---
 
-## 5. Common Service Interfaces
+## 6. Common Service Interfaces
 
 ### TickerService (for timers)
 ```dart
@@ -216,6 +293,8 @@ Before marking build as PASSED:
 - [ ] State classes have ≤5 dependencies
 - [ ] Domain tests achieve 100% coverage
 - [ ] Domain tests run in <100ms total
+- [ ] State getters return enums/primitives, not localized strings
+- [ ] Enum localization extensions in lib/domain/ if pattern used
 
 ---
 

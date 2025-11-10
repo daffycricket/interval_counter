@@ -17,3 +17,4 @@
 - **G-15**: Business logic >50 lines OR complex calculations MUST be extracted to lib/domain/ classes (pure Dart).
 - **G-16**: State classes MUST have ≤5 constructor dependencies. If >5, split into multiple services.
 - **G-17**: lib/domain/ code MUST be pure Dart (no package:flutter imports except foundation for @immutable).
+- **G-18**: State classes MUST NOT return localized strings. State getters must return enums, primitives, or domain objects. Translation to user-facing text is Widget layer responsibility using AppLocalizations.
