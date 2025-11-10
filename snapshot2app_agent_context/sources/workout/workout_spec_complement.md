@@ -3,8 +3,8 @@ Ce document est un complément de règles qui ne sont pas visibles dans le fichi
 Ces éléments doivent être pris en compte dans la génération du plan de développement, dans le build et dans les phases de test. 
 
 ## Détails sur l'écran
-Ecran "Workout". 
-Il s'agit de l'écran qui permet d'exécuter la session d'entrainement sélectionné dans l'écran "Home", en enchainant les étapes (Préparation, n répétitions de Travail puis Repos, Refoidissement)
+### Ecran "Workout". 
+Il s'agit de l'écran qui permet d'exécuter la session d'entrainement sélectionnée dans l'écran "Home", en enchainant les étapes (Préparation, n répétitions de Travail puis Repos, Refoidissement)
 
 **Suite d'étapes de l'écran**
 Cet écran passe dans chacune des étapes : 
@@ -16,19 +16,26 @@ Cet écran passe dans chacune des étapes :
 
 **Fonctionnement de l'écran**
 Cet écran affiche un chronomètre qui décroit d'une seconde, à chaque seconde.
-Dès l'affichage de l'écran ou de l'étape, le durée s'affiche, le chrono se lance et décroit jusqu'à 00:00.
-Une fois le temps terminé, l'écran passe à l'étape d'après dans le pré-réglage.
+Dès l'affichage de l'écran ou de l'étape, la durée s'affiche, le chrono se lance et décroit jusqu'à 00:00.
+Une fois le temps de l'étape terminé, l'écran passe à l'étape d'après dans le pré-réglage.
+Une fois  la session complète terminée, l'écran bascule vers l'écran de fin de session 
+
+***A prendre en compte pour l'implémentation***
+A ce stade, l'écran de fin de session n'est pas encore développé. 
+Pour le moement, à la fin de la session, basculer ver l'écran Home. La bascule vers l'écran de fin de session sera réalisée lors d'une génération à venir.
 
 ## Règles de gestion sur les transitions
 **Règles de gestion**
-- L'étape "Repos" de la dernière répétition n'est pas exécutée, l'écran passe directement dans l'étape "Refroidissement" s'il y en a une.
-- Si une étape est à zéro secondes dans le préréglage, l'étape n'est pas affichée, l'écran passe directement à l'étape d'après.
-- Lors des 3 dernières secondes d'une étape, l'appli émét un bip sonore à chaque seconde, donc à : 
-  - 00:05 => pas de bip sonore
+- 1. L'étape "Repos" de la dernière répétition n'est pas exécutée, l'écran passe directement dans l'étape "Refroidissement" s'il y en a une.
+- 2. Si une étape est à zéro secondes dans le préréglage, l'étape n'est pas affichée, l'écran passe directement à l'étape d'après.
+- 3. Lors des 3 dernières secondes d'une étape, l'appli émét un bip sonore à chaque seconde, donc à : 
   - 00:04 => pas de bip sonore
+  - 00:03 => pas de bip sonore
   - 00:02 => bip sonore
   - 00:01 => bip sonore
   - 00:00 => bip sonore
+- 4. Le nombre de répétitions restant à afficher est le même pour le couple travail/repos. Le nombre de répétitions restant du "repos" suit celui du "travail" associé. Autrement dit, c'est la valeur du "travail" qui drive la valeur du "repos". 
+- 5. A la fin de la session, retour à l'écran Home
 
 **Exemple pour le préréglage suivant : 5/3x(40/20)/10** 
   - 5 secondes de préparation
@@ -37,14 +44,17 @@ Une fois le temps terminé, l'écran passe à l'étape d'après dans le pré-ré
     - 20 secondes de repos 
   - 10 secondes de refroidissement
 
-L'écran passe dans les étapes suivantes : 
+=> L'écran passe dans les étapes suivantes : 
 1. Préparation (5 secondes)
-2. Travail (40 secondes) - reste 3 répétitions
-3. Repos (20 secondes) - reste 3 répétitions
-4. Travail (40 secondes) - reste 2 répétitions
-5. Repos (20 secondes) - reste 2 répétitions
-6. Travail (40 secondes) - reste 1 répétition
-7. Refroidissement (10 secondes)
+2. Répétition 1 (couple travail/repos n°1):
+  2.1. Travail (40 secondes) - reste 3 répétitions
+  2.2. Repos (20 secondes) - reste 3 répétitions
+3. Répétition 2 (couple travail/repos n°2):
+  3.1. Travail (40 secondes) - reste 2 répétitions
+  3.2. Repos (20 secondes) - reste 2 répétitions
+4. Répétition 3 (couple travail/repos n°3 - pas de repos car dernière répétition):
+  4.1. Travail (40 secondes) - reste 1 répétition
+5. Refroidissement (10 secondes)
 
 **Exemple pour le préréglage suivant : 0/3x(40/20)/0** 
   - 0 secondes de préparation
@@ -53,22 +63,34 @@ L'écran passe dans les étapes suivantes :
     - 20 secondes de repos 
   - 0 secondes de refroidissement
 
-L'écran passe dans les étapes suivantes : 
-1. Travail (40 secondes) - reste 3 répétitions
-2. Repos (20 secondes) - reste 3 répétitions
-3. Travail (40 secondes) - reste 2 répétitions
-4. Repos (20 secondes) - reste 2 répétitions
-5. Travail (40 secondes) - reste 1 répétition
+=> L'écran passe dans les étapes suivantes : 
+1. Répétition 1 (couple travail/repos n°1):
+  1.1. Travail (40 secondes) - reste 3 répétitions
+  1.2. Repos (20 secondes) - reste 3 répétitions
+2. Répétition 2 (couple travail/repos n°2):
+  2.1. Travail (40 secondes) - reste 2 répétitions
+  2.2. Repos (20 secondes) - reste 2 répétitions
+3. Répétition 3 (couple travail/repos n°3 - pas de repos car dernière répétition):
+  3.1. Travail (40 secondes) - reste 1 répétition
 
 ## Règles de gestion visuelles
-**Disparation de boutons et d'éléments interactifs"**
-Au lancement de l'écran, tous les éléments interactifs - boutons, fab, slider - sont affichés.
-Au bout de 1500 ms, les éléments interactifs suivants disparaissent : 
+**Disparation et apparition de boutons et d'éléments interactifs"**
+1. Au lancement de l'écran, tous les éléments interactifs - boutons, fab, slider - sont affichés.
+2. Au bout de 1500 ms, les éléments interactifs suivants disparaissent : 
   - le slider de volume, tout en haut de l'écran.
   - la ligne de contrôles : bouton précédent / bouton "Maintenir pour sortir" / bouton suivant.
   - le fab de pause en bas à droite.
-Ils ne réapparaissent pas lorsque l'écran change d'étape.
-Ils réapparaissent si l'utilisateur tap n'importe où sur l'écran, puis redisparaissent au bout de 1500 ms.
+3. Ils ne réapparaissent pas lorsque l'écran change d'étape.
+4. Ils réapparaissent si l'utilisateur tap n'importe où sur l'écran, puis redisparaissent au bout de 1500 ms.
+5. Si la session est mise en pause, les boutons restent visibles, puis disparaissent à nouveau lorsque la session est redémarrée.
+
+**Slider de volume**
+Le composant slider de volume de cet écran est le même que celui de l'écran Home :
+  - Visuellement, c'est le même, mais le menu à droite avec les 3 boutons n'est pas visible.
+  - Le widget existant doit être réutilisé, et adapté si nécessaire (menu droite visible ou non visible)
+  - Les données stockées en SharedPreferences doivent être partagées:
+    - La valeur du slider stockée sur l'écran Home, doit être récupérée sur l'écran Workout ; et inversement. 
+    - Attention à bien réutiliser les mêmes clés de stockage et de récupération entre les deux écrans.
 
 **Détails visuels généraux**
 - Chaque étape a une couleur de fond distincte.
@@ -99,12 +121,14 @@ Ils réapparaissent si l'utilisateur tap n'importe où sur l'écran, puis redisp
 ## Interactions 
 **Tap sur le fab Pause**
 Un tap sur le Floating Action Button "Pause" : 
-- met en pause le chrono de l'étape et la session d'entrainement : tout est figé.
+- Met en pause le chrono de l'étape et la session d'entrainement : tout est figé.
+- Les boutons interactifs restent affichés.
 - Le fab "Pause" est remplacé par un fab "Start"
 
 **Tap sur le fab Start**
 Un tap sur le Floating Action Button "Start" : 
-- rédémarre le chrono et la session continue
+- Rédémarre le chrono et la session continue
+- Au bout de 1500 ms, les boutons interactifs restent affichés.
 - Le fab "Start" est remplacé par le fab "Pause"
 
 **Tap sur bouton suivant**
@@ -113,7 +137,7 @@ L'écran passe automatiquement à l'étape suivante, le chrono redémarre avec l
 **Tap sur bouton précédent**
 L'écran revient automatiquement à l'étape précédente, le chrono redémarre avec le temps de l'étape précédente.
 
-**Tap sur le bouton "Maintenir pour sortir"**
+**Long tap sur le bouton "Maintenir pour sortir"**
 Un tap long (1 seconde) sur le bouton back ferme l'écran, la home se réaffiche.
 
 **Utilisation du slider sonore**
