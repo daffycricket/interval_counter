@@ -28,13 +28,21 @@ Pour le moement, à la fin de la session, basculer ver l'écran Home. La bascule
 **Règles de gestion**
 - 1. L'étape "Repos" de la dernière répétition n'est pas exécutée, l'écran passe directement dans l'étape "Refroidissement" s'il y en a une.
 - 2. Si une étape est à zéro secondes dans le préréglage, l'étape n'est pas affichée, l'écran passe directement à l'étape d'après.
-- 3. Lors des 3 dernières secondes d'une étape, l'appli émét un bip sonore à chaque seconde, donc à : 
-  - 00:04 => pas de bip sonore
-  - 00:03 => pas de bip sonore
-  - 00:02 => bip sonore
-  - 00:01 => bip sonore
-  - 00:00 => bip sonore
-- 4. Le nombre de répétitions restant à afficher est le même pour le couple travail/repos. Le nombre de répétitions restant du "repos" suit celui du "travail" associé. Autrement dit, c'est la valeur du "travail" qui drive la valeur du "repos". 
+- 3. **Bips sonores lors des 3 dernières secondes** :
+  - Les bips sonores sont joués lors des 3 dernières secondes d'une étape : à 00:02, 00:01, et 00:00.
+  - **Règle de timing** : Le bip doit être joué **lorsque** le chronomètre affiche la valeur correspondante, c'est-à-dire **après** que le chronomètre ait décrémenté d'une seconde.
+  - **Séquence complète** :
+    - Le chronomètre affiche 00:04, puis décrémente d'une seconde → affiche 00:03 (pas de bip)
+    - Le chronomètre affiche 00:03, puis décrémente d'une seconde → affiche 00:02 → **bip sonore** (bip à 00:02)
+    - Le chronomètre affiche 00:02, puis décrémente d'une seconde → affiche 00:01 → **bip sonore** (bip à 00:01)
+    - Le chronomètre affiche 00:01, puis décrémente d'une seconde → affiche 00:00 → **bip sonore** (bip à 00:00)
+    - Le chronomètre affiche 00:00, puis décrémente d'une seconde → transition vers l'étape suivante
+  - **Important** : Le bip correspond toujours à la valeur **affichée** après la décrémentation, pas à la valeur avant la décrémentation.
+- 4. **Compteur de répétitions restantes** :
+  - Le compteur affiche le nombre de répétitions complètes restantes (couple travail/repos).
+  - **Règle de décrémentation** : Le compteur est décrémenté uniquement lors de la transition `rest → work` (début d'une nouvelle répétition).
+  - **Règle d'affichage** : Pour une même répétition, les étapes `work` et `rest` affichent la même valeur de compteur.
+  - **Cas spécial** : Lors de la dernière répétition, après `work`, on passe directement à `cooldown` sans `rest`. Dans ce cas, le compteur reste à 1 pendant toute la dernière étape `work`.
 - 5. A la fin de la session, retour à l'écran Home
 
 **Exemple pour le préréglage suivant : 5/3x(40/20)/10** 
@@ -45,16 +53,19 @@ Pour le moement, à la fin de la session, basculer ver l'écran Home. La bascule
   - 10 secondes de refroidissement
 
 => L'écran passe dans les étapes suivantes : 
-1. Préparation (5 secondes)
+1. Préparation (5 secondes) - pas de compteur
 2. Répétition 1 (couple travail/repos n°1):
-  2.1. Travail (40 secondes) - reste 3 répétitions
-  2.2. Repos (20 secondes) - reste 3 répétitions
+  2.1. Travail (40 secondes) - **compteur = 3** (3 répétitions restantes)
+  2.2. Repos (20 secondes) - **compteur = 3** (même valeur que travail de la répétition 1)
+  → Transition rest → work : **décrémentation** (3 → 2)
 3. Répétition 2 (couple travail/repos n°2):
-  3.1. Travail (40 secondes) - reste 2 répétitions
-  3.2. Repos (20 secondes) - reste 2 répétitions
+  3.1. Travail (40 secondes) - **compteur = 2** (2 répétitions restantes)
+  3.2. Repos (20 secondes) - **compteur = 2** (même valeur que travail de la répétition 2)
+  → Transition rest → work : **décrémentation** (2 → 1)
 4. Répétition 3 (couple travail/repos n°3 - pas de repos car dernière répétition):
-  4.1. Travail (40 secondes) - reste 1 répétition
-5. Refroidissement (10 secondes)
+  4.1. Travail (40 secondes) - **compteur = 1** (1 répétition restante)
+  → Transition work → cooldown : **pas de décrémentation** (reste à 1)
+5. Refroidissement (10 secondes) - pas de compteur
 
 **Exemple pour le préréglage suivant : 0/3x(40/20)/0** 
   - 0 secondes de préparation
@@ -65,13 +76,16 @@ Pour le moement, à la fin de la session, basculer ver l'écran Home. La bascule
 
 => L'écran passe dans les étapes suivantes : 
 1. Répétition 1 (couple travail/repos n°1):
-  1.1. Travail (40 secondes) - reste 3 répétitions
-  1.2. Repos (20 secondes) - reste 3 répétitions
+  1.1. Travail (40 secondes) - **compteur = 3** (3 répétitions restantes)
+  1.2. Repos (20 secondes) - **compteur = 3** (même valeur que travail de la répétition 1)
+  → Transition rest → work : **décrémentation** (3 → 2)
 2. Répétition 2 (couple travail/repos n°2):
-  2.1. Travail (40 secondes) - reste 2 répétitions
-  2.2. Repos (20 secondes) - reste 2 répétitions
+  2.1. Travail (40 secondes) - **compteur = 2** (2 répétitions restantes)
+  2.2. Repos (20 secondes) - **compteur = 2** (même valeur que travail de la répétition 2)
+  → Transition rest → work : **décrémentation** (2 → 1)
 3. Répétition 3 (couple travail/repos n°3 - pas de repos car dernière répétition):
-  3.1. Travail (40 secondes) - reste 1 répétition
+  3.1. Travail (40 secondes) - **compteur = 1** (1 répétition restante)
+  → Transition work → cooldown : **pas de décrémentation** (reste à 1)
 
 ## Règles de gestion visuelles
 **Disparation et apparition de boutons et d'éléments interactifs"**

@@ -44,7 +44,7 @@ void main() {
         final newController = StreamController<int>();
         return newController.stream;
       });
-      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(0.62);
+      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(0.62);
       when(mockAudioService.setVolume(any)).thenReturn(null);
       when(mockTickerService.dispose()).thenReturn(null);
       when(mockAudioService.dispose()).thenReturn(null);

@@ -19,7 +19,7 @@ class WorkoutState extends ChangeNotifier {
   final VoidCallback? onWorkoutComplete;
   
   // Clés de persistance (partagées avec Home)
-  static const String _keyVolume = 'volume_level';
+  static const String _keyVolume = 'home_volume';
   
   // État privé
   bool _isPaused = false;
@@ -79,19 +79,21 @@ class WorkoutState extends ChangeNotifier {
   }
   
   /// Fait progresser le temps d'une seconde (appelé par le ticker)
-  void tick() {
-    if (_isPaused) return;
-    
-    // Jouer le bip si nécessaire (avant le tick pour jouer à 2, 1, 0)
-    if (_engine.shouldPlayBeep && _volume > 0) {
-      _audioService.playBeep();
-    }
-    
-    // Déléguer au domain engine
-    _engine.tick();
-    
-    notifyListeners();
+void tick() {
+  if (_isPaused) return;
+  
+  // Déléguer au domain engine (décrémente remainingTime)
+  _engine.tick();
+  
+  // Vérifier shouldPlayBeep APRÈS le tick (pour jouer le bip à 2, 1, 0)
+  // shouldPlayBeep est true quand remainingTime est 2, 1, ou 0
+  // Maintenant remainingTime correspond à la valeur affichée
+  if (_engine.shouldPlayBeep && _volume > 0) {
+    _audioService.playBeep();
   }
+  
+  notifyListeners();
+}
   
   /// Passe à l'étape suivante (bouton Suivant)
   void nextStep() {

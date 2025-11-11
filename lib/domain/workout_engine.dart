@@ -54,15 +54,17 @@ class WorkoutEngine {
   /// Fait progresser le temps d'une seconde
   /// Retourne true si une transition d'étape a eu lieu
   bool tick() {
+    // Si on est déjà à 0, faire la transition maintenant (au tick suivant après avoir affiché 0)
+    if (_remainingTime == 0) {
+      _transitionToNextStep();
+      return true;
+    }
+    
+    // Sinon, décrémenter normalement
     if (_remainingTime > 0) {
       _remainingTime--;
-      
-      // Si l'étape est terminée, passer à la suivante
-      if (_remainingTime == 0) {
-        _transitionToNextStep();
-        return true;
-      }
     }
+    
     return false;
   }
   
@@ -121,9 +123,8 @@ class WorkoutEngine {
         break;
         
       case StepType.work:
-        _remainingReps--;
-        
-        if (_remainingReps > 0) {
+        // Work → Rest (même répétition, pas de décrémentation)
+        if (_remainingReps > 1) {
           // Encore des répétitions → Repos
           _currentStep = StepType.rest;
           _remainingTime = preset.restSeconds;
@@ -142,6 +143,8 @@ class WorkoutEngine {
         
       case StepType.rest:
         // Repos → Travail (répétition suivante)
+        // Décrémenter ICI, au début de la nouvelle répétition
+        _remainingReps--;
         _currentStep = StepType.work;
         _remainingTime = preset.workSeconds;
         break;

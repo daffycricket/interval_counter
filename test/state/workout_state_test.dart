@@ -43,7 +43,7 @@ void main() {
         return newController.stream;
       });
       // Default volume level (can be overridden in individual tests)
-      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(0.62);
+      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(0.62);
       // Default no-op for setVolume
       when(mockAudioService.setVolume(any)).thenReturn(null);
       // Default no-op for set
@@ -79,7 +79,7 @@ void main() {
 
     test('load volume from SharedPreferences', () {
       // Given
-      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(0.8);
+      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(0.8);
 
       // When
       final state = WorkoutState(
@@ -98,7 +98,7 @@ void main() {
 
     test('load volume defaults to 0.62 when missing', () {
       // Given
-      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(null);
+      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(null);
 
       // When
       final state = WorkoutState(
@@ -144,7 +144,7 @@ void main() {
 
     test('tick does not call audioService.playBeep when volume = 0', () {
       // Given
-      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(0.0);
+      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(0.0);
       final preset = Preset(
         id: 'test',
         name: 'Test',
@@ -330,7 +330,7 @@ void main() {
       // Then
       expect(state.volume, 0.75);
       verify(mockAudioService.setVolume(0.75)).called(1);
-      verify(mockPrefsRepo.set<double>('volume_level', 0.75)).called(1);
+      verify(mockPrefsRepo.set<double>('home_volume', 0.75)).called(1);
       
       state.dispose();
     });
@@ -455,7 +455,7 @@ void main() {
 
     test('toggleMute sets volume to 0 when volume > 0', () {
       // Given
-      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(0.8);
+      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(0.8);
       final state = WorkoutState(
         preset: testPreset,
         tickerService: mockTickerService,
@@ -476,7 +476,7 @@ void main() {
 
     test('toggleMute restores previous volume when volume = 0', () {
       // Given
-      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(0.8);
+      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(0.8);
       final state = WorkoutState(
         preset: testPreset,
         tickerService: mockTickerService,

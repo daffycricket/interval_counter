@@ -193,7 +193,7 @@ inputsHash: workout_design_v1_spec_v2
 | remainingTime | int | preset.prepareSeconds | non | Temps restant pour l'étape |
 | remainingReps | int | preset.repetitions | non | Répétitions restantes |
 | isPaused     | bool | false | non | Chronomètre en pause |
-| volume       | double | (loaded) | oui | Volume [0.0, 1.0], clé: 'volume_level' |
+| volume       | double | (loaded) | oui | Volume [0.0, 1.0], clé: 'home_volume' |
 | controlsVisible | bool | true | non | Contrôles visibles/masqués |
 | isExiting    | bool | false | non | Demande de sortie manuelle |
 | _controlsTimer | Timer? | null | non | Timer pour masquer contrôles après 1500ms |
