@@ -90,7 +90,7 @@ Report folder: reports/workout
 
 
 ### Generate spec, using code already generated as reference
-### => used for fully refactoring Workout state after iteration #1
+### => used for fully refactoring Workout state after iteration #1 (iteration #1 bis)
 Run 00_ORCHESTRATOR.prompt starting step 2 "Generate spec" up to the last step
 For plan, build and test steps, keep existing workout layouts and views (screen, widgets), refactor state and business logic to match ARCHITECTURE_CONTRACT.md.
 Inputs:
@@ -104,7 +104,7 @@ Report folder: reports/workout_refacor
 If steps or actions are note clear, please ask me 2 to 5 questions before starting.
 
 ### Generate spec, using code already generated as reference
-### => used for refactoring Workout screen - internationalisation, tests, new rules in spec
+### => used for refactoring Workout screen - internationalisation, tests, new rules in spec (iteration #2)
 Run 00_ORCHESTRATOR.prompt starting step 2 "Generate spec" up to the last step
 For plan, build and test steps : 
 1. keep most existing workout layouts and views (screen, widgets) ; refactor WorkoutScreen to reuse VolumeHeader from Home screen and make it a generic widget in /lib/widgets/volume_header.dart,
@@ -118,4 +118,19 @@ Refer to :
  - code already present in lib/ directory as a reference, especially existing widgets, styles and theme
  - existing specification if necessary, especially Home spec in reports/home/spec.md
 Report folder: reports/workout_refactor_18ln_volume-header
+If steps or actions are note clear, please ask me 2 to 5 questions before starting.
+
+### Generate workout spec, workout business objects, workout tests but keep all the views
+Run 00_ORCHESTRATOR.prompt starting step 2 "Generate spec" up to the last step
+For plan, build and test steps : 
+1. keep all existing workout views (screen, widgets), do not modify the views
+2. build workout state, business logic, business objects and tests ; adapt widgets to these news objects ; match requirements in ARCHITECTURE_CONTRACT.md, PROJECT_CONTRACT.md and TEST_CONTRACT.md
+Inputs:
+ - design.json: sources/workout/workout_design.json
+ - spec_complement.md: sources/workout/workout_spec_complement.md
+ - existing workout widgets in lib/screens/workout_screen.dart and lib/widgets/workout/
+Refer to :
+ - code already present in lib/ directory as a reference, especially existing widgets, styles and theme
+ - existing specification if necessary, especially Home spec in reports/home/spec.md
+Report folder: reports/workout_refactor_it3
 If steps or actions are note clear, please ask me 2 to 5 questions before starting.

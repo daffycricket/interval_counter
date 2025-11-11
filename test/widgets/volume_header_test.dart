@@ -21,6 +21,9 @@ void main() {
           home: Scaffold(
             body: VolumeHeader(
               volume: volume,
+              backgroundColor: Colors.black,
+              activeColor: Colors.white,
+              inactiveColor: Colors.grey,
               onVolumeChange: (value) {
                 volume = value;
               },
@@ -62,6 +65,9 @@ void main() {
           home: Scaffold(
             body: VolumeHeader(
               volume: volume,
+              backgroundColor: Colors.black,
+              activeColor: Colors.white,
+              inactiveColor: Colors.grey,
               onVolumeChange: (value) {
                 volume = value;
               },
@@ -96,6 +102,9 @@ void main() {
           home: Scaffold(
             body: VolumeHeader(
               volume: volume,
+              backgroundColor: Colors.black,
+              activeColor: Colors.white,
+              inactiveColor: Colors.grey,
               onVolumeChange: (value) {
                 changedVolume = value;
               },
@@ -133,6 +142,9 @@ void main() {
           home: Scaffold(
             body: VolumeHeader(
               volume: volume,
+              backgroundColor: Colors.black,
+              activeColor: Colors.white,
+              inactiveColor: Colors.grey,
               onVolumeChange: (value) {},
               onMenuPressed: null,
             ),
