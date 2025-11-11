@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:interval_counter/services/impl/beep_audio_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../domain/step_type.dart';
 import '../models/preset.dart';
 import '../state/workout_state.dart';
 import '../theme/app_colors.dart';
@@ -74,11 +75,8 @@ class _WorkoutScreenContentState extends State<_WorkoutScreenContent> {
   }
   
   void _checkWorkoutComplete() {
-    print('🔵 _checkWorkoutComplete() called - isExiting=${_workoutState.isExiting}');  // 🆕 Debug
-  
     // fin manuelle de la session
     if (_workoutState.isExiting) {
-      print('✅ Navigation pop!');  // 🆕 Debug
       _workoutState.removeListener(_checkWorkoutComplete);
   
       if(mounted) {

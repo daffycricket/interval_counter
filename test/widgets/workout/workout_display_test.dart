@@ -1,108 +1,188 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:interval_counter/widgets/workout/workout_display.dart';
-import 'package:interval_counter/state/workout_state.dart';
+import 'package:interval_counter/domain/step_type.dart';
+import 'package:interval_counter/services/audio_service.dart';
+import 'package:interval_counter/services/preferences_repository.dart';
+import 'package:interval_counter/services/ticker_service.dart';
 import 'package:interval_counter/models/preset.dart';
-import '../../helpers/mock_services.dart';
+import 'package:interval_counter/state/workout_state.dart';
+import 'package:interval_counter/widgets/workout/workout_display.dart';
 
+import 'workout_display_test.mocks.dart';
+
+@GenerateMocks([TickerService, AudioService, PreferencesRepository])
 void main() {
   group('WorkoutDisplay Widget Tests', () {
+    late MockTickerService mockTickerService;
+    late MockAudioService mockAudioService;
+    late MockPreferencesRepository mockPrefsRepo;
     late Preset testPreset;
+    late StreamController<int> tickerController;
 
-    setUp(() async {
-      testPreset = Preset.create(
-        name: 'Test',
+    setUp(() {
+      mockTickerService = MockTickerService();
+      mockAudioService = MockAudioService();
+      mockPrefsRepo = MockPreferencesRepository();
+      tickerController = StreamController<int>();
+
+      testPreset = Preset(
+        id: 'test',
+        name: 'Test Preset',
         prepareSeconds: 5,
         repetitions: 3,
         workSeconds: 40,
         restSeconds: 20,
         cooldownSeconds: 10,
       );
+
+      when(mockTickerService.createTicker(any)).thenAnswer((_) {
+        final newController = StreamController<int>();
+        return newController.stream;
+      });
+      when(mockPrefsRepo.get<double>('volume_level')).thenReturn(0.62);
+      when(mockAudioService.setVolume(any)).thenReturn(null);
+      when(mockTickerService.dispose()).thenReturn(null);
+      when(mockAudioService.dispose()).thenReturn(null);
     });
 
-    WorkoutState createTestState(Preset preset) {
-      final tickerService = MockTickerService();
-      final audioService = MockAudioService();
-      final prefsRepo = MockPreferencesRepository();
-      
-      return WorkoutState(
-        preset: preset,
-        tickerService: tickerService,
-        audioService: audioService,
-        prefsRepo: prefsRepo,
-      );
-    }
+    tearDown(() {
+      tickerController.close();
+    });
 
     Widget createTestWidget(WorkoutState state) {
       return ChangeNotifierProvider.value(
         value: state,
-        child: const MaterialApp(
+        child: MaterialApp(
+          locale: const Locale('fr'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: WorkoutDisplay(),
+            body: SingleChildScrollView(
+              child: const WorkoutDisplay(),
+            ),
           ),
         ),
       );
     }
 
-    testWidgets('renders timer and step label', (tester) async {
-      final state = createTestState(testPreset);
-      
+    testWidgets('renders with correct keys', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+
+      // When
       await tester.pumpWidget(createTestWidget(state));
-      
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.byKey(const Key('workout__text-1')), findsOneWidget);
       expect(find.byKey(const Key('workout__text-2')), findsOneWidget);
       expect(find.byKey(const Key('workout__text-3')), findsOneWidget);
-      
+
       state.dispose();
     });
 
-    testWidgets('timer shows correct format', (tester) async {
-      final state = createTestState(testPreset);
-      
+    testWidgets('displays formattedTime in chronomètre', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+
+      // When
       await tester.pumpWidget(createTestWidget(state));
-      
-      expect(find.text('00:05'), findsOneWidget); // 5 seconds prep
-      
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.text('00:05'), findsOneWidget); // 5 seconds formatted
+
       state.dispose();
     });
 
-    testWidgets('step label shows correct text for preparation', (tester) async {
-      final state = createTestState(testPreset);
-      
+    testWidgets('displays remainingReps when in work step', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+      state.nextStep(); // Move to work step
+
+      // When
       await tester.pumpWidget(createTestWidget(state));
-      
-      expect(find.text('PRÉPARER'), findsOneWidget);
-      
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.text('3'), findsOneWidget); // 3 reps remaining
+      expect(state.currentStep, StepType.work);
+
       state.dispose();
     });
 
-    testWidgets('step label shows correct text for work', (tester) async {
-      final state = createTestState(testPreset);
-      
-      state.nextStep(); // Go to work
-      
+    testWidgets('displays remainingReps when in rest step', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+      state.nextStep(); // Move to work
+      state.nextStep(); // Move to rest
+
+      // When
       await tester.pumpWidget(createTestWidget(state));
-      
-      expect(find.text('TRAVAIL'), findsOneWidget);
-      
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.text('2'), findsOneWidget); // 2 reps remaining after work→rest transition
+      expect(state.currentStep, StepType.rest);
+
       state.dispose();
     });
 
-    testWidgets('step label shows correct text for rest', (tester) async {
-      final state = createTestState(testPreset);
-      
-      state.nextStep(); // prep -> work
-      state.nextStep(); // work -> rest
-      
+    testWidgets('hides remainingReps when in preparation step', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+
+      // When
       await tester.pumpWidget(createTestWidget(state));
-      
-      expect(find.text('REPOS'), findsOneWidget);
-      
+      await tester.pumpAndSettle();
+
+      // Then
+      final repsWidget = tester.widget<Visibility>(
+        find.ancestor(
+          of: find.byKey(const Key('workout__text-1')),
+          matching: find.byType(Visibility),
+        ),
+      );
+      expect(repsWidget.visible, false);
+      expect(state.currentStep, StepType.preparation);
+
       state.dispose();
     });
 
-    testWidgets('step label shows correct text for cooldown', (tester) async {
-      final presetCooldown = Preset.create(
+    testWidgets('hides remainingReps when in cooldown step', (tester) async {
+      // Given
+      final preset = Preset(
+        id: 'test',
         name: 'Test',
         prepareSeconds: 0,
         repetitions: 1,
@@ -110,54 +190,122 @@ void main() {
         restSeconds: 0,
         cooldownSeconds: 10,
       );
-      
-      final state = createTestState(presetCooldown);
-      
-      state.nextStep(); // work -> cooldown
-      
+      final state = WorkoutState(
+        preset: preset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+      state.tick(); // work → cooldown
+
+      // When
       await tester.pumpWidget(createTestWidget(state));
-      
+      await tester.pumpAndSettle();
+
+      // Then
+      final repsWidget = tester.widget<Visibility>(
+        find.ancestor(
+          of: find.byKey(const Key('workout__text-1')),
+          matching: find.byType(Visibility),
+        ),
+      );
+      expect(repsWidget.visible, false);
+      expect(state.currentStep, StepType.cooldown);
+
+      state.dispose();
+    });
+
+    testWidgets('displays "PRÉPARER" label for preparation step', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+
+      // When
+      await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.text('PRÉPARER'), findsOneWidget);
+      expect(state.currentStep, StepType.preparation);
+
+      state.dispose();
+    });
+
+    testWidgets('displays "TRAVAIL" label for work step', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+      state.nextStep(); // Move to work
+
+      // When
+      await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.text('TRAVAIL'), findsOneWidget);
+      expect(state.currentStep, StepType.work);
+
+      state.dispose();
+    });
+
+    testWidgets('displays "REPOS" label for rest step', (tester) async {
+      // Given
+      final state = WorkoutState(
+        preset: testPreset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+      state.nextStep(); // Move to work
+      state.nextStep(); // Move to rest
+
+      // When
+      await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
+
+      // Then
+      expect(find.text('REPOS'), findsOneWidget);
+      expect(state.currentStep, StepType.rest);
+
+      state.dispose();
+    });
+
+    testWidgets('displays "REFROIDIR" label for cooldown step', (tester) async {
+      // Given
+      final preset = Preset(
+        id: 'test',
+        name: 'Test',
+        prepareSeconds: 0,
+        repetitions: 1,
+        workSeconds: 1,
+        restSeconds: 0,
+        cooldownSeconds: 10,
+      );
+      final state = WorkoutState(
+        preset: preset,
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
+      );
+      state.tick(); // work → cooldown
+
+      // When
+      await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
+
+      // Then
       expect(find.text('REFROIDIR'), findsOneWidget);
-      
-      state.dispose();
-    });
+      expect(state.currentStep, StepType.cooldown);
 
-    testWidgets('reps counter not visible during preparation', (tester) async {
-      final state = createTestState(testPreset);
-      
-      await tester.pumpWidget(createTestWidget(state));
-      
-      expect(find.byKey(const Key('workout__text-1')), findsNothing);
-      
-      state.dispose();
-    });
-
-    testWidgets('reps counter visible during work', (tester) async {
-      final state = createTestState(testPreset);
-      
-      state.nextStep(); // Go to work
-      
-      await tester.pumpWidget(createTestWidget(state));
-      
-      expect(find.byKey(const Key('workout__text-1')), findsOneWidget);
-      expect(find.text('3'), findsOneWidget); // 3 reps remaining
-      
-      state.dispose();
-    });
-
-    testWidgets('reps counter visible during rest', (tester) async {
-      final state = createTestState(testPreset);
-      
-      state.nextStep(); // prep -> work
-      state.nextStep(); // work -> rest
-      
-      await tester.pumpWidget(createTestWidget(state));
-      
-      expect(find.byKey(const Key('workout__text-1')), findsOneWidget);
-      expect(find.text('2'), findsOneWidget); // 2 reps remaining
-      
       state.dispose();
     });
   });
 }
-

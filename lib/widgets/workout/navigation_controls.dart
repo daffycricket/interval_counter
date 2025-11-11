@@ -31,11 +31,7 @@ class NavigationControls extends StatelessWidget {
             behavior: HitTestBehavior.opaque,
             onLongPress: () {
               // Long-press pour sortir
-              state.exitWorkout();
-            },
-            onTap: () {
-              // Tap pour sortir
-              //state.exitWorkout();
+              state.onLongPress();
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),

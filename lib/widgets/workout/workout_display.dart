@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:interval_counter/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import '../../domain/step_type.dart';
 import '../../state/workout_state.dart';
 
 /// Widget d'affichage principal (compteur répétitions, chronomètre, libellé étape)
@@ -19,7 +20,7 @@ class WorkoutDisplay extends StatelessWidget {
       children: [
         // Compteur de répétitions (espace toujours réservé)
         Visibility(
-          visible: state.shouldShowRepsCounter,
+          visible: state.currentStep == StepType.work || state.currentStep == StepType.rest,
           maintainSize: true,
           maintainAnimation: true,
           maintainState: true,
