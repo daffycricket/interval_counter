@@ -29,7 +29,8 @@ class AppColors {
   // Slider
   static const Color sliderActive = Color(0xFFFFFFFF);
   static const Color sliderInactive = Color(0xFF90A4AE);
-  static const Color sliderThumb = Color(0xFFFFFFFF);
+  static const Color sliderActiveDark = Color(0xFF212121);
+  static const Color sliderInactiveDark = Color(0xFF90A4AE);
   
   // CTA et boutons
   static const Color cta = Color(0xFF607D8B);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/home_state.dart';
-import '../widgets/home/volume_header.dart';
+import '../widgets/volume_header.dart';
 import '../widgets/home/quick_start_card.dart';
 import '../widgets/home/presets_header.dart';
 import '../widgets/home/preset_card.dart';
@@ -24,6 +24,9 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: VolumeHeader(
         volume: homeState.volume,
+        backgroundColor: AppColors.headerBackgroundDark,
+        activeColor: AppColors.sliderActive,
+        inactiveColor: AppColors.sliderInactive,
         onVolumeChange: homeState.onVolumeChange,
         onMenuPressed: () {
           // TODO: Navigation vers menu/settings

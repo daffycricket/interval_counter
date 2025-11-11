@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/preset.dart';
 import '../state/workout_state.dart';
 import '../theme/app_colors.dart';
-import '../widgets/workout/volume_controls.dart'; // TODO HERE : Refactor to use VolumeHeader widget
+import '../widgets/volume_header.dart';
 import '../widgets/workout/navigation_controls.dart';
 import '../widgets/workout/workout_display.dart';
 import '../widgets/workout/pause_button.dart';
@@ -148,7 +148,14 @@ class _WorkoutScreenContentState extends State<_WorkoutScreenContent> {
                   AnimatedOpacity(
                     opacity: state.controlsVisible ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 300),
-                    child: const VolumeControls(), // TODO HERE : Refactor to use VolumeHeader widget
+                    child: VolumeHeader(
+                      volume: state.volume,
+                      backgroundColor: backgroundColor,
+                      activeColor: AppColors.sliderActiveDark,
+                      inactiveColor: AppColors.sliderInactiveDark,
+                      onVolumeChange: state.onVolumeChange,
+                      onMenuPressed: null, // Pas de menu dans Workout
+                    ),
                   ),
                   
                   // Contrôles de navigation

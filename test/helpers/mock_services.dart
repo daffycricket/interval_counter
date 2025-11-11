@@ -21,6 +21,7 @@ class MockAudioService implements AudioService {
   double _volume = 0.9;
   bool _isEnabled = true;
   int beepCount = 0;
+  bool disposed = false;
   
   @override
   void playBeep() {
@@ -41,6 +42,11 @@ class MockAudioService implements AudioService {
   @override
   set isEnabled(bool value) {
     _isEnabled = value;
+  }
+  
+  @override
+  void dispose() {
+    disposed = true;
   }
 }
 

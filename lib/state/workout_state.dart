@@ -166,7 +166,7 @@ class WorkoutState extends ChangeNotifier {
   void onVolumeChange(double value) {
     _audioService.setVolume(value);
     notifyListeners();
-    _prefsRepo.set(_keyVolume, 0.9);
+    _prefsRepo.set(_keyVolume, value);
   }
   
   /// Toggle son activé/désactivé

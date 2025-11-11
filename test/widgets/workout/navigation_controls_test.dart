@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:interval_counter/widgets/workout/navigation_controls.dart';
 import 'package:interval_counter/state/workout_state.dart';
 import 'package:interval_counter/models/preset.dart';
+import '../../helpers/mock_services.dart';
 
 void main() {
   group('NavigationControls Widget Tests', () {
-    late SharedPreferences prefs;
     late Preset testPreset;
 
     setUp(() async {
-      SharedPreferences.setMockInitialValues({});
-      prefs = await SharedPreferences.getInstance();
-      
       testPreset = Preset.create(
         name: 'Test',
         prepareSeconds: 5,
@@ -24,6 +20,20 @@ void main() {
         cooldownSeconds: 10,
       );
     });
+
+    WorkoutState createTestState(Preset preset, {VoidCallback? onWorkoutComplete}) {
+      final tickerService = MockTickerService();
+      final audioService = MockAudioService();
+      final prefsRepo = MockPreferencesRepository();
+      
+      return WorkoutState(
+        preset: preset,
+        tickerService: tickerService,
+        audioService: audioService,
+        prefsRepo: prefsRepo,
+        onWorkoutComplete: onWorkoutComplete,
+      );
+    }
 
     Widget createTestWidget(WorkoutState state) {
       return ChangeNotifierProvider.value(
@@ -37,8 +47,7 @@ void main() {
     }
 
     testWidgets('renders all navigation controls', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createTestState(testPreset);
       
       await tester.pumpWidget(createTestWidget(state));
       
@@ -51,8 +60,7 @@ void main() {
     });
 
     testWidgets('previous button calls previousStep', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createTestState(testPreset);
       
       // Aller à work d'abord
       state.nextStep();
@@ -69,8 +77,7 @@ void main() {
     });
 
     testWidgets('next button calls nextStep', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createTestState(testPreset);
       
       expect(state.currentStep, StepType.preparation);
       
@@ -85,8 +92,7 @@ void main() {
     });
 
     testWidgets('exit button shows correct text', (tester) async {
-      final state = WorkoutState(prefs, testPreset);
-      state.stopTimer();
+      final state = createTestState(testPreset);
       
       await tester.pumpWidget(createTestWidget(state));
       
@@ -97,10 +103,9 @@ void main() {
 
     testWidgets('long press on exit button calls exitWorkout', (tester) async {
       bool workoutExited = false;
-      final state = WorkoutState(prefs, testPreset, onWorkoutComplete: () {
+      final state = createTestState(testPreset, onWorkoutComplete: () {
         workoutExited = true;
       });
-      state.stopTimer();
       
       await tester.pumpWidget(createTestWidget(state));
       
