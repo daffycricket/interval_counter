@@ -7,7 +7,7 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
 ## Inputs
 - `design.json`
 - `spec.md`
-- `UI_MAPPING_GUIDE.md`, `BEST_PRACTICES.md`, `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `PROJECT_CONTRACT.md`, `ARCHITECTURE_CONTRACT.md`, `GUARDRAILS.md`
+- `UI_MAPPING_GUIDE.md`, `BEST_PRACTICES.md`, `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `CODE_CONTRACT.md`, `GUARDRAILS.md`
 
 ## Service Dependency Analysis
 
@@ -29,7 +29,7 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
    - List implementations to generate
    - List domain classes to extract
 
-**See:** `ARCHITECTURE_CONTRACT.md` for patterns and rules.
+**See:** `CODE_CONTRACT.md` §2-4 for patterns and rules.
 
 ## Output
 - A single Markdown file `plan.md` **strictly following** `templates/plan_template.md`.

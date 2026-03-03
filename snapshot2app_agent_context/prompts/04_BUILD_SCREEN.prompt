@@ -1,170 +1,75 @@
-# PROMPT — Build flutter and dart components according to plan
+# PROMPT — Build Flutter & Dart components according to plan
 
-Role: **Screen Builder**. You generate deterministic Flutter/Dart code by consuming:
-- `plan.md` (conforms to `templates/plan_template.md`) — **authoritative build contract**
-- `design.json` — authoritative for **layout & styling**
-- `spec.md` — authoritative for **interactions/state/navigation/a11y**
-- `guides/UI_MAPPING_GUIDE.md` — mapping rules for rendering primitives
-- `guides/UI_MAPPING_GUIDE_EXAMPLES.md` — implementation examples
-- `guides/BEST_PRACTICES.md` — common pitfalls and technical best practices
-- `contracts/PROJECT_CONTRACT.md` — code organization & architecture patterns
-- `contracts/ARCHITECTURE_CONTRACT.md` — Clean Architecture & layered design
-- `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `GUARDRAILS.md`
+Role: **Screen Builder**. Generate deterministic Flutter/Dart code from:
+- `plan.md` — authoritative build contract
+- `design.json` — authoritative for layout & styling
+- `spec.md` — authoritative for interactions/state/navigation/a11y
+- `guides/UI_MAPPING_GUIDE.md` — rendering rules
+- `guides/BEST_PRACTICES.md` — common pitfalls
+- `contracts/CODE_CONTRACT.md` — code organization & architecture
+- `contracts/TEST_CONTRACT.md` — testing requirements
+- `guards/GUARDRAILS.md` — verification rules
 
-## Objectives
-- Produce a set of Flutter files **exactly** as declared in `plan.md` → *Files to Generate*.
-- Map UI strictly via `UI_MAPPING_GUIDE.md`. Do **not** restate mapping logic here.
-- Keep output deterministic, testable, and aligned to stable keys.
-
-## Hard Rules (Determinism)
-- **No guessing**: colors/styles come only from `tokens.colors`, `tokens.typography`, or explicit `component.style` in `design.json`.
-- **Stable keys**: every test-targeted/interactive widget has `Key('{screenId}__{compId}')`.
-- **Controlled vocabularies only**: `variant (cta|primary|secondary|ghost)`, `placement (start|center|end|stretch)`, `widthMode (fixed|hug|fill)`…
+## Hard Rules
+- **No guessing**: colors/styles only from `tokens.colors`, `tokens.typography`, or `component.style`.
+- **Stable keys**: `Key('{screenId}__{compId}')` on all interactive widgets.
+- **Controlled vocabularies**: `variant (cta|primary|secondary|ghost)`, `placement (start|center|end|stretch)`, `widthMode (fixed|hug|fill)`.
 - **Conflict resolution**: layout → `design.json`; behavior/state/navigation → `spec.md`.
-- **No new routes/tokens/widgets** beyond those listed in `plan.md`.
-- **Verbatim** UI texts (already enforced by spec) — do not paraphrase.
-- **Fail fast** if a referenced key/route/token is missing.
-- **Localization in State**: State MUST NOT contain or return localized strings. State returns enums/primitives; widgets translate using AppLocalizations or extension methods.
+- **No new routes/tokens/widgets** beyond `plan.md`.
+- **Verbatim** UI texts from spec. Do not paraphrase.
+- **Fail fast** if referenced key/route/token is missing.
 
 ## Dependency Policy
-- Do **not** modify `pubspec.yaml` other than running `flutter pub get`.
-- Do **not** add or remove dependencies; only use those already declared in the file.
-- Use each library for its intended purpose:
-  - **provider** → state management (listenable view-model, context.watch, etc.)
-  - **shared_preferences** → lightweight local storage
-  - **collection** → functional and utility extensions on lists/maps
-  - **google_fonts** → dynamic typography when specified in design tokens
-  - **cupertino_icons** → iOS-style icons
-  - **flutter_test** → all widget and golden tests (no external golden frameworks)
-- Never import or rely on:
-  - `riverpod`, `get_it`, `flutter_hooks`, `freezed`, `json_serializable`,
-  - `golden_toolkit`, `golden_tests`, or any codegen dependency.
+- Do **not** modify `pubspec.yaml` (only `flutter pub get`).
+- Use only declared dependencies: `provider`, `shared_preferences`, `collection`, `google_fonts`, `cupertino_icons`, `flutter_test`.
+- Never import: `riverpod`, `get_it`, `flutter_hooks`, `freezed`, `json_serializable`, `golden_toolkit`.
 
-## Execution Steps (follow in order)
+## Execution Steps
 
-### Step 0 — Dependency & Domain Extraction (before widgets)
+### Step 0 — Domain & Service Extraction
+Per `CODE_CONTRACT.md` §2-4:
+1. Generate **Domain classes** (`lib/domain/`) — pure Dart business logic
+2. Generate **Service interfaces** (`lib/services/`) — abstract classes
+3. Generate **Service implementations** (`lib/services/impl/`) — concrete Flutter implementations
+4. Verify architecture compliance with `CODE_CONTRACT.md`
 
-**Input:** `plan.md § 2.2.1 Service Dependencies`, `spec.md`
+### Step 1-9 — Build
+1. Scaffold all files from `plan.md/Files to Generate`
+2. Generate i18n: ARB files + `l10n.yaml` + delegates in `main.dart`
+3. Build widgets per `plan.md/Widget Breakdown` using `UI_MAPPING_GUIDE.md` rules
+4. Layout composition from `plan.md/Layout Composition` (`design.json` authoritative)
+5. Wire interactions from `plan.md/Interaction Wiring` to state layer
+6. Implement State as thin coordinator per `CODE_CONTRACT.md` §5
+7. Set accessibility per `plan.md/Accessibility Plan`
+8. Verify file paths and naming per `CODE_CONTRACT.md` §1, §7
+9. Run `GUARDRAILS.md` checks — stop on failure
 
-**Generate in order:**
+### Step 10 — Generate Tests
+Per `TEST_CONTRACT.md`, generate in order:
+1. Domain tests (`test/domain/`)
+2. Service tests (`test/services/impl/`)
+3. State tests (`test/state/`)
+4. Model tests (`test/models/`)
+5. Widget tests (`test/widgets/`) — one file per widget
+6. Screen tests (`test/screens/`)
+7. Shared helpers (`test/helpers/widget_test_helpers.dart`)
 
-1. **Domain Classes** (`lib/domain/`):
-   - Pure Dart business logic (no Flutter imports except `foundation`)
-   - Extract from State logic: calculations, state machines, validators
-   - Example: `WorkoutEngine`, `TimerCalculator`, `PresetValidator`
-   - Keep classes focused (SRP): one engine/calculator/validator per domain concept
+Verify 1:1 file-to-test ratio (G-11) and coverage thresholds (G-09).
 
-2. **Service Interfaces** (`lib/services/`):
-   - Abstract classes for non-mockable dependencies
-   - Methods needed by State (from plan.md § 2.2.1)
-   - Examples: `TickerService`, `AudioService`, `PreferencesRepository`, `ApiClient`
+## Build Guard: Orphan Thumb
+If `plan.md` row has `buildStrategy == rule:slider/normalizeSiblings(drop)` → do not render node.
 
-3. **Service Implementations** (`lib/services/impl/`):
-   - Concrete implementations using Flutter/Dart APIs
-   - One file per service: `{service_name}_impl.dart`
-   - Examples: `DartTickerService`, `SystemAudioService`, `SharedPrefsRepository`
+## Quality
+- Null-safety, no dead code, no unused imports
+- Extract reusable widgets, avoid magic numbers (use theme/tokens)
+- Follow `guides/BEST_PRACTICES.md`
 
-4. **Verify Architecture Compliance:**
-   - Verify all rules from `ARCHITECTURE_CONTRACT.md` §1-6 are respected
-   - State as thin coordinator (§3), Domain extraction (§2), DIP (§1), Localization (§4)
-
----
-
-1. **Scaffold** all files declared in `plan.md/Files to Generate` (widgets, state, routes, themes/tokens, test scaffolds). Use paths *as-is*.
-2. **Internationalization Setup**: generate ARB files and i18n configuration per `plan.md/Translations Plan`. See § i18n Generation below.
-3. **Widgets rendering**: for each row in `plan.md/Widget Breakdown`, create the corresponding widget and render components using the mapping rules from `UI_MAPPING_GUIDE.md` (containers, Row/Column/Stack, placement, widthMode, typographyRef, icons, sliders, shaped icon buttons, patterns…). Apply keys.
-4. **Layout composition**: implement structure/constraints from `plan.md/Layout Composition` (hierarchy, flex, alignment, maxWidth, scroll). `design.json` is authoritative for these values.
-5. **Interaction wiring**: bind each entry from `plan.md/Interaction Wiring` to concrete functions in the **state layer** (names must match `spec §6` and `plan §7`). Handle navigation exactly as declared (including Back).
-6. **State layer**: implement as **thin coordinator** per `ARCHITECTURE_CONTRACT.md`. State injects service interfaces + domain classes. Delegate business logic to domain, I/O to services. State <200 lines, ≤5 dependencies.
-7. **Accessibility**: set semantics, aria-like labels, and focus order per `plan.md/Accessibility Plan`.
-8. **Project Structure**: verify all file paths, state patterns, and naming conventions comply with `PROJECT_CONTRACT.md`.
-9. **Validation Gates**: run checks listed in `plan.md/Check Gates` and `GUARDRAILS.md`. If any fails → stop and emit a build error.
-10. **Emit Report**: concise summary listing generated files + any blocking Risk from `plan.md/Risks` (do not invent new TODOs).
-11. **Generate Tests**: produce comprehensive test suite following `contracts/TEST_CONTRACT.md`. See § Test Generation below.
-
-## Build guard for orphan thumb
-During build, consult the plan row for each candidate sibling near a `Slider`:
-- If `buildStrategy == rule:slider/normalizeSiblings(drop)`, do **not** render the node.
-- Do **not** attempt to 're-detect'; use the plan as the single source of truth.
-
-## Quality Constraints
-- Null-safety, no dead code, no unused imports.
-- Extract small reusable widgets; avoid magic numbers (prefer theme/tokens).
-- Deterministic rendering suitable for golden tests (avoid implicit animations/s randomness unless specified).
-- Follow best practices from `guides/BEST_PRACTICES.md` (avoid common pitfalls).
-
-## Test Generation (Step 10)
-
-After generating all lib/ files, generate comprehensive test suite per `TEST_CONTRACT.md`:
-
-### Test Coverage Requirements
-- **Domain classes:** 100% (§1, §2 TEST_CONTRACT.md)
-- **State classes:** 100% (§1, TEST_CONTRACT.md)
-- **Model classes:** 100% (§4, TEST_CONTRACT.md)
-- **Service implementations:** ≥80% (§3, TEST_CONTRACT.md)
-- **Widgets:** ≥90% generic, ≥70% screen-specific (§5, TEST_CONTRACT.md)
-- **Screens:** ≥60% (§6, TEST_CONTRACT.md)
-- **Overall:** ≥80%
-
-### Test Types to Generate
-1. **Domain tests** (`test/domain/`) - Pure Dart, ultra-fast
-2. **Service tests** (`test/services/impl/`) - Integration tests
-3. **State tests** (`test/state/`) - All public methods, notifyListeners, persistence
-4. **Model tests** (`test/models/`) - Serialization, copyWith, equality
-5. **Widget tests** (`test/widgets/`) - ONE FILE PER WIDGET, rendering + interaction
-6. **Screen tests** (`test/screens/`) - Component presence, main flow
-7. **Shared helpers** (`test/helpers/`) - Reduce boilerplate
-
-**See `TEST_CONTRACT.md` for detailed requirements, templates, and patterns.**
-
----
-
-### Verification & Validation
-
-**After generating all tests:**
-1. **Verify 1:1 file-to-test ratio** (G-11)
-2. **Generate shared test helpers** (`test/helpers/`)
-3. **Run `flutter test --coverage`**
-4. **Verify coverage thresholds** per TEST_CONTRACT.md
-5. **Verify G-09 guardrail satisfied**
-
-**If any threshold not met → STOP BUILD with detailed error report**
-
-**See TEST_CONTRACT.md § "Verification Checklist" for complete validation rules.**
-
----
-
-### Internationalization (i18n) Generation
-
-**Generate per plan.md § 2.6 Translations Plan:**
-1. Create ARB files (`lib/l10n/app_en.arb`, `app_fr.arb`)
-2. Create i18n config (`l10n.yaml`)
-3. Setup main.dart with localization delegates
-4. Replace hardcoded strings with `AppLocalizations.of(context)!.key`
-
-**Enforce G-12:** All user-facing text must use AppLocalizations.
-
----
-
-### Shared Test Helpers
-
-**Generate `test/helpers/widget_test_helpers.dart`** with:
-- Mock state factories
-- Test widget wrappers with Provider
-- Common setup utilities
-
-**See TEST_CONTRACT.md for helper patterns and usage.**
-
----
-
-## Acceptance (auto-verify)
-- [ ] Keys follow `{screenId}__{compId}` on interactive widgets
-- [ ] Mapping rules from UI_MAPPING_GUIDE.md applied
-- [ ] Layout matches `design.json` (placement/widthMode/constraints)
-- [ ] Interactions/state/navigation match `spec.md` and plan
-- [ ] All contracts satisfied: ARCHITECTURE_CONTRACT.md, PROJECT_CONTRACT.md, TEST_CONTRACT.md
-- [ ] All guardrails satisfied (G-01 through G-18)
-- [ ] Tests generated per TEST_CONTRACT.md with required coverage
-- [ ] Widget-to-test ratio 1:1 verified (G-11)
-- [ ] i18n files generated, no hardcoded strings (G-12, G-18)
-- [ ] Build fails on any contract/guardrail violation
+## Acceptance
+- [ ] Keys on interactive widgets
+- [ ] UI_MAPPING_GUIDE.md rules applied
+- [ ] Layout matches `design.json`
+- [ ] Interactions match `spec.md`
+- [ ] CODE_CONTRACT.md satisfied
+- [ ] TEST_CONTRACT.md satisfied
+- [ ] GUARDRAILS.md G-01 to G-18 satisfied
+- [ ] i18n complete, no hardcoded strings

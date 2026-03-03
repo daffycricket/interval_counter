@@ -1,0 +1,93 @@
+# pipeline_manifest.yaml
+# Defines which context files to load at each pipeline step.
+# Goal: minimize token consumption by loading only what each step needs.
+
+# Files loaded for ALL steps (always in context)
+global:
+  - contracts/CODE_CONTRACT.md
+  - guards/GUARDRAILS.md
+
+steps:
+  01_validate_design:
+    prompt: prompts/01_VALIDATE_DESIGN.prompt
+    context:
+      - contracts/DESIGN_CONTRACT.md
+      - schema/minifigma.schema.json
+    inputs:
+      - "{screen}/design.json"
+    outputs:
+      - "{report_dir}/validation_report.md"
+
+  02_generate_spec:
+    prompt: prompts/02_GENERATE_SPEC.prompt
+    context:
+      - contracts/SPEC_CONTRACT.md
+      - contracts/DESIGN_CONTRACT.md
+      - templates/spec_template.md
+    inputs:
+      - "{screen}/design.json"
+      - "{screen}/spec_complement.md"       # optional user overrides
+    outputs:
+      - "{report_dir}/spec.md"
+
+  03_plan_build:
+    prompt: prompts/03_PLAN_BUILD.prompt
+    context:
+      - contracts/SPEC_CONTRACT.md
+      - contracts/DESIGN_CONTRACT.md
+      - guides/UI_MAPPING_GUIDE.md
+      - guides/BEST_PRACTICES.md
+      - templates/plan_template.md
+    inputs:
+      - "{screen}/design.json"
+      - "{report_dir}/spec.md"
+    outputs:
+      - "{report_dir}/plan.md"
+
+  04_build_screen:
+    prompt: prompts/04_BUILD_SCREEN.prompt
+    context:
+      - contracts/TEST_CONTRACT.md
+      - guides/UI_MAPPING_GUIDE.md
+      - guides/BEST_PRACTICES.md
+    inputs:
+      - "{screen}/design.json"
+      - "{report_dir}/spec.md"
+      - "{report_dir}/plan.md"
+    outputs:
+      - "lib/**/*.dart"
+      - "test/**/*.dart"
+
+  05_run_tests:
+    prompt: prompts/05_RUN_TESTS.prompt.md
+    context: []
+    inputs:
+      - "{report_dir}/plan.md"
+    outputs:
+      - "test results (stdout)"
+      - "coverage/lcov.info"
+
+  06_autofix_tests:
+    prompt: prompts/06_AUTOFIX_TESTS.prompt.md
+    context:
+      - contracts/TEST_CONTRACT.md
+    inputs:
+      - "failing test output"
+      - "{report_dir}/plan.md"
+    outputs:
+      - "patched files"
+      - "{report_dir}/autofix_attempts/"
+
+  07_evaluate_output:
+    prompt: prompts/07_EVALUATE_OUTPUT.prompt
+    context:
+      - contracts/TEST_CONTRACT.md
+      - templates/agent_report.md
+    inputs:
+      - "{report_dir}/plan.md"
+      - "{report_dir}/spec.md"
+      - "{report_dir}/validation_report.md"
+      - "test results"
+      - "coverage/lcov.info"
+    outputs:
+      - "{report_dir}/evaluation_report.md"

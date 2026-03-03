@@ -9,6 +9,7 @@ Audience: Builder, Planner, Test runner
 ---
 
 ## Rule Index
+- rule:theme/resolve
 - rule:text/transform
 - rule:button/cta
 - rule:button/primary
@@ -30,21 +31,49 @@ Audience: Builder, Planner, Test runner
 
 ---
 
+## rule:theme/resolve
+**Input**: `tokens.colors`, `tokens.typography`
+**Output**: `ThemeData` built exclusively from tokens — never guess colors or font sizes.
+
+**Typography mapping** (`typographyRef` → `TextTheme`):
+
+| typographyRef | Maps to                   | Notes |
+|---|---|---|
+| `titleLarge`  | `textTheme.titleLarge`    | weight via `fontWeight` |
+| `title`       | `textTheme.titleMedium`   |  |
+| `subtitle`    | `textTheme.titleSmall`    |  |
+| `label`       | `textTheme.labelLarge`    |  |
+| `body`        | `textTheme.bodyMedium`    |  |
+| `muted`       | `textTheme.bodySmall`     | reduced contrast |
+| `value`       | `textTheme.headlineSmall` | numeric/time values |
+
+---
+
 ## rule:text/transform
-**Input**: `node.text`, `node.style.transform`, `tokens.typography`, `node.typographyRef`  
-**Output**: `Text` widget with transformed copy and resolved style.  
+**Input**: `node.text`, `node.style.transform`, `tokens.typography`, `node.typographyRef`
+**Output**: `Text` widget with transformed copy and resolved style.
 **Deterministic Steps**:
 1. `copy = applyTransform(node.text, node.style?.transform or "none")`
-2. `style = resolveTextStyle(node.typographyRef, tokens) // no substitutions`
+2. `style = resolveTextStyle(node.typographyRef, tokens)`
 3. `return Text(copy, key: Key('{screenId}__{node.id}'), style: style)`
+
+```dart
+String applyTransform(String s, String? transform) {
+  switch (transform) {
+    case "uppercase": return s.toUpperCase();
+    case "lowercase": return s.toLowerCase();
+    default: return s;
+  }
+}
+```
 
 ---
 
 ## rule:button/cta
-**When** `node.type == "Button" && node.variant == "cta"`  
-**Map to** `ElevatedButton` (or `.icon` if `leadingIcon` present)  
-**Colors**: `bg = tokens.colors.cta or tokens.colors.primary`; `fg = tokens.colors.onPrimary`  
-**Deterministic Steps**:
+**When** `node.type == "Button" && node.variant == "cta"`
+**Map to** `ElevatedButton` (or `.icon` if `leadingIcon` present)
+**Colors**: `bg = tokens.colors.cta or tokens.colors.primary`; `fg = tokens.colors.onPrimary`
+**Steps**:
 1. `child = node.leadingIcon ? Row(Icon(resolveIconData), Text(copy)) : Text(copy)`
 2. Return `ElevatedButton(style: bg/fg from tokens, onPressed: handler, child: child)`
 
@@ -56,13 +85,13 @@ Same as CTA but **bg = tokens.colors.primary**, **fg = tokens.colors.onPrimary**
 ---
 
 ## rule:button/secondary
-Map to `OutlinedButton`.  
+Map to `OutlinedButton`.
 **Border**: `color = node.style.borderColor or tokens.colors.border`; `width = node.style.borderWidth or 1`.
 
 ---
 
 ## rule:button/ghost
-Map to `TextButton`.  
+Map to `TextButton`.
 **Foreground**: `node.style.color or colorScheme.primary`.
 
 ---
@@ -70,6 +99,24 @@ Map to `TextButton`.
 ## rule:iconButton/shaped
 - If shape attributes present (`style.radius` and/or `style.borderWidth`/`borderColor`), wrap `IconButton` in a `Container` with decoration enforcing size/border/radius.
 - Do not render `IconButton` if `iconName` is missing. Treat as validation error.
+
+```dart
+Widget shapedIconButton(Comp c, Tokens t) {
+  final size = (c.bbox?.height ?? 36).toDouble();
+  return Container(
+    width: size, height: size,
+    decoration: BoxDecoration(
+      color: c.style.backgroundColorOr(Colors.transparent),
+      border: (c.style.borderWidth ?? 0) > 0
+        ? Border.all(color: c.style.borderColorOr(t.color("border")),
+                     width: (c.style.borderWidth ?? 1).toDouble())
+        : null,
+      borderRadius: BorderRadius.circular(t.radius(c.style.radius)),
+    ),
+    child: IconButton(onPressed: (){}, icon: buildIcon(c, t), splashRadius: size/2),
+  );
+}
+```
 
 ---
 
@@ -81,15 +128,27 @@ Map to `TextButton`.
 ---
 
 ## rule:layout/placement
-Inside the parent axis:  
-- `start|center|end` → `Align(alignment: Alignment.(centerLeft|center|centerRight))`  
+Inside the parent axis:
+- `start|center|end` → `Align(alignment: Alignment.(centerLeft|center|centerRight))`
 - `stretch` → expand to max cross-axis (`Expanded`/`SizedBox.expand` per parent constraints)
+
+```dart
+Widget place(Widget w, Comp c) {
+  final placed = switch (c.placement) {
+    "end" => Align(alignment: Alignment.centerRight, child: w),
+    "center" => Align(alignment: Alignment.center, child: w),
+    "stretch" => Align(alignment: Alignment.centerLeft, child: SizedBox.expand(child: w)),
+    _ => Align(alignment: Alignment.centerLeft, child: w),
+  };
+  return c.widthMode == "hug" ? placed : Expanded(child: placed);
+}
+```
 
 ---
 
 ## rule:group/alignment
-For containers/cards with a `group` block:  
-- `alignment: "center"` → wrap with `Center`  
+For containers/cards with a `group` block:
+- `alignment: "center"` → wrap with `Center`
 - `alignment: "end"` → `Align(alignment: Alignment.centerRight)`
 
 ---
@@ -100,17 +159,17 @@ If `group.maxWidth > 0` → `ConstrainedBox(BoxConstraints(maxWidth: ...))` arou
 ---
 
 ## rule:group/distribution
-Map to `MainAxisAlignment`:  
-- `start` → `start`  
-- `spaceBetween` → `spaceBetween`  
-- `spaceAround` → `spaceAround`  
+Map to `MainAxisAlignment`:
+- `start` → `start`
+- `spaceBetween` → `spaceBetween`
+- `spaceAround` → `spaceAround`
 - `end` → `end`
 
 ---
 
 ## rule:slider/theme
-- Use a `SliderTheme` where available.  
-- `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` from `node.style` if provided.  
+- Use a `SliderTheme` where available.
+- `activeTrack`, `inactiveTrack`, `thumbColor`, `trackHeight` from `node.style` if provided.
 - Initial `value` from `valueNormalized` in [0,1] when present.
 - Set track height to 1 `trackHeight: 1`.
 - Set `trackShape: RectangularSliderTrackShape()`.
@@ -128,63 +187,75 @@ Map to `MainAxisAlignment`:
 ---
 
 ## rule:icon/resolve
-- If `iconName` starts with `material.` → map to `Icons.*`  
+- If `iconName` starts with `material.` → map to `Icons.*`
 - Else → resolve via `IconRegistry` (project-defined).
 
 ---
 
 ## rule:keys/stable
-- Every widget uses `Key('{screenId}__{node.id}')` for stability and testing.  
-- Apply on all **interactive** and **test-targeted** widgets at minimum.
-- Decorative nodes that are intentionally kept (e.g., `role:"indicator"`) must still receive a stable key; otherwise filtered out nodes are **not** keyed.
+**Purpose**: Deterministic, stable keys for testing and widget identity.
+**Pattern**: `Key('{screenId}__{node.id}')`
+
+**Applies to all interactive widgets:**
+- Button, IconButton, TextButton, ElevatedButton, OutlinedButton
+- TextField, TextFormField, Slider, Switch, Checkbox, Radio
+- Card (if has onTap/onPressed), InkWell, GestureDetector
+- Any widget with callbacks (onPressed, onChange, onTap, etc.)
+
+**Also applies to:**
+- Decorative nodes with `role:"indicator"` (intentionally kept)
+- Text/Icon widgets only if tests verify specific instances
+
+**Filtered-out nodes are NOT keyed.**
+
+**Deterministic Steps**:
+1. Extract `node.id` from design.json, `screenId` from meta
+2. Generate: `key: Key('{screenId}__{node.id}')`
+3. Record in plan.md Widget Breakdown for test reference
+4. In tests: always `find.byKey(const Key('x'))` — never `find.text()` or `find.byType()`
 
 ---
 
 ## rule:pattern/valueControl
 When:
 - A horizontal `Row` or `Frame` contains **exactly three children** ordered as:
-  1. icon or button “−”
+  1. icon or button "−"
   2. text-like element (value or label)
-  3. icon or button “+”
+  3. icon or button "+"
 - All items share the same vertical alignment (baseline or center)
 
 Then:
 - Map to existing widget `ValueControl` (import from `lib/widgets/value_control.dart`)
-- Main props:
-  - `label`: middle title,
-  - `value`: middle child text
-  - `onIncrease`, `onDecrease`: inherited from the actions
-  - `decreaseKey`, `valueKey`, `increaseKey`, `decreaseKey`: `{screenId}__{type}-{index}`
-  - `decreaseSemanticLabel`, `increaseSemanticLabel`: semantic labels
+- Main props: `label`, `value`, `onIncrease`, `onDecrease`, `decreaseKey`, `valueKey`, `increaseKey`, `decreaseSemanticLabel`, `increaseSemanticLabel`
 - Do **not** generate a new widget
 - Mark `buildStrategy: rule:pattern/customStepper`
 
-
-              ValueControl(
-                label: 'RÉPÉTITIONS',
-                value: _reps.toString(),
-                onDecrease: _onDecreaseReps,
-                onIncrease: _onIncreaseReps,
-                decreaseKey: 'interval_timer_home__IconButton-11',
-                valueKey: 'interval_timer_home__Text-12',
-                increaseKey: 'interval_timer_home__IconButton-13',
-                decreaseSemanticLabel: 'Diminuer les répétitions',
-                increaseSemanticLabel: 'Augmenter les répétitions',
-                decreaseEnabled: _reps > _minReps,
-                increaseEnabled: _reps < _maxReps,
-              ),
+```dart
+ValueControl(
+  label: 'RÉPÉTITIONS',
+  value: _reps.toString(),
+  onDecrease: _onDecreaseReps,
+  onIncrease: _onIncreaseReps,
+  decreaseKey: 'interval_timer_home__IconButton-11',
+  valueKey: 'interval_timer_home__Text-12',
+  increaseKey: 'interval_timer_home__IconButton-13',
+  decreaseSemanticLabel: 'Diminuer les répétitions',
+  increaseSemanticLabel: 'Augmenter les répétitions',
+  decreaseEnabled: _reps > _minReps,
+  increaseEnabled: _reps < _maxReps,
+),
+```
 
 ---
 
 ## rule:font/size
 1. Always use the characteristics below for the fonts you identify
-2. If possible, infer the other font charasterics using these as a reference
-3. Never override a predefined style with specific characteristics, such as fontSize or fontWeight. If no predefined style corresponds exactly to the text at hand, choose the one whose font whose size is the closest to the text at hand :
-  - forbidden to override font style with `style: AppTextStyles.title.copyWith(fontSize: 16)`
-  - stick always with `style: AppTextStyles.titleLarge`
+2. If possible, infer the other font characteristics using these as a reference
+3. Never override a predefined style with specific characteristics — always use the closest match:
+  - forbidden: `style: AppTextStyles.title.copyWith(fontSize: 16)`
+  - correct: `style: AppTextStyles.titleLarge`
 
-
-Font characteristics : 
+Font characteristics:
 - titleLarge: fontSize = 22, fontWeight = FontWeight.bold, height: 1.4
 - title: fontSize = 22, fontWeight = FontWeight.bold, height = 1.25
 - label: fontSize = 14, fontWeight = FontWeight.w500, height = 1.33
@@ -192,8 +263,8 @@ Font characteristics :
 ---
 
 ## rule:card/style
-**When** `node.type == "Card"`  
-**Map to** `Card` widget with standardized styling  
+**When** `node.type == "Card"`
+**Map to** `Card` widget with standardized styling
 **Deterministic Steps**:
 1. Always set `elevation: 0`
 2. Apply `shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2))`
@@ -210,72 +281,6 @@ Font characteristics :
 - Padding for child: always `12`
 - Border: use `node.style.borderColor/borderWidth` if present, else default `divider/1`
 
-**Example**:
-```dart
-Card(
-  key: Key('{screenId}__{node.id}'),
-  color: node.style.backgroundColor ?? AppColors.surface,
-  elevation: 0,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(2),
-    side: BorderSide(
-      color: node.style.borderColor ?? AppColors.divider,
-      width: node.style.borderWidth ?? 1,
-    ),
-  ),
-  margin: const EdgeInsets.symmetric(horizontal: 6),
-  child: Padding(
-    padding: const EdgeInsets.all(12)
-      child: node.hasInteractiveChild 
-      ? InkWell(
-          onTap: handler,
-          borderRadius: BorderRadius.circular(2),
-          child: content,
-        )
-      : content,
-  )
-)
-```
-
----
-
-## rule:keys/testable
-
-**For all interactive widgets:**
-- Apply stable key: `Key('{screenId}__{node.id}')`
-- Key must match plan.md component ID
-- Never generate random or dynamic keys
-- Keys enable deterministic testing with find.byKey()
-
-**Interactive components requiring keys:**
-- Button, IconButton, TextButton, ElevatedButton, OutlinedButton
-- TextField, TextFormField
-- Slider
-- Switch, Checkbox, Radio
-- Card (if has onTap/onPressed)
-- InkWell, GestureDetector
-- Any widget with callbacks (onPressed, onChange, onTap, etc.)
-
-**Deterministic Steps:**
-1. Extract `node.id` from design.json component
-2. Extract `screenId` from design.json meta or spec.md
-3. Generate: `key: Key('{screenId}__{node.id}')`
-4. Record in plan.md Widget Breakdown for test generation reference
-5. Never use: `find.text()` or `find.byType()` in tests (fragile, breaks on i18n/refactor)
-6. Always use: `find.byKey(const Key('specific_id'))` in tests (deterministic)
-
-**For non-interactive components:**
-- Keys optional (use only if test needs to verify by key)
-- Text widgets: key if test verifies specific text instance
-- Icon widgets: key if test verifies specific icon instance
-- Container/Padding/Decoration: usually not keyed
-
-**Rationale:**
-- ✅ Tests are deterministic and survive text changes (i18n)
-- ✅ Tests are precise (target specific widget, not first match)
-- ✅ Tests are maintainable (key stays stable, implementation can change)
-- ✅ Aligns with Flutter testing best practices
-
 ---
 
 ## Implementation Notes (non-normative)
@@ -287,7 +292,7 @@ Card(
 
 ## Test Hints
 For each rule, provide at least one widget test ensuring:
-- deterministic key (via rule:keys/testable),  
-- mapping to expected widget class,  
-- correct theme resolution,  
+- deterministic key (via rule:keys/stable),
+- mapping to expected widget class,
+- correct theme resolution,
 - behavior hooks present when applicable.

@@ -12,7 +12,7 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
 - Confirm that generated Flutter code respects:
   - design.json semantics (variants, placement, widthMode, group alignment, tokens, typography, a11y, keys).
   - contracts/DESIGN_CONTRACT.md and contracts/SPEC_CONTRACT.md.
-  - contracts/PROJECT_CONTRACT.md (file organization, state patterns, naming).
+  - contracts/CODE_CONTRACT.md (file organization, state patterns, naming, architecture).
 
 ### 2. Check Tests
 - Parse test results from `flutter test`.
@@ -37,7 +37,7 @@ Output: `evaluation_report.md` with final PASS/FAIL status and rationale.
 
 ### 4. Architecture Compliance (CRITICAL)
 
-Verify `ARCHITECTURE_CONTRACT.md` compliance:
+Verify `CODE_CONTRACT.md` §2-4 compliance:
 - [ ] No `Timer.periodic()`, `SystemSound.play()`, or platform channels in State files
 - [ ] All external dependencies injected via constructor (no instantiation in methods)
 - [ ] Service interfaces exist in `lib/services/`
@@ -58,7 +58,7 @@ Verify `ARCHITECTURE_CONTRACT.md` compliance:
 - Verify that all widgets include deterministic keys: `Key('<screenName>__<id>')`.
 
 ### 7. Project Structure & Maintainability
-- Verify compliance with contracts/PROJECT_CONTRACT.md:
+- Verify compliance with contracts/CODE_CONTRACT.md:
   - File paths match declared structure
   - State classes are ChangeNotifier subclasses
   - Widget decomposition rules respected
