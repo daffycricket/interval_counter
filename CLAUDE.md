@@ -10,6 +10,12 @@ The project follows a **screen-by-screen generation workflow** where each screen
 - A design file (`design.json`) following the mini-Figma schema
 - A functional specification (`spec.md`)
 
+## Environment
+
+- **Flutter version:** 3.38.3 (stable) — Dart 3.10.1
+- **Localization:** fichiers générés dans `lib/l10n/` (via `output-dir: lib/l10n` dans `l10n.yaml`). Import : `package:interval_counter/l10n/app_localizations.dart`. Ne jamais utiliser `package:flutter_gen/gen_l10n/...` (supprimé depuis Flutter 3.27+).
+- Si les fichiers `lib/l10n/app_localizations*.dart` sont absents, relancer `flutter gen-l10n`.
+
 ## Key Commands
 
 ### Development

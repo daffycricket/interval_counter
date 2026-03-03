@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 import 'state/home_state.dart';
 import 'theme/app_colors.dart';
 import 'routes/app_routes.dart';

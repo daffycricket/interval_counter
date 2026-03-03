@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../value_control.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 
 /// Widget du panneau de configuration des paramètres en mode SIMPLE
 class PresetParamsPanel extends StatelessWidget {

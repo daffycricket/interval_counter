@@ -6,7 +6,7 @@ import 'package:interval_counter/screens/preset_editor_screen.dart';
 import 'package:interval_counter/state/preset_editor_state.dart';
 import 'package:interval_counter/state/home_state.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 
 void main() {
   late HomeState homeState;

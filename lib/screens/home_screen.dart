@@ -8,7 +8,7 @@ import '../widgets/home/preset_card.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../routes/app_routes.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 
 /// Écran principal de l'application
 class HomeScreen extends StatelessWidget {

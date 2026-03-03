@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 
 /// Widget de l'en-tête avec contrôle volume et menu
 class VolumeHeader extends StatelessWidget implements PreferredSizeWidget {

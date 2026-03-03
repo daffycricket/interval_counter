@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/preset.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 
 /// Carte affichant un préréglage
 class PresetCard extends StatelessWidget {
