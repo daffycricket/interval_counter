@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:interval_counter/theme/app_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../domain/step_type.dart';
 import '../../state/workout_state.dart';
