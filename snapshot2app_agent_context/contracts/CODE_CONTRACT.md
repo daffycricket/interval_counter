@@ -36,7 +36,7 @@ Max 2 levels in `widgets/`. No hardcoded strings in UI (use `AppLocalizations`).
 | Domain | `lib/domain/` | Pure Dart + `foundation` for `@immutable` | 100%, <1ms/test |
 | Services | `lib/services/` (interfaces), `lib/services/impl/` | Interfaces = pure Dart; Impls = Flutter APIs | ≥80% |
 | State | `lib/state/` | Domain + Service interfaces + `ChangeNotifier` | 100% |
-| Presentation | `lib/screens/`, `lib/widgets/` | Anything | See GUARDRAILS.md |
+| Presentation | `lib/screens/`, `lib/widgets/` | Anything | ≥60% screens, ≥70% screen widgets, ≥90% generic widgets |
 
 ---
 

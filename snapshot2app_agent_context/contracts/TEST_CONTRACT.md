@@ -8,7 +8,7 @@ Code must follow `CODE_CONTRACT.md` (DI, domain layer, State as coordinator).
 
 ## Coverage Thresholds
 
-See `GUARDRAILS.md` G-09 for exact thresholds. Summary:
+Coverage thresholds (build-blocking where indicated):
 
 | Layer | Target | Blocks build? |
 |---|---|---|
@@ -25,7 +25,7 @@ See `GUARDRAILS.md` G-09 for exact thresholds. Summary:
 
 ## Test File Structure
 
-Mirror `lib/` 1:1 in `test/` (G-11):
+Mirror `lib/` 1:1 in `test/` — every production file must have a test file:
 ```
 test/
   domain/{feature}_test.dart

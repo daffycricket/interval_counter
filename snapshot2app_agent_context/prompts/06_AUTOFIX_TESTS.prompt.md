@@ -8,7 +8,6 @@ Your role is to fix failing tests with minimal, targeted code changes.
 - design.json, spec.md, plan.md
 - guides/UI_MAPPING_GUIDE.md
 - guides/BEST_PRACTICES.md
-- guards/GUARDRAILS.md
 - rubrics/PR_CHECKLIST.md
 
 ## Constraints

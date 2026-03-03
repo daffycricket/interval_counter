@@ -27,25 +27,28 @@ Output: validated, built, tested, and evaluated Flutter application files.
 - Output: Flutter files under lib/, test/, integration_test/
 - Must respect: variants, placement, widthMode, group alignment, tokens, typography, a11y, keys, Clean Architecture (domain/services/state layers).
 
-### Step 5 — Run Tests
+### Step 5 — Run Tests & Verify
 - Action: run 05_RUN_TESTS.prompt
-- If status == tests_passed → proceed to Step 7 (Evaluation).
-- Else → proceed to Step 6 (Auto-fix).
+- Runs `guards/verify.sh` (architecture checks) AND `flutter test --coverage`
+- If both pass → proceed to Step 7 (Evaluation).
+- If tests fail → proceed to Step 6 (Auto-fix).
+- If verify.sh fails → proceed to Step 6 (Auto-fix) with verify_report.txt.
 
 ### Step 6 — Auto-fix Failing Tests
 - Action: run 06_AUTOFIX_TESTS.prompt
 - If status == tests_fixed → proceed to Step 7 (Evaluation).
 - Else → stop with status = tests_failed_after_autofix.
 
-### Step 7 — Evaluate Output
-- Action: run 07_EVALUATE_OUTPUT.prompt 
-- Input: plan.md, spec.md, validation_report.md, build output, test results, coverage/lcov.info
-- Output: evaluation_report.md
+### Step 7 — Aggregate Evaluation Report
+- Action: run 07_EVALUATE_OUTPUT.prompt
+- Input: verify_report.txt, test_report.md, flutter analyze output, coverage/lcov.info, autofix patches
+- Output: evaluation_report.md (factual summary, PASS/FAIL verdict)
+- No subjective code review — report only mechanical results.
 
 ---
 
-## Guardrails
-- Stateless orchestration
+## Pipeline Rules
+- Stateless orchestration.
 - Fail fast if contracts not respected.
 - Stop if coverage ratio < 1.0 in design.json validation.
 - Warnings if qa.confidenceGlobal < threshold, but pipeline continues unless configured otherwise.

@@ -7,7 +7,8 @@ Steps:
 2. Verify: bbox/sourceRect integers, text coverage, a11y on interactives, counts by type.
 3. If issues → propose a normalized diff (JSON Patch style) and list assumptions with confidence.
 4. Never invent text or components; flag as `openQuestions` instead.
-5. Success criteria: coverageRatio=1.0, confidenceGlobal≥0.85, no missing texts.
+5. Success criteria: coverageRatio=1.0, confidenceGlobal≥0.85, no missing texts, a11y labels on all interactives.
+   **Abort pipeline** if coverageRatio < 1.0 or a11y missing on interactive components.
 
 6. Check sliders.
 For each `Slider`:

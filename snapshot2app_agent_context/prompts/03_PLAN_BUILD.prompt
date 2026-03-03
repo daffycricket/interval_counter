@@ -7,7 +7,7 @@ You are a **Build Planner**. Your job is to produce a *deterministic* build plan
 ## Inputs
 - `design.json`
 - `spec.md`
-- `UI_MAPPING_GUIDE.md`, `BEST_PRACTICES.md`, `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `CODE_CONTRACT.md`, `GUARDRAILS.md`
+- `UI_MAPPING_GUIDE.md`, `BEST_PRACTICES.md`, `DESIGN_CONTRACT.md`, `SPEC_CONTRACT.md`, `CODE_CONTRACT.md`
 
 ## Service Dependency Analysis
 

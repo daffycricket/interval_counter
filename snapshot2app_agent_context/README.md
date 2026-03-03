@@ -19,7 +19,7 @@ Agents consume these files and produce code in `lib/`, `test/`, etc.
 | `prompts/` | 00_ORCHESTRATOR through 07_EVALUATE |
 | `contracts/` | CODE_CONTRACT, TEST_CONTRACT, DESIGN_CONTRACT, SPEC_CONTRACT |
 | `guides/` | UI_MAPPING_GUIDE, BEST_PRACTICES |
-| `guards/` | GUARDRAILS (G-01 to G-18), FAILURE_TAXONOMY |
+| `guards/` | verify.sh (deterministic architecture checks) |
 | `templates/` | spec_template, plan_template, validation_report, agent_report |
 | `schema/` | minifigma.schema.json |
 | `sources/` | Design JSON + spec complements per screen |

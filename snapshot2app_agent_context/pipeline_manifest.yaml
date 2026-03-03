@@ -5,7 +5,6 @@
 # Files loaded for ALL steps (always in context)
 global:
   - contracts/CODE_CONTRACT.md
-  - guards/GUARDRAILS.md
 
 steps:
   01_validate_design:
@@ -60,11 +59,13 @@ steps:
 
   05_run_tests:
     prompt: prompts/05_RUN_TESTS.prompt.md
-    context: []
+    context:
+      - guards/verify.sh
     inputs:
       - "{report_dir}/plan.md"
     outputs:
-      - "test results (stdout)"
+      - "verify_report.txt"
+      - "test_report.md"
       - "coverage/lcov.info"
 
   06_autofix_tests:
@@ -80,14 +81,12 @@ steps:
 
   07_evaluate_output:
     prompt: prompts/07_EVALUATE_OUTPUT.prompt
-    context:
-      - contracts/TEST_CONTRACT.md
-      - templates/agent_report.md
+    context: []
     inputs:
-      - "{report_dir}/plan.md"
-      - "{report_dir}/spec.md"
-      - "{report_dir}/validation_report.md"
-      - "test results"
+      - "verify_report.txt"
+      - "test_report.md"
+      - "flutter analyze output"
       - "coverage/lcov.info"
+      - "{report_dir}/autofix_attempts/"
     outputs:
       - "{report_dir}/evaluation_report.md"

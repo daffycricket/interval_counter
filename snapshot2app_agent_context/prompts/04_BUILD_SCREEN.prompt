@@ -8,9 +8,8 @@ Role: **Screen Builder**. Generate deterministic Flutter/Dart code from:
 - `guides/BEST_PRACTICES.md` — common pitfalls
 - `contracts/CODE_CONTRACT.md` — code organization & architecture
 - `contracts/TEST_CONTRACT.md` — testing requirements
-- `guards/GUARDRAILS.md` — verification rules
-
 ## Hard Rules
+- **No invention**: never generate widgets, texts, or tokens not present in design.json or spec.md.
 - **No guessing**: colors/styles only from `tokens.colors`, `tokens.typography`, or `component.style`.
 - **Stable keys**: `Key('{screenId}__{compId}')` on all interactive widgets.
 - **Controlled vocabularies**: `variant (cta|primary|secondary|ghost)`, `placement (start|center|end|stretch)`, `widthMode (fixed|hug|fill)`.
@@ -18,6 +17,9 @@ Role: **Screen Builder**. Generate deterministic Flutter/Dart code from:
 - **No new routes/tokens/widgets** beyond `plan.md`.
 - **Verbatim** UI texts from spec. Do not paraphrase.
 - **Fail fast** if referenced key/route/token is missing.
+- **Determinism**: all outputs must be re-runnable with identical results.
+- **No code in planning**: code generation only in this build phase.
+- **Assumptions**: treat any estimate as a hypothesis — list with confidence level.
 
 ## Dependency Policy
 - Do **not** modify `pubspec.yaml` (only `flutter pub get`).
@@ -42,7 +44,7 @@ Per `CODE_CONTRACT.md` §2-4:
 6. Implement State as thin coordinator per `CODE_CONTRACT.md` §5
 7. Set accessibility per `plan.md/Accessibility Plan`
 8. Verify file paths and naming per `CODE_CONTRACT.md` §1, §7
-9. Run `GUARDRAILS.md` checks — stop on failure
+9. Self-check: no hardcoded strings (use AppLocalizations), 1:1 file-to-test ratio, all i18n in ARB en/fr
 
 ### Step 10 — Generate Tests
 Per `TEST_CONTRACT.md`, generate in order:
@@ -54,7 +56,7 @@ Per `TEST_CONTRACT.md`, generate in order:
 6. Screen tests (`test/screens/`)
 7. Shared helpers (`test/helpers/widget_test_helpers.dart`)
 
-Verify 1:1 file-to-test ratio (G-11) and coverage thresholds (G-09).
+Verify 1:1 file-to-test ratio and coverage thresholds (see `TEST_CONTRACT.md`).
 
 ## Build Guard: Orphan Thumb
 If `plan.md` row has `buildStrategy == rule:slider/normalizeSiblings(drop)` → do not render node.
@@ -71,5 +73,5 @@ If `plan.md` row has `buildStrategy == rule:slider/normalizeSiblings(drop)` → 
 - [ ] Interactions match `spec.md`
 - [ ] CODE_CONTRACT.md satisfied
 - [ ] TEST_CONTRACT.md satisfied
-- [ ] GUARDRAILS.md G-01 to G-18 satisfied
-- [ ] i18n complete, no hardcoded strings
+- [ ] i18n complete, no hardcoded strings (AppLocalizations, ARB en/fr)
+- [ ] No invention beyond design.json + spec.md
