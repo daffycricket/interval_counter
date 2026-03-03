@@ -22,6 +22,7 @@ Capture output. If exit code != 0 → record violations for evaluation report.
 Run in project root:
 ```bash
 flutter pub get
+flutter gen-l10n
 flutter analyze
 flutter test --reporter expanded --coverage
 ```

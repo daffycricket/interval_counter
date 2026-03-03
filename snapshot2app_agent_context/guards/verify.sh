@@ -27,6 +27,15 @@ check() {
 echo "=== Architecture & Structure Verification ==="
 echo ""
 
+# --- 0. Localization files exist ---
+if [ -f "l10n.yaml" ]; then
+  if [ -f "lib/l10n/app_localizations.dart" ]; then
+    check "l10n-files-exist" "pass"
+  else
+    check "l10n-files-exist" "fail" "lib/l10n/app_localizations.dart missing — run: flutter gen-l10n"
+  fi
+fi
+
 # --- 1. No Timer.periodic / SystemSound / HapticFeedback in State ---
 BANNED_IN_STATE=$(grep -rn "Timer\.periodic\|SystemSound\.play\|HapticFeedback\." lib/state/ 2>/dev/null || true)
 if [ -z "$BANNED_IN_STATE" ]; then
@@ -118,6 +127,20 @@ if [ -d "lib/services/impl" ]; then
     check "service-interfaces-exist" "pass"
   else
     check "service-interfaces-exist" "fail" "no interface for:$ORPHAN_IMPLS"
+  fi
+fi
+
+# --- 8. App compiles (flutter analyze) ---
+ANALYZE_OUTPUT=$(flutter analyze 2>&1 || true)
+if echo "$ANALYZE_OUTPUT" | grep -q "No issues found"; then
+  check "app-compiles" "pass"
+else
+  ERRORS=$(echo "$ANALYZE_OUTPUT" | grep -c "error •" || true)
+  WARNINGS=$(echo "$ANALYZE_OUTPUT" | grep -c "warning •" || true)
+  if [ "$ERRORS" -gt 0 ]; then
+    check "app-compiles" "fail" "$ERRORS errors, $WARNINGS warnings (first: $(echo "$ANALYZE_OUTPUT" | grep "error •" | head -1))"
+  else
+    check "app-compiles" "pass" "($WARNINGS warnings)"
   fi
 fi
 
