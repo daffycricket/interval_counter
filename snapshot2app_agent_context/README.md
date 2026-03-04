@@ -54,6 +54,15 @@ Refer to code already present in lib/ as reference.
 Report folder: reports/{screen}
 ```
 
+```
+Run 00_ORCHESTRATOR.prompt
+Inputs:
+  - design.json: sources/end_workout/end_workout_design.json
+  - spec_complement.md: sources/end_workout/end_workout_spec_complement.md
+Refer to code already present in lib/ as reference.
+Report folder: reports/end_workout
+```
+
 ### Refactor iteration (keep views, rebuild state/domain)
 ```
 Run 00_ORCHESTRATOR.prompt starting step 2 up to last step
@@ -69,14 +78,12 @@ If unclear, ask 2-5 questions before starting.
 ```
 
 Run 00_ORCHESTRATOR.prompt starting step 3 up to last step
-For plan, build and test: keep existing views, refactor state and business logic
-to match CODE_CONTRACT.md and TEST_CONTRACT.md.
 Inputs:
-  - design.json: sources/new_preset/new_preset_design.json
-  - spec.md: reports/new_preset/spec.md
-  - existing screen code in lib/screens/ and lib/widgets/new_preset/
+  - design.json: sources/end_workout/end_workout.json
+  - spec.md: reports/end_workout/spec.md
+  - existing screen code in lib/screens/ and lib/widgets/end_workout/
 Refer to code in lib/ as reference.
-Report folder: reports/new_preset_refactor_it1
+Report folder: reports/end_workout_it2
 If unclear, ask 2-5 questions before starting.
 
 ---
