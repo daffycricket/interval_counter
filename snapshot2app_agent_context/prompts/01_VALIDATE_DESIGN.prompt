@@ -10,7 +10,19 @@ Steps:
 5. Success criteria: coverageRatio=1.0, confidenceGlobal≥0.85, no missing texts, a11y labels on all interactives.
    **Abort pipeline** if coverageRatio < 1.0 or a11y missing on interactive components.
 
-6. Check sliders.
+6. Layout/bbox coherence check.
+For each `Container` or `Card` with `layout.justify` and ≥2 children having `bbox`:
+- Compute each child's center position as % of parent axis (height for column, width for row).
+- If children spread > 30% of parent axis AND `layout.justify == "center"` → flag as incoherent in `findings.layout.justifyBboxMismatch`, suggest `spaceAround` or `spaceBetween`.
+- If children clustered within < 20% AND `layout.justify ∈ {spaceAround, spaceBetween}` → flag, suggest `center`.
+- Propose normalized diff to fix `layout.justify` and `group.distribution` accordingly.
+
+7. Typography coherence check.
+For each `Text` with both `style.fontSize` and `style.typographyRef`:
+- If `typographyRef != "custom"` AND `fontSize` does not match the known token size (titleLarge=22, title=22, label=14, body=14, muted=12, value=24, subtitle=16) → flag in `findings.typography.fontSizeMismatch`.
+- Propose normalized diff: set `typographyRef: "custom"` and keep raw `fontSize`.
+
+8. Check sliders.
 For each `Slider`:
 - Inspect siblings in the same Row/Group.
 - If a sibling matches a *thumb-like* pattern:

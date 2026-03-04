@@ -14,6 +14,7 @@ Role: **Screen Builder**. Generate deterministic Flutter/Dart code from:
 - **Stable keys**: `Key('{screenId}__{compId}')` on all interactive widgets.
 - **Controlled vocabularies**: `variant (cta|primary|secondary|ghost)`, `placement (start|center|end|stretch)`, `widthMode (fixed|hug|fill)`.
 - **Conflict resolution**: layout → `design.json`; behavior/state/navigation → `spec.md`.
+- **Layout conflict priority**: when `layout.justify` and children `bbox` positions are incoherent (flagged in `validation_report.md` under `findings.layout.justifyBboxMismatch`), use the normalized value from the validation report. General priority: **bbox positions > layout.justify > group.distribution**.
 - **No new routes/tokens/widgets** beyond `plan.md`.
 - **Verbatim** UI texts from spec. Do not paraphrase.
 - **Fail fast** if referenced key/route/token is missing.

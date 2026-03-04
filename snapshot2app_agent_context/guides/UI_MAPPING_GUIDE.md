@@ -16,6 +16,7 @@ Audience: Builder, Planner, Test runner
 - rule:button/secondary
 - rule:button/ghost
 - rule:iconButton/shaped
+- rule:iconButton/size
 - rule:layout/placement
 - rule:layout/widthMode
 - rule:group/alignment
@@ -120,6 +121,25 @@ Widget shapedIconButton(Comp c, Tokens t) {
 
 ---
 
+## rule:iconButton/size
+**Purpose**: Derive `iconSize` from design.json bbox so icons render at the intended visual size.
+**Deterministic Steps**:
+1. If the `IconButton` node has a child `Icon` with its own `bbox` → `iconSize = childIcon.bbox[3]` (height)
+2. Else → `iconSize = (node.bbox[3] * 0.5).round()` (50% of container height)
+3. Pass `iconSize` to `IconButton(iconSize: ...)` or `Icon(size: ...)`
+
+```dart
+double resolveIconSize(Comp iconButton) {
+  final iconChild = iconButton.children?.firstWhereOrNull((c) => c.type == "Icon");
+  if (iconChild != null && iconChild.bbox != null) {
+    return iconChild.bbox![3].toDouble();
+  }
+  return ((iconButton.bbox?[3] ?? 48) * 0.5).roundToDouble();
+}
+```
+
+---
+
 ## rule:layout/widthMode
 - `fill` → wrap with `Expanded`
 - `hug` (intrinsic) → size to content
@@ -161,6 +181,7 @@ If `group.maxWidth > 0` → `ConstrainedBox(BoxConstraints(maxWidth: ...))` arou
 ## rule:group/distribution
 Map to `MainAxisAlignment`:
 - `start` → `start`
+- `center` → `center`
 - `spaceBetween` → `spaceBetween`
 - `spaceAround` → `spaceAround`
 - `end` → `end`
@@ -254,6 +275,9 @@ ValueControl(
 3. Never override a predefined style with specific characteristics — always use the closest match:
   - forbidden: `style: AppTextStyles.title.copyWith(fontSize: 16)`
   - correct: `style: AppTextStyles.titleLarge`
+4. If `typographyRef == "custom"` → do **not** use `AppTextStyles`. Build a raw `TextStyle` from `node.style.fontSize`, `node.style.fontWeight`, and `node.style.color`:
+  - correct: `style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Color(0xFF1A1A1A))`
+  - forbidden: `style: AppTextStyles.titleLarge.copyWith(fontSize: 40)`
 
 Font characteristics:
 - titleLarge: fontSize = 22, fontWeight = FontWeight.bold, height: 1.4
