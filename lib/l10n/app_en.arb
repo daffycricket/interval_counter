@@ -203,6 +203,18 @@
   "workoutResume": "Resume",
   "@workoutResume": {
     "description": "Resume button semantic label"
+  },
+  "endWorkoutTitle": "FINI",
+  "@endWorkoutTitle": {
+    "description": "End workout screen title"
+  },
+  "endWorkoutStopLabel": "Stop timer",
+  "@endWorkoutStopLabel": {
+    "description": "Stop button semantic label on end workout screen"
+  },
+  "endWorkoutRestartLabel": "Restart timer",
+  "@endWorkoutRestartLabel": {
+    "description": "Restart button semantic label on end workout screen"
   }
 }
 

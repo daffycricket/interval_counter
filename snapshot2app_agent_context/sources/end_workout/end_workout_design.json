@@ -1,214 +1,195 @@
 {
-  "meta": { "version": "1.0", "screenName": "end_workout", "snapshotRef": "c6581509-e5b9-4306-9f04-0faf619e3f6c" },
+  "meta": {
+    "version": "1.0",
+    "screenName": "GameOverScreen",
+    "snapshotRef": "1772643683668_image.png"
+  },
   "tokens": {
     "colors": {
-      "primary": "#0F7C82",
-      "onPrimary": "#E6E6E6",
-      "background": "#0F7C82",
-      "surface": "#6F7F86",
-      "textPrimary": "#1A1A1A",
-      "textSecondary": "#6F7F86",
-      "divider": "#6F7F86",
-      "accent": "#0F7C82",
-      "sliderActive": "#0F7C82",
-      "sliderInactive": "#6F7F86",
-      "sliderThumb": "#E6E6E6",
-      "border": "#6F7F86",
-      "cta": "#0F7C82",
-      "success": "#0F7C82",
-      "warning": "#6F7F86",
-      "info": "#0F7C82",
-      "headerBackgroundDark": "#0F7C82",
-      "iconLight": "#E6E6E6"
+      "primary": "#008290",
+      "onPrimary": "#FFFFFF",
+      "background": "#008290",
+      "surface": "#546F78",
+      "textPrimary": "#212121",
+      "textSecondary": "#546F78",
+      "divider": "#546F78",
+      "accent": "#008290",
+      "sliderActive": "#008290",
+      "sliderInactive": "#546F78",
+      "sliderThumb": "#FFFFFF",
+      "border": "#546F78",
+      "cta": "#008290",
+      "success": "#00A86B",
+      "warning": "#FFB300",
+      "info": "#0288D1",
+      "headerBackgroundDark": "#006070",
+      "buttonBackground": "#546F78",
+      "iconWhite": "#FFFFFF"
     },
     "typography": {
-      "fontFamilies": ["Roboto", "sans-serif", "unknown"],
-      "fontSizes": { "xs": 12, "sm": 14, "md": 18, "lg": 28, "xl": 40 },
+      "fontFamilies": ["sans-serif", "unknown"],
+      "fontSizes": { "xs": 10, "sm": 12, "md": 14, "lg": 18, "xl": 22 },
       "fontWeights": { "regular": 400, "medium": 500, "bold": 700 },
-      "lineHeights": { "sm": 16, "md": 24, "lg": 44 }
+      "lineHeights": { "sm": 16, "md": 20, "lg": 28 }
     },
-    "spacing": { "xxs": 4, "xs": 8, "sm": 12, "md": 16, "lg": 24, "xl": 40 },
-    "radius": { "sm": 4, "md": 6, "lg": 8, "xl": 12 },
-    "shadow": { "sm": "0 1px 2px rgba(0,0,0,0.15)", "md": "0 2px 6px rgba(0,0,0,0.2)", "lg": "0 4px 12px rgba(0,0,0,0.25)" }
+    "spacing": { "xxs": 2, "xs": 4, "sm": 8, "md": 16, "lg": 24, "xl": 44 },
+    "radius": { "sm": 4, "md": 8, "lg": 12, "xl": 24 },
+    "shadow": { "sm": "0 1px 2px rgba(0,0,0,0.1)", "md": "0 2px 4px rgba(0,0,0,0.15)", "lg": "0 4px 8px rgba(0,0,0,0.2)" }
   },
-  "screen": { "size": { "width": 666, "height": 1350 }, "layout": { "orientation": "portrait", "scrollable": false } },
+  "screen": {
+    "size": { "width": 744, "height": 1506 },
+    "layout": { "orientation": "portrait", "scrollable": false }
+  },
   "components": [
     {
       "id": "container-1",
       "type": "Container",
-      "bbox": [0, 0, 666, 1350],
-      "sourceRect": [0, 0, 666, 1350],
+      "bbox": [0, 0, 744, 1506],
+      "sourceRect": [0, 0, 744, 1506],
       "style": {
-        "backgroundColor": "#0F7C82",
-        "color": "#1A1A1A",
-        "fontSize": 18,
-        "fontWeight": "regular",
-        "typographyRef": "body",
-        "transform": "none",
-        "paddingX": 0,
-        "paddingY": 0,
-        "radius": "sm",
-        "borderColor": "#0F7C82",
-        "borderWidth": 0,
-        "shadow": "sm"
+        "backgroundColor": "#008290"
       },
-      "layout": { "type": "flex", "direction": "column", "gap": "xl", "align": "center", "justify": "center" },
-      "group": { "alignment": "center", "distribution": "around", "maxWidth": 666 },
-      "children": ["text-2", "container-3"]
-    },
-    {
-      "id": "text-2",
-      "type": "Text",
-      "bbox": [260, 600, 146, 40],
-      "sourceRect": [260, 600, 146, 40],
-      "text": "FINI",
-      "style": {
-        "backgroundColor": "#0F7C82",
-        "color": "#1A1A1A",
-        "fontSize": 40,
-        "fontWeight": "bold",
-        "typographyRef": "titleLarge",
-        "transform": "uppercase",
-        "paddingX": 0,
-        "paddingY": 0,
-        "radius": "sm",
-        "borderColor": "#0F7C82",
-        "borderWidth": 0,
-        "shadow": "sm"
-      }
-    },
-    {
-      "id": "container-3",
-      "type": "Container",
-      "bbox": [208, 940, 250, 110],
-      "sourceRect": [208, 940, 250, 110],
-      "style": {
-        "backgroundColor": "#0F7C82",
-        "color": "#1A1A1A",
-        "fontSize": 18,
-        "fontWeight": "regular",
-        "typographyRef": "body",
-        "transform": "none",
-        "paddingX": 0,
-        "paddingY": 0,
-        "radius": "sm",
-        "borderColor": "#0F7C82",
-        "borderWidth": 0,
-        "shadow": "sm"
+      "layout": {
+        "type": "flex",
+        "direction": "column",
+        "gap": "xl",
+        "align": "center",
+        "justify": "center"
       },
-      "layout": { "type": "flex", "direction": "row", "gap": "lg", "align": "center", "justify": "center" },
-      "group": { "alignment": "center", "distribution": "around", "maxWidth": 250 },
-      "children": ["iconbutton-4", "iconbutton-6"]
-    },
-    {
-      "id": "iconbutton-4",
-      "type": "IconButton",
-      "variant": "secondary",
-      "bbox": [208, 940, 100, 100],
-      "sourceRect": [208, 940, 100, 100],
-      "a11y": { "ariaLabel": "Stop timer" },
-      "placement": "center",
-      "widthMode": "intrinsic",
-      "style": {
-        "backgroundColor": "#6F7F86",
-        "color": "#E6E6E6",
-        "fontSize": 18,
-        "fontWeight": "regular",
-        "typographyRef": "body",
-        "transform": "none",
-        "paddingX": 0,
-        "paddingY": 0,
-        "radius": "md",
-        "borderColor": "#6F7F86",
-        "borderWidth": 0,
-        "shadow": "sm"
+      "group": {
+        "alignment": "center",
+        "distribution": "center"
       },
-      "children": ["icon-5"]
-    },
-    {
-      "id": "icon-5",
-      "type": "Icon",
-      "bbox": [243, 975, 30, 30],
-      "sourceRect": [243, 975, 30, 30],
-      "iconName": "material.stop",
-      "style": {
-        "backgroundColor": "#6F7F86",
-        "color": "#E6E6E6",
-        "fontSize": 18,
-        "fontWeight": "regular",
-        "typographyRef": "body",
-        "transform": "none",
-        "paddingX": 0,
-        "paddingY": 0,
-        "radius": "sm",
-        "borderColor": "#6F7F86",
-        "borderWidth": 0,
-        "shadow": "sm"
-      }
-    },
-    {
-      "id": "iconbutton-6",
-      "type": "IconButton",
-      "variant": "secondary",
-      "bbox": [358, 940, 100, 100],
-      "sourceRect": [358, 940, 100, 100],
-      "a11y": { "ariaLabel": "Restart timer" },
-      "placement": "center",
-      "widthMode": "intrinsic",
-      "style": {
-        "backgroundColor": "#6F7F86",
-        "color": "#E6E6E6",
-        "fontSize": 18,
-        "fontWeight": "regular",
-        "typographyRef": "body",
-        "transform": "none",
-        "paddingX": 0,
-        "paddingY": 0,
-        "radius": "md",
-        "borderColor": "#6F7F86",
-        "borderWidth": 0,
-        "shadow": "sm"
-      },
-      "children": ["icon-7"]
-    },
-    {
-      "id": "icon-7",
-      "type": "Icon",
-      "bbox": [393, 975, 34, 34],
-      "sourceRect": [393, 975, 34, 34],
-      "iconName": "material.refresh",
-      "style": {
-        "backgroundColor": "#6F7F86",
-        "color": "#E6E6E6",
-        "fontSize": 18,
-        "fontWeight": "regular",
-        "typographyRef": "body",
-        "transform": "none",
-        "paddingX": 0,
-        "paddingY": 0,
-        "radius": "sm",
-        "borderColor": "#6F7F86",
-        "borderWidth": 0,
-        "shadow": "sm"
-      }
+      "children": [
+        {
+          "id": "text-1",
+          "type": "Text",
+          "bbox": [302, 448, 440, 504],
+          "sourceRect": [302, 448, 440, 504],
+          "text": "FINI",
+          "style": {
+            "color": "#212121",
+            "fontSize": 48,
+            "fontWeight": "bold",
+            "typographyRef": "custom",
+            "transform": "uppercase"
+          },
+          "placement": "center",
+          "widthMode": "intrinsic"
+        },
+        {
+          "id": "container-2",
+          "type": "Container",
+          "bbox": [227, 958, 516, 1075],
+          "sourceRect": [227, 958, 516, 1075],
+          "layout": {
+            "type": "flex",
+            "direction": "row",
+            "gap": "xl",
+            "align": "center",
+            "justify": "center"
+          },
+          "group": {
+            "alignment": "center",
+            "distribution": "center"
+          },
+          "children": [
+            {
+              "id": "iconbutton-1",
+              "type": "IconButton",
+              "variant": "secondary",
+              "bbox": [227, 958, 349, 1074],
+              "sourceRect": [227, 958, 349, 1074],
+              "iconName": "material.stop",
+              "a11y": { "ariaLabel": "Arrêter" },
+              "placement": "center",
+              "widthMode": "intrinsic",
+              "style": {
+                "backgroundColor": "#546F78",
+                "color": "#FFFFFF",
+                "radius": "sm",
+                "paddingX": 32,
+                "paddingY": 32
+              },
+              "children": [
+                {
+                  "id": "icon-1",
+                  "type": "Icon",
+                  "bbox": [266, 994, 311, 1039],
+                  "sourceRect": [266, 994, 311, 1039],
+                  "iconName": "material.stop",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 46
+                  }
+                }
+              ]
+            },
+            {
+              "id": "iconbutton-2",
+              "type": "IconButton",
+              "variant": "secondary",
+              "bbox": [394, 958, 516, 1075],
+              "sourceRect": [394, 958, 516, 1075],
+              "iconName": "material.replay",
+              "a11y": { "ariaLabel": "Recommencer" },
+              "placement": "center",
+              "widthMode": "intrinsic",
+              "style": {
+                "backgroundColor": "#546F78",
+                "color": "#FFFFFF",
+                "radius": "sm",
+                "paddingX": 32,
+                "paddingY": 32
+              },
+              "children": [
+                {
+                  "id": "icon-2",
+                  "type": "Icon",
+                  "bbox": [425, 977, 485, 1050],
+                  "sourceRect": [425, 977, 485, 1050],
+                  "iconName": "material.replay",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 61
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "qa": {
     "inventory": [
-      { "idx": 1, "roughType": "background", "roughText": "" },
-      { "idx": 2, "roughType": "text", "roughText": "FINI" },
-      { "idx": 3, "roughType": "button", "roughText": "" },
-      { "idx": 4, "roughType": "icon", "roughText": "" },
-      { "idx": 5, "roughType": "button", "roughText": "" },
-      { "idx": 6, "roughType": "icon", "roughText": "" }
+      { "idx": 1, "roughType": "Container", "roughText": "" },
+      { "idx": 2, "roughType": "Text", "roughText": "FINI" },
+      { "idx": 3, "roughType": "Container", "roughText": "" },
+      { "idx": 4, "roughType": "IconButton", "roughText": "" },
+      { "idx": 5, "roughType": "Icon", "roughText": "" },
+      { "idx": 6, "roughType": "IconButton", "roughText": "" },
+      { "idx": 7, "roughType": "Icon", "roughText": "" }
     ],
-    "countsByType": { "Text": 1, "Button": 0, "Icon": 2, "IconButton": 2, "Slider": 0, "Container": 2, "Card": 0, "Placeholder": 0 },
-    "textCoverage": { "found": ["FINI"], "missing": [] },
+    "countsByType": {
+      "Text": 1,
+      "Button": 0,
+      "Icon": 2,
+      "IconButton": 2,
+      "Slider": 0,
+      "Container": 2,
+      "Card": 0,
+      "Placeholder": 0
+    },
+    "textCoverage": {
+      "found": ["FINI"],
+      "missing": []
+    },
     "colorsUsed": [
-      { "hex": "#0F7C82", "token": "background" },
-      { "hex": "#6F7F86", "token": "surface" },
-      { "hex": "#E6E6E6", "token": "onPrimary" },
-      { "hex": "#1A1A1A", "token": "textPrimary" }
+      { "hex": "#008290", "token": "background" },
+      { "hex": "#212121", "token": "textPrimary" },
+      { "hex": "#546F78", "token": "buttonBackground" },
+      { "hex": "#FFFFFF", "token": "iconWhite" }
     ],
     "missingAtoms": [],
     "coverageRatio": 1.0,
@@ -227,15 +208,57 @@
       "non-fullwidth actions have placement and widthMode",
       "icon+label actions encoded as composed buttons (leadingIcon+text)",
       "uppercase labels use style.transform",
-      "variants map to semantic color tokens (no stray hex)"
+      "variants map to semantic color tokens (no stray hex)",
+      "layout.justify coherent with group.distribution and children bbox positions",
+      "fontSize coherent with typographyRef (custom if no token matches)",
+      "justify/distribution use controlled vocabulary (spaceBetween, spaceAround — not between, around)"
     ],
     "assumptions": [
-      { "item": "background color teal approximated from image", "confidence": 0.75 },
-      { "item": "button gray color approximated", "confidence": 0.75 },
-      { "item": "icon names inferred as material.stop and material.refresh", "confidence": 0.8 },
-      { "item": "bbox positions approximated visually from screenshot", "confidence": 0.7 }
+      {
+        "item": "FINI fontSize",
+        "detail": "Cap height measured at 57px. Estimated fontSize ~48px based on typical bold sans-serif cap-height-to-em ratio (~0.72-0.80). Used typographyRef:custom since no token matches.",
+        "confidence": 0.75
+      },
+      {
+        "item": "Button background color",
+        "detail": "Buttons appear as semi-transparent overlay on teal background. Measured composite color is #546F78. May be a translucent gray (~rgba(128,128,128,0.4)) over #008290.",
+        "confidence": 0.8
+      },
+      {
+        "item": "Icon identification",
+        "detail": "Left button icon identified as material.stop (square shape). Right button icon identified as material.replay (circular arrow). Based on visual shape matching.",
+        "confidence": 0.85
+      },
+      {
+        "item": "FINI text color",
+        "detail": "Most frequent dark pixel color in text area is #212121, with slight variations due to anti-aliasing on the teal background.",
+        "confidence": 0.85
+      },
+      {
+        "item": "Button radius",
+        "detail": "Buttons appear to have slight rounding at corners. Assigned radius:sm (4px). Hard to distinguish from sharp corners at this resolution.",
+        "confidence": 0.65
+      },
+      {
+        "item": "Layout justify for root container",
+        "detail": "Text FINI is at ~30% vertical, buttons at ~65% vertical. This is not perfectly centered. However, the visual intent appears to be centered layout with elements grouped toward the vertical middle. Used justify:center as the closest match.",
+        "confidence": 0.7
+      },
+      {
+        "item": "Gap between buttons",
+        "detail": "Measured 44px gap between left button right edge (349) and right button left edge (394). Mapped to spacing token xl (44).",
+        "confidence": 0.9
+      },
+      {
+        "item": "Font family",
+        "detail": "Cannot determine exact font family from pixel data. Listed as sans-serif/unknown.",
+        "confidence": 0.6
+      }
     ],
-    "openQuestions": [],
-    "confidenceGlobal": 0.74
+    "openQuestions": [
+      "Is the button background a solid color (#546F78) or a semi-transparent overlay on the teal background?",
+      "Exact font family used for FINI text."
+    ],
+    "confidenceGlobal": 0.78
   }
 }

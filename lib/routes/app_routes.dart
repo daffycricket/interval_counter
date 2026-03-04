@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../screens/end_workout_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/preset_editor_screen.dart';
 import '../screens/workout_screen.dart';
@@ -15,6 +16,7 @@ class AppRoutes {
   // Noms de routes
   static const String home = '/';
   static const String workout = '/workout';
+  static const String endWorkout = '/end_workout';
   static const String presetEditor = '/preset_editor';
 
   /// Génère les routes de l'application
@@ -30,6 +32,13 @@ class AppRoutes {
         final preset = settings.arguments as Preset;
         return MaterialPageRoute(
           builder: (_) => WorkoutScreen(preset: preset),
+          settings: settings,
+        );
+
+      case endWorkout:
+        final preset = settings.arguments as Preset;
+        return MaterialPageRoute(
+          builder: (_) => EndWorkoutScreen(preset: preset),
           settings: settings,
         );
 

@@ -160,4 +160,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workoutResume => 'Resume';
+
+  @override
+  String get endWorkoutTitle => 'FINI';
+
+  @override
+  String get endWorkoutStopLabel => 'Stop timer';
+
+  @override
+  String get endWorkoutRestartLabel => 'Restart timer';
 }

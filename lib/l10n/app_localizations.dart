@@ -403,6 +403,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Resume'**
   String get workoutResume;
+
+  /// End workout screen title
+  ///
+  /// In en, this message translates to:
+  /// **'FINI'**
+  String get endWorkoutTitle;
+
+  /// Stop button semantic label on end workout screen
+  ///
+  /// In en, this message translates to:
+  /// **'Stop timer'**
+  String get endWorkoutStopLabel;
+
+  /// Restart button semantic label on end workout screen
+  ///
+  /// In en, this message translates to:
+  /// **'Restart timer'**
+  String get endWorkoutRestartLabel;
 }
 
 class _AppLocalizationsDelegate
