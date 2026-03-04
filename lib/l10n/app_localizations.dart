@@ -421,6 +421,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restart timer'**
   String get endWorkoutRestartLabel;
+
+  /// Group repetitions header label in advanced mode
+  ///
+  /// In en, this message translates to:
+  /// **'REPS'**
+  String get advancedRepsLabel;
+
+  /// Step mode: time
+  ///
+  /// In en, this message translates to:
+  /// **'TIME'**
+  String get advancedTimeLabel;
+
+  /// Step mode: reps
+  ///
+  /// In en, this message translates to:
+  /// **'REPS'**
+  String get advancedStepRepsLabel;
+
+  /// Color picker button text
+  ///
+  /// In en, this message translates to:
+  /// **'COLOR'**
+  String get advancedColorLabel;
+
+  /// Finish section title
+  ///
+  /// In en, this message translates to:
+  /// **'FINISH'**
+  String get advancedFinishLabel;
+
+  /// Alarm label in finish card
+  ///
+  /// In en, this message translates to:
+  /// **'ALARM'**
+  String get advancedAlarmLabel;
+
+  /// Alarm beeps display
+  ///
+  /// In en, this message translates to:
+  /// **'BEEP X{count}'**
+  String advancedAlarmBeepsFormat(int count);
+
+  /// Default step name
+  ///
+  /// In en, this message translates to:
+  /// **'Step {number}'**
+  String advancedStepDefaultName(int number);
+
+  /// Add step button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Add step to group'**
+  String get advancedAddStepLabel;
+
+  /// Add group button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new group'**
+  String get advancedAddGroupLabel;
+
+  /// Duplicate step button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate step'**
+  String get advancedDuplicateLabel;
+
+  /// Delete step button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete step'**
+  String get advancedDeleteLabel;
+
+  /// Reorder step button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder step'**
+  String get advancedReorderLabel;
+
+  /// Decrease button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease'**
+  String get advancedDecreaseLabel;
+
+  /// Increase button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Increase'**
+  String get advancedIncreaseLabel;
+
+  /// Choose color button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Choose color'**
+  String get advancedChooseColorLabel;
+
+  /// Color picker dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a color'**
+  String get advancedChooseColorTitle;
 }
 
 class _AppLocalizationsDelegate

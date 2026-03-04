@@ -53,6 +53,23 @@
   "workoutResume": "Reprendre",
   "endWorkoutTitle": "FINI",
   "endWorkoutStopLabel": "Arrêter",
-  "endWorkoutRestartLabel": "Reprendre"
+  "endWorkoutRestartLabel": "Reprendre",
+  "advancedRepsLabel": "RÉPÉTITIONS",
+  "advancedTimeLabel": "TIME",
+  "advancedStepRepsLabel": "REPS",
+  "advancedColorLabel": "COLOR",
+  "advancedFinishLabel": "FINISH",
+  "advancedAlarmLabel": "ALARM",
+  "advancedAlarmBeepsFormat": "BEEP X{count}",
+  "advancedStepDefaultName": "Étape {number}",
+  "advancedAddStepLabel": "Ajouter étape au groupe",
+  "advancedAddGroupLabel": "Ajouter un nouveau groupe",
+  "advancedDuplicateLabel": "Dupliquer l'étape",
+  "advancedDeleteLabel": "Supprimer l'étape",
+  "advancedReorderLabel": "Réorganiser l'étape",
+  "advancedDecreaseLabel": "Diminuer",
+  "advancedIncreaseLabel": "Augmenter",
+  "advancedChooseColorLabel": "Choisir couleur",
+  "advancedChooseColorTitle": "Choisir une couleur"
 }
 

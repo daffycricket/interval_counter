@@ -169,4 +169,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get endWorkoutRestartLabel => 'Restart timer';
+
+  @override
+  String get advancedRepsLabel => 'REPS';
+
+  @override
+  String get advancedTimeLabel => 'TIME';
+
+  @override
+  String get advancedStepRepsLabel => 'REPS';
+
+  @override
+  String get advancedColorLabel => 'COLOR';
+
+  @override
+  String get advancedFinishLabel => 'FINISH';
+
+  @override
+  String get advancedAlarmLabel => 'ALARM';
+
+  @override
+  String advancedAlarmBeepsFormat(int count) {
+    return 'BEEP X$count';
+  }
+
+  @override
+  String advancedStepDefaultName(int number) {
+    return 'Step $number';
+  }
+
+  @override
+  String get advancedAddStepLabel => 'Add step to group';
+
+  @override
+  String get advancedAddGroupLabel => 'Add a new group';
+
+  @override
+  String get advancedDuplicateLabel => 'Duplicate step';
+
+  @override
+  String get advancedDeleteLabel => 'Delete step';
+
+  @override
+  String get advancedReorderLabel => 'Reorder step';
+
+  @override
+  String get advancedDecreaseLabel => 'Decrease';
+
+  @override
+  String get advancedIncreaseLabel => 'Increase';
+
+  @override
+  String get advancedChooseColorLabel => 'Choose color';
+
+  @override
+  String get advancedChooseColorTitle => 'Choose a color';
 }

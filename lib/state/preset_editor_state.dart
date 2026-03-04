@@ -1,8 +1,13 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../models/preset.dart';
+import '../models/advanced_step.dart';
+import '../models/workout_group.dart';
 import '../domain/time_formatter.dart';
 import '../domain/view_mode.dart';
+import '../domain/step_mode.dart';
 import '../domain/preset_calculator.dart';
+import '../domain/advanced_preset_calculator.dart';
+import '../theme/app_colors.dart';
 import 'home_state.dart';
 
 /// State for PresetEditorScreen — thin coordinator per CODE_CONTRACT §5.
@@ -25,6 +30,11 @@ class PresetEditorState extends ChangeNotifier {
   bool _editMode = false;
   String? _presetId;
 
+  // ADVANCED mode fields
+  List<WorkoutGroup> _groups = [];
+  Color _finishColor = AppColors.finishYellow;
+  final int _finishAlarmBeeps = 3;
+
   String get name => _name;
   int get prepareSeconds => _prepareSeconds;
   int get repetitions => _repetitions;
@@ -35,18 +45,28 @@ class PresetEditorState extends ChangeNotifier {
   bool get editMode => _editMode;
   String? get presetId => _presetId;
 
+  // ADVANCED getters
+  List<WorkoutGroup> get groups => List.unmodifiable(_groups);
+  Color get finishColor => _finishColor;
+  int get finishAlarmBeeps => _finishAlarmBeeps;
+
   String get formattedPrepareTime => TimeFormatter.format(_prepareSeconds);
   String get formattedWorkTime => TimeFormatter.format(_workSeconds);
   String get formattedRestTime => TimeFormatter.format(_restSeconds);
   String get formattedCooldownTime => TimeFormatter.format(_cooldownSeconds);
 
-  String get formattedTotal => PresetCalculator.formatTotal(
-        prepareSeconds: _prepareSeconds,
-        repetitions: _repetitions,
-        workSeconds: _workSeconds,
-        restSeconds: _restSeconds,
-        cooldownSeconds: _cooldownSeconds,
-      );
+  String get formattedTotal {
+    if (_viewMode == ViewMode.advanced) {
+      return AdvancedPresetCalculator.formatTotal(_groups);
+    }
+    return PresetCalculator.formatTotal(
+      prepareSeconds: _prepareSeconds,
+      repetitions: _repetitions,
+      workSeconds: _workSeconds,
+      restSeconds: _restSeconds,
+      cooldownSeconds: _cooldownSeconds,
+    );
+  }
 
   /// Accepts any HomeState (mock or real) — use directly in tests and production.
   PresetEditorState(
@@ -93,7 +113,19 @@ class PresetEditorState extends ChangeNotifier {
     _workSeconds = _workSeconds.clamp(minSeconds, maxSeconds);
     _restSeconds = _restSeconds.clamp(minSeconds, maxSeconds);
     _cooldownSeconds = _cooldownSeconds.clamp(minSeconds, maxSeconds);
+
+    // Initialize ADVANCED mode with one default group + one step
+    _groups = [
+      WorkoutGroup.create(
+        repeatCount: 1,
+        steps: [
+          AdvancedStep.create(name: 'Étape 1', durationSeconds: 5),
+        ],
+      ),
+    ];
   }
+
+  // --- SIMPLE mode methods (existing) ---
 
   void incrementPrepare() {
     if (_prepareSeconds < maxSeconds) { _prepareSeconds++; notifyListeners(); }
@@ -149,6 +181,200 @@ class PresetEditorState extends ChangeNotifier {
     _viewMode = ViewMode.advanced;
     notifyListeners();
   }
+
+  // --- ADVANCED mode methods ---
+
+  void addGroup() {
+    final newGroup = WorkoutGroup.create(
+      repeatCount: 1,
+      order: _groups.length,
+    );
+    _groups = [..._groups, newGroup];
+    notifyListeners();
+  }
+
+  void removeGroup(int groupIdx) {
+    if (_groups.length <= 1 || groupIdx < 0 || groupIdx >= _groups.length) {
+      return;
+    }
+    _groups = [..._groups]..removeAt(groupIdx);
+    notifyListeners();
+  }
+
+  void incrementGroupReps(int groupIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (group.repeatCount >= maxReps) return;
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(repeatCount: group.repeatCount + 1);
+    notifyListeners();
+  }
+
+  void decrementGroupReps(int groupIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (group.repeatCount <= minReps) return;
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(repeatCount: group.repeatCount - 1);
+    notifyListeners();
+  }
+
+  void addStep(int groupIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    final stepNumber = group.steps.length + 1;
+    final newStep = AdvancedStep.create(
+      name: 'Étape $stepNumber',
+      durationSeconds: 5,
+      order: group.steps.length,
+    );
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: [...group.steps, newStep]);
+    notifyListeners();
+  }
+
+  void removeStep(int groupIdx, int stepIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final newSteps = [...group.steps]..removeAt(stepIdx);
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void duplicateStep(int groupIdx, int stepIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final original = group.steps[stepIdx];
+    final copy = AdvancedStep.create(
+      name: original.name,
+      durationSeconds: original.durationSeconds,
+      color: original.color,
+      mode: original.mode,
+      repeatCount: original.repeatCount,
+      order: stepIdx + 1,
+    );
+    final newSteps = [...group.steps]..insert(stepIdx + 1, copy);
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void reorderStep(int groupIdx, int oldIdx, int newIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (oldIdx < 0 || oldIdx >= group.steps.length) return;
+    var adjustedNewIdx = newIdx;
+    if (adjustedNewIdx > oldIdx) adjustedNewIdx--;
+    if (adjustedNewIdx < 0 || adjustedNewIdx >= group.steps.length) return;
+    final newSteps = [...group.steps];
+    final step = newSteps.removeAt(oldIdx);
+    newSteps.insert(adjustedNewIdx, step);
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void toggleStepMode(int groupIdx, int stepIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final step = group.steps[stepIdx];
+    final newMode = step.mode == StepMode.time ? StepMode.reps : StepMode.time;
+    final newSteps = [...group.steps];
+    newSteps[stepIdx] = step.copyWith(mode: newMode);
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void incrementStepValue(int groupIdx, int stepIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final step = group.steps[stepIdx];
+    final newSteps = [...group.steps];
+    if (step.mode == StepMode.time) {
+      if (step.durationSeconds >= maxSeconds) return;
+      newSteps[stepIdx] = step.copyWith(durationSeconds: step.durationSeconds + 1);
+    } else {
+      if (step.repeatCount >= maxReps) return;
+      newSteps[stepIdx] = step.copyWith(repeatCount: step.repeatCount + 1);
+    }
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void decrementStepValue(int groupIdx, int stepIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final step = group.steps[stepIdx];
+    final newSteps = [...group.steps];
+    if (step.mode == StepMode.time) {
+      if (step.durationSeconds <= minSeconds) return;
+      newSteps[stepIdx] = step.copyWith(durationSeconds: step.durationSeconds - 1);
+    } else {
+      if (step.repeatCount <= minReps) return;
+      newSteps[stepIdx] = step.copyWith(repeatCount: step.repeatCount - 1);
+    }
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void incrementStepDuration(int groupIdx, int stepIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final step = group.steps[stepIdx];
+    if (step.durationSeconds >= maxSeconds) return;
+    final newSteps = [...group.steps];
+    newSteps[stepIdx] = step.copyWith(durationSeconds: step.durationSeconds + 1);
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void decrementStepDuration(int groupIdx, int stepIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final step = group.steps[stepIdx];
+    if (step.durationSeconds <= minSeconds) return;
+    final newSteps = [...group.steps];
+    newSteps[stepIdx] = step.copyWith(durationSeconds: step.durationSeconds - 1);
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void setStepColor(int groupIdx, int stepIdx, Color color) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return;
+    final group = _groups[groupIdx];
+    if (stepIdx < 0 || stepIdx >= group.steps.length) return;
+    final newSteps = [...group.steps];
+    newSteps[stepIdx] = group.steps[stepIdx].copyWith(color: color);
+    _groups = [..._groups];
+    _groups[groupIdx] = group.copyWith(steps: newSteps);
+    notifyListeners();
+  }
+
+  void setFinishColor(Color color) {
+    _finishColor = color;
+    notifyListeners();
+  }
+
+  /// Formatted group subtotal (e.g. "00:35").
+  String formattedGroupSubtotal(int groupIdx) {
+    if (groupIdx < 0 || groupIdx >= _groups.length) return '00:00';
+    return AdvancedPresetCalculator.formatGroupSubtotal(_groups[groupIdx]);
+  }
+
+  // --- Shared methods ---
 
   bool save() {
     if (_name.trim().isEmpty) throw Exception('Veuillez saisir un nom');

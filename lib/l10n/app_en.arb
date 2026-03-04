@@ -215,6 +215,80 @@
   "endWorkoutRestartLabel": "Restart timer",
   "@endWorkoutRestartLabel": {
     "description": "Restart button semantic label on end workout screen"
+  },
+  "advancedRepsLabel": "REPS",
+  "@advancedRepsLabel": {
+    "description": "Group repetitions header label in advanced mode"
+  },
+  "advancedTimeLabel": "TIME",
+  "@advancedTimeLabel": {
+    "description": "Step mode: time"
+  },
+  "advancedStepRepsLabel": "REPS",
+  "@advancedStepRepsLabel": {
+    "description": "Step mode: reps"
+  },
+  "advancedColorLabel": "COLOR",
+  "@advancedColorLabel": {
+    "description": "Color picker button text"
+  },
+  "advancedFinishLabel": "FINISH",
+  "@advancedFinishLabel": {
+    "description": "Finish section title"
+  },
+  "advancedAlarmLabel": "ALARM",
+  "@advancedAlarmLabel": {
+    "description": "Alarm label in finish card"
+  },
+  "advancedAlarmBeepsFormat": "BEEP X{count}",
+  "@advancedAlarmBeepsFormat": {
+    "description": "Alarm beeps display",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "advancedStepDefaultName": "Step {number}",
+  "@advancedStepDefaultName": {
+    "description": "Default step name",
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "advancedAddStepLabel": "Add step to group",
+  "@advancedAddStepLabel": {
+    "description": "Add step button semantic label"
+  },
+  "advancedAddGroupLabel": "Add a new group",
+  "@advancedAddGroupLabel": {
+    "description": "Add group button semantic label"
+  },
+  "advancedDuplicateLabel": "Duplicate step",
+  "@advancedDuplicateLabel": {
+    "description": "Duplicate step button semantic label"
+  },
+  "advancedDeleteLabel": "Delete step",
+  "@advancedDeleteLabel": {
+    "description": "Delete step button semantic label"
+  },
+  "advancedReorderLabel": "Reorder step",
+  "@advancedReorderLabel": {
+    "description": "Reorder step button semantic label"
+  },
+  "advancedDecreaseLabel": "Decrease",
+  "@advancedDecreaseLabel": {
+    "description": "Decrease button semantic label"
+  },
+  "advancedIncreaseLabel": "Increase",
+  "@advancedIncreaseLabel": {
+    "description": "Increase button semantic label"
+  },
+  "advancedChooseColorLabel": "Choose color",
+  "@advancedChooseColorLabel": {
+    "description": "Choose color button semantic label"
+  },
+  "advancedChooseColorTitle": "Choose a color",
+  "@advancedChooseColorTitle": {
+    "description": "Color picker dialog title"
   }
 }
 

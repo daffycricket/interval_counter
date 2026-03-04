@@ -5,9 +5,9 @@ import '../widgets/preset_editor/preset_editor_header.dart';
 import '../widgets/preset_editor/preset_name_input.dart';
 import '../widgets/preset_editor/preset_params_panel.dart';
 import '../widgets/preset_editor/preset_total_display.dart';
+import '../widgets/preset_editor/advanced_params_panel.dart';
 import '../domain/view_mode.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
 
 /// Écran d'édition et de création de préréglages
 class PresetEditorScreen extends StatelessWidget {
@@ -64,19 +64,9 @@ class PresetEditorScreen extends StatelessWidget {
                       onIncrementCooldown: state.incrementCooldown,
                     ),
 
-                  // Panneau ADVANCED (placeholder vide pour l'instant)
+                  // Panneau ADVANCED
                   if (state.viewMode == ViewMode.advanced)
-                    Container(
-                      padding: const EdgeInsets.all(24),
-                      child: Center(
-                        child: Text(
-                          'Mode avancé - À venir',
-                          style: AppTextStyles.body.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ),
-                    ),
+                    const AdvancedParamsPanel(),
 
                   const SizedBox(height: 16),
                 ],

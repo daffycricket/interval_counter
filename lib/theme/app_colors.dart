@@ -50,5 +50,36 @@ class AppColors {
   static const Color prepareColor = Color(0xFFFFCC00); // Jaune pour Préparation
   static const Color cooldownColor = Color.fromARGB(255, 203, 128, 216); // Violet pour Refroidissement
   static const Color ghostButtonBg = Color.fromARGB(255, 85, 85, 85); // Gris foncé pour boutons ghost
+
+  // Advanced Preset Editor
+  static const Color advancedBg = Color(0xFF000000);
+  static const Color advancedCardBg = Color(0xFF1C1C1C);
+  static const Color advancedHeaderBg = Color(0xFF111111);
+  static const Color advancedInputBorder = Color(0xFF555555);
+  static const Color advancedTextPrimary = Color(0xFFFFFFFF);
+  static const Color advancedTextSecondary = Color(0xFFAAAAAA);
+  static const Color addButtonBg = Color(0xFFFFFFFF);
+  static const Color addButtonFg = Color(0xFF000000);
+
+  // Step colors (Advanced mode)
+  static const Color stepMagenta = Color(0xFFCC1177);
+  static const Color stepLavender = Color(0xFFB39DDB);
+  static const Color stepGreen = Color(0xFF388E3C);
+  static const Color stepRed = Color(0xFFD32F2F);
+  static const Color finishYellow = Color(0xFFCDDC39);
+
+  /// Preset step color palette for the color picker.
+  static const List<Color> stepColorPalette = [
+    stepMagenta,
+    stepLavender,
+    stepGreen,
+    stepRed,
+    Color(0xFF2196F3), // blue
+    Color(0xFFFF9800), // orange
+    Color(0xFF9C27B0), // purple
+    Color(0xFF00BCD4), // cyan
+    Color(0xFFFFEB3B), // yellow
+    Color(0xFF795548), // brown
+  ];
 }
 
