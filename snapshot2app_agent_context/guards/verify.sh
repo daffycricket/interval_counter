@@ -148,6 +148,16 @@ if [ -d "lib/screens" ] && [ -d "integration_test" ]; then
   else
     check "e2e-tests-per-screen" "fail" "missing:$MISSING_E2E"
   fi
+
+  # Run integration tests
+  E2E_OUTPUT=$(flutter test integration_test/app_test.dart 2>&1 || true)
+  if echo "$E2E_OUTPUT" | grep -q "All tests passed"; then
+    E2E_COUNT=$(echo "$E2E_OUTPUT" | grep -oE "\+[0-9]+" | tail -1 | tr -d '+')
+    check "e2e-tests-pass" "pass" "($E2E_COUNT tests)"
+  else
+    FAIL_SUMMARY=$(echo "$E2E_OUTPUT" | grep -E "FAILED|Some tests failed" | head -3)
+    check "e2e-tests-pass" "fail" "integration tests failed — $FAIL_SUMMARY"
+  fi
 fi
 
 # --- 9. Coverage report exists ---
