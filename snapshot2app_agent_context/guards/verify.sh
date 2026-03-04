@@ -130,7 +130,27 @@ if [ -d "lib/services/impl" ]; then
   fi
 fi
 
-# --- 8. Coverage report exists ---
+# --- 8. Integration tests exist for each screen ---
+if [ -d "lib/screens" ] && [ -d "integration_test" ]; then
+  MISSING_E2E=""
+  for screen in lib/screens/*_screen.dart; do
+    [ -f "$screen" ] || continue
+    BASE=$(basename "$screen" _screen.dart)
+    E2E_FILE="integration_test/${BASE}_flow_test.dart"
+    if [ ! -f "$E2E_FILE" ]; then
+      MISSING_E2E="$MISSING_E2E $E2E_FILE"
+    elif ! grep -q "${BASE}_flow_test\|${BASE}/" integration_test/app_test.dart 2>/dev/null; then
+      MISSING_E2E="$MISSING_E2E ${E2E_FILE}(not imported in app_test.dart)"
+    fi
+  done
+  if [ -z "$MISSING_E2E" ]; then
+    check "e2e-tests-per-screen" "pass"
+  else
+    check "e2e-tests-per-screen" "fail" "missing:$MISSING_E2E"
+  fi
+fi
+
+# --- 9. Coverage report exists ---
 if [ -f "coverage/lcov.info" ]; then
   if [ -f "coverage/html/index.html" ]; then
     check "coverage-report" "pass"
