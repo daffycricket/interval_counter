@@ -130,7 +130,18 @@ if [ -d "lib/services/impl" ]; then
   fi
 fi
 
-# --- 8. App compiles (flutter analyze) ---
+# --- 8. Coverage report exists ---
+if [ -f "coverage/lcov.info" ]; then
+  if [ -f "coverage/html/index.html" ]; then
+    check "coverage-report" "pass"
+  else
+    check "coverage-report" "fail" "coverage/html/index.html missing — run: genhtml coverage/lcov.info --output-directory coverage/html"
+  fi
+else
+  check "coverage-report" "fail" "coverage/lcov.info missing — run: flutter test --coverage"
+fi
+
+# --- 9. App compiles (flutter analyze) ---
 ANALYZE_OUTPUT=$(flutter analyze 2>&1 || true)
 if echo "$ANALYZE_OUTPUT" | grep -q "No issues found"; then
   check "app-compiles" "pass"
