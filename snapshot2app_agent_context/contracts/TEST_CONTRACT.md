@@ -98,6 +98,22 @@ Generate `test/helpers/widget_test_helpers.dart` with:
 
 ---
 
+## Integration Tests (E2E)
+
+Location: `integration_test/`
+- `app_test.dart` — single entry point (imports all flow files)
+- `{screen}_flow_test.dart` — one file per screen/flow
+
+**Rules:**
+- Every new feature MUST add integration tests for its user-facing flows
+- Existing integration test files MUST NOT be modified unless the spec_complement explicitly documents a behavior change on that screen
+- All integration tests MUST pass for the pipeline to succeed (gate)
+- Use `find.byKey()` with stable keys only — never `find.text()` or `find.byIcon()`
+
+**Run:** `flutter test integration_test/app_test.dart`
+
+---
+
 ## Exemptions
 
 **Exempt from coverage:**

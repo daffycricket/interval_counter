@@ -56,6 +56,7 @@ steps:
     outputs:
       - "lib/**/*.dart"
       - "test/**/*.dart"
+      - "integration_test/**/*.dart"
 
   05_run_tests:
     prompt: prompts/05_RUN_TESTS.prompt.md
@@ -66,7 +67,9 @@ steps:
     outputs:
       - "verify_report.txt"
       - "test_report.md"
+      - "integration_test_report.md"
       - "coverage/lcov.info"
+      - "coverage/html/index.html"
 
   06_autofix_tests:
     prompt: prompts/06_AUTOFIX_TESTS.prompt.md
@@ -85,6 +88,7 @@ steps:
     inputs:
       - "verify_report.txt"
       - "test_report.md"
+      - "integration_test_report.md"
       - "flutter analyze output"
       - "coverage/lcov.info"
       - "{report_dir}/autofix_attempts/"

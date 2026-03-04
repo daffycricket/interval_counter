@@ -27,18 +27,26 @@ flutter analyze
 flutter test --reporter expanded --coverage
 ```
 
-### 3. Coverage report
+### 3. Integration tests (E2E gate)
+```bash
+flutter test integration_test/app_test.dart
+```
+**All existing integration tests MUST pass.** This is the final gate.
+
+### 4. Coverage report
 ```bash
 genhtml coverage/lcov.info --output-directory coverage/html
 ```
 
-### 4. Outputs
+### 5. Outputs
 - `verify_report.txt` — output of verify.sh (architecture checks)
-- `test_report.md` — stdout/stderr of flutter test
+- `test_report.md` — stdout/stderr of unit tests
+- `integration_test_report.md` — stdout/stderr of integration tests
 - `coverage/lcov.info`
 - `coverage/html/index.html` (MANDATORY — if missing → FAIL)
 
-### 5. Routing
-- If **both** verify.sh exit 0 AND flutter test exit 0 → status = **tests_passed**, proceed to evaluation.
-- If flutter test fails → status = **tests_failed**, forward to 06_AUTOFIX_TESTS.prompt.
+### 6. Routing
+- If **all three** pass (verify.sh + unit tests + integration tests) → status = **tests_passed**, proceed to evaluation.
+- If unit tests fail → status = **tests_failed**, forward to 06_AUTOFIX_TESTS.prompt.
+- If integration tests fail → status = **integration_tests_failed**, forward to 06_AUTOFIX_TESTS.prompt. **Do not modify existing integration test files** — fix the production code instead.
 - If verify.sh fails but tests pass → status = **architecture_violations**, forward verify_report.txt to 06_AUTOFIX_TESTS.prompt.

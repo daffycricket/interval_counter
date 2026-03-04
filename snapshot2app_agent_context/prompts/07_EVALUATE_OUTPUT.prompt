@@ -11,7 +11,8 @@ Output: `evaluation_report.md` — factual summary with PASS/FAIL verdict.
 | Source | Data |
 |---|---|
 | `verify_report.txt` | Architecture checks (pass/fail per check) |
-| `flutter test` output | Test results (pass/fail count) |
+| `flutter test` output | Unit test results (pass/fail count) |
+| `flutter test integration_test/` output | Integration test results (pass/fail count) |
 | `flutter analyze` output | Static analysis warnings/errors |
 | `coverage/lcov.info` | Line coverage % |
 | `autofix_attempts/` | Patches applied, if any |

@@ -58,6 +58,13 @@ Per `TEST_CONTRACT.md`, generate in order:
 
 Verify 1:1 file-to-test ratio and coverage thresholds (see `TEST_CONTRACT.md`).
 
+### Step 11 — Generate Integration Tests
+Per `TEST_CONTRACT.md` § Integration Tests:
+1. Add `integration_test/{screen}_flow_test.dart` with user-facing flow tests
+2. Import it in `integration_test/app_test.dart`
+3. Use `find.byKey()` with stable keys only
+4. **DO NOT modify** existing integration test files unless spec_complement documents a behavior change
+
 ## Build Guard: Orphan Thumb
 If `plan.md` row has `buildStrategy == rule:slider/normalizeSiblings(drop)` → do not render node.
 
@@ -75,3 +82,5 @@ If `plan.md` row has `buildStrategy == rule:slider/normalizeSiblings(drop)` → 
 - [ ] TEST_CONTRACT.md satisfied
 - [ ] i18n complete, no hardcoded strings (AppLocalizations, ARB en/fr)
 - [ ] No invention beyond design.json + spec.md
+- [ ] Integration tests added for new flows
+- [ ] Existing integration tests NOT modified (unless behavior change documented)
