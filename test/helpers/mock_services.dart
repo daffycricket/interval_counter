@@ -19,31 +19,22 @@ class MockTickerService implements TickerService {
 
 class MockAudioService implements AudioService {
   double _volume = 0.9;
-  bool _isEnabled = true;
   int beepCount = 0;
   bool disposed = false;
-  
+
   @override
   void playBeep() {
     beepCount++;
   }
-  
+
   @override
   void setVolume(double volume) {
     _volume = volume.clamp(0.0, 1.0);
   }
-  
+
   @override
   double get volume => _volume;
-  
-  @override
-  bool get isEnabled => _isEnabled;
-  
-  @override
-  set isEnabled(bool value) {
-    _isEnabled = value;
-  }
-  
+
   @override
   void dispose() {
     disposed = true;

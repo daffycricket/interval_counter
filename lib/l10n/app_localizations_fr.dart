@@ -130,4 +130,34 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get increaseCooldownLabel => 'Augmenter refroidir';
+
+  @override
+  String get workoutExitButton => 'Maintenir pour sortir';
+
+  @override
+  String get workoutStepWork => 'TRAVAIL';
+
+  @override
+  String get workoutStepRest => 'REPOS';
+
+  @override
+  String get workoutStepPrepare => 'PRÉPARER';
+
+  @override
+  String get workoutStepCooldown => 'REFROIDIR';
+
+  @override
+  String get workoutToggleSound => 'Activer ou désactiver le son';
+
+  @override
+  String get workoutPrevious => 'Précédent';
+
+  @override
+  String get workoutNext => 'Suivant';
+
+  @override
+  String get workoutPause => 'Mettre en pause';
+
+  @override
+  String get workoutResume => 'Reprendre';
 }

@@ -51,7 +51,7 @@ class WorkoutScreen extends StatelessWidget {
     await audioService.initialize();
     final prefs = await SharedPreferences.getInstance();
     final prefsRepo = SharedPrefsRepository(prefs);
-    return WorkoutState(preset: preset, tickerService: tickerService, audioService: audioService, prefsRepo: prefsRepo, onWorkoutComplete: () {});
+    return WorkoutState(preset: preset, tickerService: tickerService, audioService: audioService, prefsRepo: prefsRepo);
   }
 }
 
@@ -78,16 +78,14 @@ class _WorkoutScreenContentState extends State<_WorkoutScreenContent> {
     // fin manuelle de la session
     if (_workoutState.isExiting) {
       _workoutState.removeListener(_checkWorkoutComplete);
-  
-      if(mounted) {
+      if (mounted) {
         Navigator.of(context).pop();
       }
       return;
     }
     // fin naturelle de la session
-    if (_workoutState.currentStep == StepType.cooldown && _workoutState.remainingTime == 0) {
+    if (_workoutState.isComplete) {
       _workoutState.removeListener(_checkWorkoutComplete);
-      // Session terminée, retour à Home
       if (mounted) {
         Navigator.of(context).pop();
       }

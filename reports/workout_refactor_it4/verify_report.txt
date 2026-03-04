@@ -1,0 +1,18 @@
+=== Architecture & Structure Verification ===
+
+  PASS  no-banned-apis-in-state
+  PASS  domain-pure-dart
+  FAIL  state-under-200-lines:  lib/state/home_state.dart(238 lines) lib/state/preset_editor_state.dart(257 lines)
+  FAIL  1-to-1-test-ratio: missing: test/widgets/home/preset_card_test.dart test/widgets/home/presets_header_test.dart test/widgets/preset_editor/mode_toggle_button_test.dart test/widgets/value_control_test.dart test/screens/home_screen_test.dart test/services/impl/system_ticker_service_test.dart test/services/impl/beep_audio_service_test.dart
+  PASS  no-hardcoded-strings
+  PASS  state-no-localization
+  FAIL  service-interfaces-exist: no interface for: lib/services/impl/beep_audio_service.dart lib/services/impl/shared_prefs_repository.dart lib/services/impl/system_ticker_service.dart
+
+=== Summary ===
+  4/7 checks passed, 3 failed
+
+=== Violations ===
+
+  FAIL  state-under-200-lines:  lib/state/home_state.dart(238 lines) lib/state/preset_editor_state.dart(257 lines)
+  FAIL  1-to-1-test-ratio: missing: test/widgets/home/preset_card_test.dart test/widgets/home/presets_header_test.dart test/widgets/preset_editor/mode_toggle_button_test.dart test/widgets/value_control_test.dart test/screens/home_screen_test.dart test/services/impl/system_ticker_service_test.dart test/services/impl/beep_audio_service_test.dart
+  FAIL  service-interfaces-exist: no interface for: lib/services/impl/beep_audio_service.dart lib/services/impl/shared_prefs_repository.dart lib/services/impl/system_ticker_service.dart

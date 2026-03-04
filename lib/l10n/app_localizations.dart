@@ -343,6 +343,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Increase cooldown time'**
   String get increaseCooldownLabel;
+
+  /// Long-press to exit workout button
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to exit'**
+  String get workoutExitButton;
+
+  /// Work step label
+  ///
+  /// In en, this message translates to:
+  /// **'WORK'**
+  String get workoutStepWork;
+
+  /// Rest step label
+  ///
+  /// In en, this message translates to:
+  /// **'REST'**
+  String get workoutStepRest;
+
+  /// Prepare step label
+  ///
+  /// In en, this message translates to:
+  /// **'PREPARE'**
+  String get workoutStepPrepare;
+
+  /// Cooldown step label
+  ///
+  /// In en, this message translates to:
+  /// **'COOLDOWN'**
+  String get workoutStepCooldown;
+
+  /// Toggle sound button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle sound on or off'**
+  String get workoutToggleSound;
+
+  /// Previous step button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get workoutPrevious;
+
+  /// Next step button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get workoutNext;
+
+  /// Pause button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get workoutPause;
+
+  /// Resume button semantic label
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get workoutResume;
 }
 
 class _AppLocalizationsDelegate

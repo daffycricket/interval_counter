@@ -1,62 +1,47 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:interval_counter/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:interval_counter/services/audio_service.dart';
-import 'package:interval_counter/services/preferences_repository.dart';
-import 'package:interval_counter/services/ticker_service.dart';
-import 'package:interval_counter/models/preset.dart';
+import 'package:interval_counter/domain/step_type.dart';
+import 'package:interval_counter/domain/workout_engine.dart';
 import 'package:interval_counter/state/workout_state.dart';
 import 'package:interval_counter/widgets/workout/navigation_controls.dart';
 
-import 'navigation_controls_test.mocks.dart';
+import '../../helpers/mock_services.dart';
 
-@GenerateMocks([TickerService, AudioService, PreferencesRepository])
 void main() {
   group('NavigationControls Widget Tests', () {
     late MockTickerService mockTickerService;
     late MockAudioService mockAudioService;
     late MockPreferencesRepository mockPrefsRepo;
-    late Preset testPreset;
-    late StreamController<int> tickerController;
 
     setUp(() {
       mockTickerService = MockTickerService();
       mockAudioService = MockAudioService();
       mockPrefsRepo = MockPreferencesRepository();
-      tickerController = StreamController<int>();
+    });
 
-      testPreset = Preset(
-        id: 'test',
-        name: 'Test Preset',
-        prepareSeconds: 5,
-        repetitions: 3,
-        workSeconds: 40,
-        restSeconds: 20,
-        cooldownSeconds: 10,
+    WorkoutState createState({List<WorkoutStep>? steps}) {
+      return WorkoutState.withEngine(
+        engine: WorkoutEngine.fromSteps(steps ?? [
+          const WorkoutStep(type: StepType.preparation, duration: 5, reps: 0),
+          const WorkoutStep(type: StepType.work, duration: 40, reps: 3),
+          const WorkoutStep(type: StepType.rest, duration: 20, reps: 3),
+        ]),
+        tickerService: mockTickerService,
+        audioService: mockAudioService,
+        prefsRepo: mockPrefsRepo,
       );
-
-      when(mockTickerService.createTicker(any)).thenAnswer((_) {
-        final newController = StreamController<int>();
-        return newController.stream;
-      });
-      when(mockPrefsRepo.get<double>('home_volume')).thenReturn(0.62);
-      when(mockAudioService.setVolume(any)).thenReturn(null);
-      when(mockTickerService.dispose()).thenReturn(null);
-      when(mockAudioService.dispose()).thenReturn(null);
-    });
-
-    tearDown(() {
-      tickerController.close();
-    });
+    }
 
     Widget createTestWidget(WorkoutState state) {
       return ChangeNotifierProvider.value(
         value: state,
-        child: const MaterialApp(
-          home: Scaffold(
+        child: MaterialApp(
+          locale: const Locale('fr'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(
             body: NavigationControls(),
           ),
         ),
@@ -64,150 +49,87 @@ void main() {
     }
 
     testWidgets('renders with correct keys', (tester) async {
-      // Given
-      final state = WorkoutState(
-        preset: testPreset,
-        tickerService: mockTickerService,
-        audioService: mockAudioService,
-        prefsRepo: mockPrefsRepo,
-      );
+      final state = createState();
 
-      // When
       await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
 
-      // Then
       expect(find.byKey(const Key('workout__container-2')), findsOneWidget);
       expect(find.byKey(const Key('workout__iconbutton-2')), findsOneWidget);
       expect(find.byKey(const Key('workout__button-1')), findsOneWidget);
       expect(find.byKey(const Key('workout__iconbutton-3')), findsOneWidget);
-
-      state.dispose();
     });
 
     testWidgets('displays skip_previous icon for previous button', (tester) async {
-      // Given
-      final state = WorkoutState(
-        preset: testPreset,
-        tickerService: mockTickerService,
-        audioService: mockAudioService,
-        prefsRepo: mockPrefsRepo,
-      );
+      final state = createState();
 
-      // When
       await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
 
-      // Then
       final iconButton = tester.widget<IconButton>(
         find.byKey(const Key('workout__iconbutton-2')),
       );
       final icon = iconButton.icon as Icon;
       expect(icon.icon, Icons.skip_previous);
-
-      state.dispose();
     });
 
     testWidgets('displays skip_next icon for next button', (tester) async {
-      // Given
-      final state = WorkoutState(
-        preset: testPreset,
-        tickerService: mockTickerService,
-        audioService: mockAudioService,
-        prefsRepo: mockPrefsRepo,
-      );
+      final state = createState();
 
-      // When
       await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
 
-      // Then
       final iconButton = tester.widget<IconButton>(
         find.byKey(const Key('workout__iconbutton-3')),
       );
       final icon = iconButton.icon as Icon;
       expect(icon.icon, Icons.skip_next);
-
-      state.dispose();
     });
 
-    testWidgets('displays "Maintenir pour sortir" text', (tester) async {
-      // Given
-      final state = WorkoutState(
-        preset: testPreset,
-        tickerService: mockTickerService,
-        audioService: mockAudioService,
-        prefsRepo: mockPrefsRepo,
-      );
+    testWidgets('displays localized exit button text', (tester) async {
+      final state = createState();
 
-      // When
       await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
 
-      // Then
       expect(find.text('Maintenir pour sortir'), findsOneWidget);
-
-      state.dispose();
     });
 
     testWidgets('tap on previous button calls previousStep', (tester) async {
-      // Given
-      final state = WorkoutState(
-        preset: testPreset,
-        tickerService: mockTickerService,
-        audioService: mockAudioService,
-        prefsRepo: mockPrefsRepo,
-      );
-      state.nextStep(); // Move to work step
-      expect(state.currentStep.toString(), contains('work'));
+      final state = createState();
+      state.nextStep(); // Move to work
+      expect(state.currentStep, StepType.work);
 
-      // When
       await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('workout__iconbutton-2')));
       await tester.pumpAndSettle();
 
-      // Then
-      expect(state.currentStep.toString(), contains('preparation'));
-
-      state.dispose();
+      expect(state.currentStep, StepType.preparation);
     });
 
     testWidgets('tap on next button calls nextStep', (tester) async {
-      // Given
-      final state = WorkoutState(
-        preset: testPreset,
-        tickerService: mockTickerService,
-        audioService: mockAudioService,
-        prefsRepo: mockPrefsRepo,
-      );
-      expect(state.currentStep.toString(), contains('preparation'));
+      final state = createState();
+      expect(state.currentStep, StepType.preparation);
 
-      // When
       await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('workout__iconbutton-3')));
       await tester.pumpAndSettle();
 
-      // Then
-      expect(state.currentStep.toString(), contains('work'));
-
-      state.dispose();
+      expect(state.currentStep, StepType.work);
     });
 
     testWidgets('long press on exit button calls onLongPress', (tester) async {
-      // Given
-      final state = WorkoutState(
-        preset: testPreset,
-        tickerService: mockTickerService,
-        audioService: mockAudioService,
-        prefsRepo: mockPrefsRepo,
-      );
+      final state = createState();
       expect(state.isExiting, false);
 
-      // When
       await tester.pumpWidget(createTestWidget(state));
+      await tester.pumpAndSettle();
       await tester.longPress(find.byKey(const Key('workout__button-1')));
       await tester.pumpAndSettle();
 
-      // Then
       expect(state.isExiting, true);
-
-      state.dispose();
     });
   });
 }
