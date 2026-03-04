@@ -112,3 +112,6 @@ junit.xml
 *.dmg
 *.pkg
 *.deb
+macos/Podfile
+macos/Runner.xcodeproj/project.pbxproj
+macos/Runner.xcworkspace/contents.xcworkspacedata
