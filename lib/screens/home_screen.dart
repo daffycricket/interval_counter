@@ -53,7 +53,7 @@ class HomeScreen extends StatelessWidget {
               onIncrementRest: homeState.incrementRest,
               onSave: () => _showSavePresetDialog(context, homeState),
               decreaseRepsEnabled: homeState.reps > HomeState.minReps,
-              decreaseWorkEnabled: homeState.workSeconds > HomeState.maxWorkSeconds,
+              decreaseWorkEnabled: homeState.workSeconds > HomeState.minWorkSeconds,
               decreaseRestEnabled: homeState.restSeconds > HomeState.minSeconds,
             ),
 

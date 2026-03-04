@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:interval_counter/screens/preset_editor_screen.dart';
 import 'package:interval_counter/state/preset_editor_state.dart';
 import 'package:interval_counter/state/home_state.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:interval_counter/l10n/app_localizations.dart';
+import '../helpers/mock_services.dart';
 
 void main() {
   late HomeState homeState;
 
-  setUp(() async {
-    SharedPreferences.setMockInitialValues({});
-    final prefs = await SharedPreferences.getInstance();
-    homeState = HomeState(prefs);
+  setUp(() {
+    homeState = HomeState(MockPreferencesRepository());
   });
 
   Widget createTestWidget(PresetEditorState editorState) {
