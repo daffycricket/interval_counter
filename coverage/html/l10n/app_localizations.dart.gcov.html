@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-03-04 12:37:25</td>
+            <td class="headerValue">2026-03-04 17:53:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -124,13 +124,13 @@
 <span id="L62"><span class="lineNum">      62</span>              : /// be consistent with the languages listed in the AppLocalizations.supportedLocales</span>
 <span id="L63"><span class="lineNum">      63</span>              : /// property.</span>
 <span id="L64"><span class="lineNum">      64</span>              : abstract class AppLocalizations {</span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          14 :   AppLocalizations(String locale)</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          28 :     : localeName = intl.Intl.canonicalizedLocale(locale.toString());</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          15 :   AppLocalizations(String locale)</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          30 :     : localeName = intl.Intl.canonicalizedLocale(locale.toString());</span></span>
 <span id="L67"><span class="lineNum">      67</span>              : </span>
 <span id="L68"><span class="lineNum">      68</span>              :   final String localeName;</span>
 <span id="L69"><span class="lineNum">      69</span>              : </span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          13 :   static AppLocalizations? of(BuildContext context) {</span></span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          13 :     return Localizations.of&lt;AppLocalizations&gt;(context, AppLocalizations);</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          14 :   static AppLocalizations? of(BuildContext context) {</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          14 :     return Localizations.of&lt;AppLocalizations&gt;(context, AppLocalizations);</span></span>
 <span id="L72"><span class="lineNum">      72</span>              :   }</span>
 <span id="L73"><span class="lineNum">      73</span>              : </span>
 <span id="L74"><span class="lineNum">      74</span>              :   static const LocalizationsDelegate&lt;AppLocalizations&gt; delegate =</span>
@@ -465,41 +465,59 @@
 <span id="L403"><span class="lineNum">     403</span>              :   /// In en, this message translates to:</span>
 <span id="L404"><span class="lineNum">     404</span>              :   /// **'Resume'**</span>
 <span id="L405"><span class="lineNum">     405</span>              :   String get workoutResume;</span>
-<span id="L406"><span class="lineNum">     406</span>              : }</span>
-<span id="L407"><span class="lineNum">     407</span>              : </span>
-<span id="L408"><span class="lineNum">     408</span>              : class _AppLocalizationsDelegate</span>
-<span id="L409"><span class="lineNum">     409</span>              :     extends LocalizationsDelegate&lt;AppLocalizations&gt; {</span>
-<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">           3 :   const _AppLocalizationsDelegate();</span></span>
-<span id="L411"><span class="lineNum">     411</span>              : </span>
-<span id="L412"><span class="lineNum">     412</span> <span class="tlaGNC">          14 :   @override</span></span>
-<span id="L413"><span class="lineNum">     413</span>              :   Future&lt;AppLocalizations&gt; load(Locale locale) {</span>
-<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">          28 :     return SynchronousFuture&lt;AppLocalizations&gt;(lookupAppLocalizations(locale));</span></span>
-<span id="L415"><span class="lineNum">     415</span>              :   }</span>
-<span id="L416"><span class="lineNum">     416</span>              : </span>
-<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">          14 :   @override</span></span>
-<span id="L418"><span class="lineNum">     418</span>              :   bool isSupported(Locale locale) =&gt;</span>
-<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">          42 :       &lt;String&gt;['en', 'fr'].contains(locale.languageCode);</span></span>
-<span id="L420"><span class="lineNum">     420</span>              : </span>
-<span id="L421"><span class="lineNum">     421</span> <span class="tlaGNC">           1 :   @override</span></span>
-<span id="L422"><span class="lineNum">     422</span>              :   bool shouldReload(_AppLocalizationsDelegate old) =&gt; false;</span>
-<span id="L423"><span class="lineNum">     423</span>              : }</span>
-<span id="L424"><span class="lineNum">     424</span>              : </span>
-<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">          14 : AppLocalizations lookupAppLocalizations(Locale locale) {</span></span>
-<span id="L426"><span class="lineNum">     426</span>              :   // Lookup logic when only language code is specified.</span>
-<span id="L427"><span class="lineNum">     427</span> <span class="tlaGNC">          14 :   switch (locale.languageCode) {</span></span>
-<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">          14 :     case 'en':</span></span>
-<span id="L429"><span class="lineNum">     429</span> <span class="tlaUNC">           0 :       return AppLocalizationsEn();</span></span>
-<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">          14 :     case 'fr':</span></span>
-<span id="L431"><span class="lineNum">     431</span> <span class="tlaGNC">          14 :       return AppLocalizationsFr();</span></span>
-<span id="L432"><span class="lineNum">     432</span>              :   }</span>
-<span id="L433"><span class="lineNum">     433</span>              : </span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaUNC">           0 :   throw FlutterError(</span></span>
-<span id="L435"><span class="lineNum">     435</span>              :     'AppLocalizations.delegate failed to load unsupported locale &quot;$locale&quot;. This is likely '</span>
-<span id="L436"><span class="lineNum">     436</span>              :     'an issue with the localizations generation tool. Please file an issue '</span>
-<span id="L437"><span class="lineNum">     437</span>              :     'on GitHub with a reproducible sample app and the gen-l10n configuration '</span>
-<span id="L438"><span class="lineNum">     438</span>              :     'that was used.',</span>
-<span id="L439"><span class="lineNum">     439</span>              :   );</span>
-<span id="L440"><span class="lineNum">     440</span>              : }</span>
+<span id="L406"><span class="lineNum">     406</span>              : </span>
+<span id="L407"><span class="lineNum">     407</span>              :   /// End workout screen title</span>
+<span id="L408"><span class="lineNum">     408</span>              :   ///</span>
+<span id="L409"><span class="lineNum">     409</span>              :   /// In en, this message translates to:</span>
+<span id="L410"><span class="lineNum">     410</span>              :   /// **'FINI'**</span>
+<span id="L411"><span class="lineNum">     411</span>              :   String get endWorkoutTitle;</span>
+<span id="L412"><span class="lineNum">     412</span>              : </span>
+<span id="L413"><span class="lineNum">     413</span>              :   /// Stop button semantic label on end workout screen</span>
+<span id="L414"><span class="lineNum">     414</span>              :   ///</span>
+<span id="L415"><span class="lineNum">     415</span>              :   /// In en, this message translates to:</span>
+<span id="L416"><span class="lineNum">     416</span>              :   /// **'Stop timer'**</span>
+<span id="L417"><span class="lineNum">     417</span>              :   String get endWorkoutStopLabel;</span>
+<span id="L418"><span class="lineNum">     418</span>              : </span>
+<span id="L419"><span class="lineNum">     419</span>              :   /// Restart button semantic label on end workout screen</span>
+<span id="L420"><span class="lineNum">     420</span>              :   ///</span>
+<span id="L421"><span class="lineNum">     421</span>              :   /// In en, this message translates to:</span>
+<span id="L422"><span class="lineNum">     422</span>              :   /// **'Restart timer'**</span>
+<span id="L423"><span class="lineNum">     423</span>              :   String get endWorkoutRestartLabel;</span>
+<span id="L424"><span class="lineNum">     424</span>              : }</span>
+<span id="L425"><span class="lineNum">     425</span>              : </span>
+<span id="L426"><span class="lineNum">     426</span>              : class _AppLocalizationsDelegate</span>
+<span id="L427"><span class="lineNum">     427</span>              :     extends LocalizationsDelegate&lt;AppLocalizations&gt; {</span>
+<span id="L428"><span class="lineNum">     428</span> <span class="tlaGNC">           2 :   const _AppLocalizationsDelegate();</span></span>
+<span id="L429"><span class="lineNum">     429</span>              : </span>
+<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">          15 :   @override</span></span>
+<span id="L431"><span class="lineNum">     431</span>              :   Future&lt;AppLocalizations&gt; load(Locale locale) {</span>
+<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">          30 :     return SynchronousFuture&lt;AppLocalizations&gt;(lookupAppLocalizations(locale));</span></span>
+<span id="L433"><span class="lineNum">     433</span>              :   }</span>
+<span id="L434"><span class="lineNum">     434</span>              : </span>
+<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">          15 :   @override</span></span>
+<span id="L436"><span class="lineNum">     436</span>              :   bool isSupported(Locale locale) =&gt;</span>
+<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">          45 :       &lt;String&gt;['en', 'fr'].contains(locale.languageCode);</span></span>
+<span id="L438"><span class="lineNum">     438</span>              : </span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">           2 :   @override</span></span>
+<span id="L440"><span class="lineNum">     440</span>              :   bool shouldReload(_AppLocalizationsDelegate old) =&gt; false;</span>
+<span id="L441"><span class="lineNum">     441</span>              : }</span>
+<span id="L442"><span class="lineNum">     442</span>              : </span>
+<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">          15 : AppLocalizations lookupAppLocalizations(Locale locale) {</span></span>
+<span id="L444"><span class="lineNum">     444</span>              :   // Lookup logic when only language code is specified.</span>
+<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">          15 :   switch (locale.languageCode) {</span></span>
+<span id="L446"><span class="lineNum">     446</span> <span class="tlaGNC">          15 :     case 'en':</span></span>
+<span id="L447"><span class="lineNum">     447</span> <span class="tlaUNC">           0 :       return AppLocalizationsEn();</span></span>
+<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">          15 :     case 'fr':</span></span>
+<span id="L449"><span class="lineNum">     449</span> <span class="tlaGNC">          15 :       return AppLocalizationsFr();</span></span>
+<span id="L450"><span class="lineNum">     450</span>              :   }</span>
+<span id="L451"><span class="lineNum">     451</span>              : </span>
+<span id="L452"><span class="lineNum">     452</span> <span class="tlaUNC">           0 :   throw FlutterError(</span></span>
+<span id="L453"><span class="lineNum">     453</span>              :     'AppLocalizations.delegate failed to load unsupported locale &quot;$locale&quot;. This is likely '</span>
+<span id="L454"><span class="lineNum">     454</span>              :     'an issue with the localizations generation tool. Please file an issue '</span>
+<span id="L455"><span class="lineNum">     455</span>              :     'on GitHub with a reproducible sample app and the gen-l10n configuration '</span>
+<span id="L456"><span class="lineNum">     456</span>              :     'that was used.',</span>
+<span id="L457"><span class="lineNum">     457</span>              :   );</span>
+<span id="L458"><span class="lineNum">     458</span>              : }</span>
         </pre>
               </td>
             </tr>

@@ -50,6 +50,9 @@
   "workoutPrevious": "Précédent",
   "workoutNext": "Suivant",
   "workoutPause": "Mettre en pause",
-  "workoutResume": "Reprendre"
+  "workoutResume": "Reprendre",
+  "endWorkoutTitle": "FINI",
+  "endWorkoutStopLabel": "Arrêter",
+  "endWorkoutRestartLabel": "Reprendre"
 }
 

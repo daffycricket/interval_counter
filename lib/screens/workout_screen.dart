@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/step_type.dart';
 import '../models/preset.dart';
+import '../routes/app_routes.dart';
 import '../state/workout_state.dart';
 import '../theme/app_colors.dart';
 import '../widgets/volume_header.dart';
@@ -37,7 +38,7 @@ class WorkoutScreen extends StatelessWidget {
         
         return ChangeNotifierProvider.value(
           value: snapshot.data!,
-          child: const _WorkoutScreenContent(),
+          child: _WorkoutScreenContent(preset: preset),
         );
       },
     );
@@ -56,8 +57,10 @@ class WorkoutScreen extends StatelessWidget {
 }
 
 class _WorkoutScreenContent extends StatefulWidget {
-  const _WorkoutScreenContent();
-  
+  final Preset preset;
+
+  const _WorkoutScreenContent({required this.preset});
+
   @override
   State<_WorkoutScreenContent> createState() => _WorkoutScreenContentState();
 }
@@ -83,11 +86,14 @@ class _WorkoutScreenContentState extends State<_WorkoutScreenContent> {
       }
       return;
     }
-    // fin naturelle de la session
+    // fin naturelle de la session → écran de fin de workout
     if (_workoutState.isComplete) {
       _workoutState.removeListener(_checkWorkoutComplete);
       if (mounted) {
-        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacementNamed(
+          AppRoutes.endWorkout,
+          arguments: widget.preset,
+        );
       }
     }
   }
