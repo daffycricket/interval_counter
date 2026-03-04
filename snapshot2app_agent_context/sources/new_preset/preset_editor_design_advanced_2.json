@@ -1,0 +1,1856 @@
+{
+  "meta": {
+    "version": "1.0",
+    "screenName": "Interval Timer – Advanced Edit",
+    "snapshotRef": "Screenshot_20260304_110158_Interval_Timer.jpg"
+  },
+  "tokens": {
+    "colors": {
+      "primary": "#E91E8C",
+      "onPrimary": "#FFFFFF",
+      "background": "#000000",
+      "surface": "#1A1A1A",
+      "textPrimary": "#FFFFFF",
+      "textSecondary": "#AAAAAA",
+      "divider": "#333333",
+      "accent": "#E91E8C",
+      "sliderActive": "#E91E8C",
+      "sliderInactive": "#555555",
+      "sliderThumb": "#FFFFFF",
+      "border": "#444444",
+      "cta": "#E91E8C",
+      "success": "#4CAF50",
+      "warning": "#CDDC39",
+      "info": "#2196F3",
+      "headerBackgroundDark": "#111111",
+      "stepMagenta": "#CC1177",
+      "stepLavender": "#B39DDB",
+      "stepGreen": "#388E3C",
+      "stepRed": "#D32F2F",
+      "finishYellow": "#CDDC39",
+      "cardBackground": "#1C1C1C",
+      "inputBackground": "#1C1C1C",
+      "inputBorder": "#555555",
+      "ghostButtonBg": "#000000",
+      "presetCardBg": "#1C1C1C",
+      "tabActiveBg": "#FFFFFF",
+      "tabActiveText": "#000000",
+      "tabInactiveText": "#AAAAAA",
+      "timeText": "#FFFFFF",
+      "labelText": "#CCCCCC",
+      "repsAccent": "#E91E8C",
+      "statusBarBg": "#000000",
+      "addButtonBg": "#FFFFFF",
+      "addButtonFg": "#000000",
+      "totalTextColor": "#FFFFFF",
+      "sectionDivider": "#333333"
+    },
+    "typography": {
+      "fontFamilies": ["Roboto", "sans-serif"],
+      "fontSizes": { "xs": 10, "sm": 12, "md": 14, "lg": 18, "xl": 28 },
+      "fontWeights": { "regular": 400, "medium": 500, "bold": 700 },
+      "lineHeights": { "sm": 16, "md": 20, "lg": 28 }
+    },
+    "spacing": { "xxs": 2, "xs": 4, "sm": 8, "md": 16, "lg": 24, "xl": 32 },
+    "radius": { "sm": 4, "md": 8, "lg": 16, "xl": 50 },
+    "shadow": { "sm": "0 1px 3px rgba(0,0,0,0.4)", "md": "0 2px 6px rgba(0,0,0,0.5)", "lg": "0 4px 12px rgba(0,0,0,0.6)" }
+  },
+  "screen": {
+    "size": { "width": 304, "height": 1404 },
+    "layout": { "orientation": "portrait", "scrollable": true }
+  },
+  "components": [
+    {
+      "id": "container-0",
+      "type": "Container",
+      "bbox": [0, 0, 304, 30],
+      "sourceRect": [0, 0, 304, 30],
+      "style": {
+        "backgroundColor": "#000000",
+        "paddingX": 8,
+        "paddingY": 4
+      },
+      "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+      "group": { "alignment": "center", "distribution": "between" },
+      "children": [
+        {
+          "id": "text-0",
+          "type": "Text",
+          "bbox": [8, 6, 40, 18],
+          "sourceRect": [8, 6, 40, 18],
+          "text": "11:01",
+          "style": {
+            "color": "#FFFFFF",
+            "fontSize": 12,
+            "fontWeight": "medium",
+            "typographyRef": "label",
+            "backgroundColor": "#000000"
+          }
+        },
+        {
+          "id": "container-1",
+          "type": "Container",
+          "bbox": [200, 6, 296, 22],
+          "sourceRect": [200, 6, 296, 22],
+          "style": { "backgroundColor": "#000000" },
+          "layout": { "type": "flex", "direction": "row", "gap": "xs", "align": "center", "justify": "end" },
+          "children": [
+            {
+              "id": "icon-0",
+              "type": "Icon",
+              "bbox": [200, 8, 216, 20],
+              "sourceRect": [200, 8, 216, 20],
+              "iconName": "material.signal_cellular_alt",
+              "style": { "color": "#FFFFFF" }
+            },
+            {
+              "id": "icon-1",
+              "type": "Icon",
+              "bbox": [218, 8, 234, 20],
+              "sourceRect": [218, 8, 234, 20],
+              "iconName": "material.wifi",
+              "style": { "color": "#FFFFFF" }
+            },
+            {
+              "id": "text-1",
+              "type": "Text",
+              "bbox": [236, 8, 268, 20],
+              "sourceRect": [236, 8, 268, 20],
+              "text": "74%",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 12,
+                "fontWeight": "regular",
+                "typographyRef": "label"
+              }
+            },
+            {
+              "id": "icon-2",
+              "type": "Icon",
+              "bbox": [270, 8, 296, 20],
+              "sourceRect": [270, 8, 296, 20],
+              "iconName": "material.battery_std",
+              "style": { "color": "#FFFFFF" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "container-2",
+      "type": "Container",
+      "bbox": [0, 30, 304, 68],
+      "sourceRect": [0, 30, 304, 68],
+      "style": {
+        "backgroundColor": "#111111",
+        "paddingX": 12,
+        "paddingY": 8
+      },
+      "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+      "group": { "alignment": "center", "distribution": "between" },
+      "children": [
+        {
+          "id": "iconbutton-0",
+          "type": "IconButton",
+          "bbox": [8, 36, 32, 60],
+          "sourceRect": [8, 36, 32, 60],
+          "iconName": "material.close",
+          "variant": "ghost",
+          "a11y": { "ariaLabel": "Fermer" },
+          "style": { "color": "#FFFFFF", "backgroundColor": "#111111" }
+        },
+        {
+          "id": "container-3",
+          "type": "Container",
+          "bbox": [80, 34, 224, 62],
+          "sourceRect": [80, 34, 224, 62],
+          "style": { "backgroundColor": "#111111" },
+          "layout": { "type": "flex", "direction": "row", "gap": "xs", "align": "center", "justify": "center" },
+          "group": { "alignment": "center", "distribution": "between" },
+          "children": [
+            {
+              "id": "button-0",
+              "type": "Button",
+              "bbox": [80, 36, 138, 60],
+              "sourceRect": [80, 36, 138, 60],
+              "text": "SIMPLE",
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Mode simple" },
+              "style": {
+                "color": "#AAAAAA",
+                "backgroundColor": "#111111",
+                "fontSize": 12,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase",
+                "paddingX": 12,
+                "paddingY": 6,
+                "radius": "xl"
+              }
+            },
+            {
+              "id": "button-1",
+              "type": "Button",
+              "bbox": [140, 36, 222, 60],
+              "sourceRect": [140, 36, 222, 60],
+              "text": "ADVANCED",
+              "variant": "secondary",
+              "a11y": { "ariaLabel": "Mode avancé" },
+              "style": {
+                "color": "#FFFFFF",
+                "backgroundColor": "#111111",
+                "borderColor": "#FFFFFF",
+                "borderWidth": 1,
+                "fontSize": 12,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase",
+                "paddingX": 12,
+                "paddingY": 6,
+                "radius": "xl"
+              }
+            }
+          ]
+        },
+        {
+          "id": "iconbutton-1",
+          "type": "IconButton",
+          "bbox": [272, 36, 296, 60],
+          "sourceRect": [272, 36, 296, 60],
+          "iconName": "material.save",
+          "variant": "ghost",
+          "a11y": { "ariaLabel": "Enregistrer" },
+          "style": { "color": "#FFFFFF", "backgroundColor": "#111111" }
+        }
+      ]
+    },
+    {
+      "id": "container-4",
+      "type": "Container",
+      "bbox": [0, 68, 304, 108],
+      "sourceRect": [0, 68, 304, 108],
+      "style": {
+        "backgroundColor": "#1C1C1C",
+        "borderColor": "#555555",
+        "borderWidth": 1,
+        "paddingX": 12,
+        "paddingY": 6,
+        "radius": "sm"
+      },
+      "layout": { "type": "flex", "direction": "column", "gap": "xxs", "align": "start", "justify": "start" },
+      "children": [
+        {
+          "id": "text-2",
+          "type": "Text",
+          "bbox": [12, 70, 120, 82],
+          "sourceRect": [12, 70, 120, 82],
+          "text": "Nom prédéfini",
+          "style": {
+            "color": "#AAAAAA",
+            "fontSize": 10,
+            "fontWeight": "regular",
+            "typographyRef": "muted"
+          }
+        },
+        {
+          "id": "text-3",
+          "type": "Text",
+          "bbox": [12, 84, 280, 104],
+          "sourceRect": [12, 84, 280, 104],
+          "text": "Programme spécifique",
+          "style": {
+            "color": "#FFFFFF",
+            "fontSize": 16,
+            "fontWeight": "regular",
+            "typographyRef": "body"
+          }
+        }
+      ]
+    },
+    {
+      "id": "card-0",
+      "type": "Card",
+      "bbox": [0, 112, 304, 316],
+      "sourceRect": [0, 112, 304, 316],
+      "style": {
+        "backgroundColor": "#1C1C1C",
+        "paddingX": 12,
+        "paddingY": 10,
+        "radius": "sm"
+      },
+      "layout": { "type": "flex", "direction": "column", "gap": "sm", "align": "center", "justify": "start" },
+      "group": { "alignment": "center", "distribution": "start" },
+      "children": [
+        {
+          "id": "container-5",
+          "type": "Container",
+          "bbox": [0, 112, 304, 142],
+          "sourceRect": [0, 112, 304, 142],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+          "children": [
+            {
+              "id": "text-4",
+              "type": "Text",
+              "bbox": [12, 118, 120, 134],
+              "sourceRect": [12, 118, 120, 134],
+              "text": "RÉPÉTITIONS",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 12,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase"
+              }
+            },
+            {
+              "id": "iconbutton-2",
+              "type": "IconButton",
+              "bbox": [278, 116, 298, 136],
+              "sourceRect": [278, 116, 298, 136],
+              "iconName": "material.more_vert",
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Plus d'options" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C" }
+            }
+          ]
+        },
+        {
+          "id": "container-6",
+          "type": "Container",
+          "bbox": [40, 144, 264, 172],
+          "sourceRect": [40, 144, 264, 172],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "lg", "align": "center", "justify": "center" },
+          "group": { "alignment": "center", "distribution": "around" },
+          "children": [
+            {
+              "id": "iconbutton-3",
+              "type": "IconButton",
+              "bbox": [40, 146, 68, 170],
+              "sourceRect": [40, 146, 68, 170],
+              "iconName": "material.remove",
+              "variant": "secondary",
+              "a11y": { "ariaLabel": "Diminuer répétitions" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+            },
+            {
+              "id": "text-5",
+              "type": "Text",
+              "bbox": [120, 146, 184, 170],
+              "sourceRect": [120, 146, 184, 170],
+              "text": "1",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 28,
+                "fontWeight": "bold",
+                "typographyRef": "value"
+              }
+            },
+            {
+              "id": "iconbutton-4",
+              "type": "IconButton",
+              "bbox": [236, 146, 264, 170],
+              "sourceRect": [236, 146, 264, 170],
+              "iconName": "material.add",
+              "variant": "secondary",
+              "a11y": { "ariaLabel": "Augmenter répétitions" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+            }
+          ]
+        },
+        {
+          "id": "card-1",
+          "type": "Card",
+          "bbox": [0, 178, 304, 290],
+          "sourceRect": [0, 178, 304, 290],
+          "style": {
+            "backgroundColor": "#CC1177",
+            "paddingX": 12,
+            "paddingY": 8,
+            "radius": "sm"
+          },
+          "layout": { "type": "flex", "direction": "column", "gap": "sm", "align": "start", "justify": "start" },
+          "group": { "alignment": "start", "distribution": "start" },
+          "children": [
+            {
+              "id": "container-7",
+              "type": "Container",
+              "bbox": [0, 180, 304, 204],
+              "sourceRect": [0, 180, 304, 204],
+              "style": { "backgroundColor": "#CC1177" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "text-6",
+                  "type": "Text",
+                  "bbox": [12, 184, 80, 198],
+                  "sourceRect": [12, 184, 80, 198],
+                  "text": "Étape 1",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 14,
+                    "fontWeight": "regular",
+                    "typographyRef": "body"
+                  }
+                },
+                {
+                  "id": "iconbutton-5",
+                  "type": "IconButton",
+                  "bbox": [280, 182, 300, 202],
+                  "sourceRect": [280, 182, 300, 202],
+                  "iconName": "material.drag_handle",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Réorganiser étape 1" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#CC1177" }
+                }
+              ]
+            },
+            {
+              "id": "container-8",
+              "type": "Container",
+              "bbox": [12, 206, 200, 224],
+              "sourceRect": [12, 206, 200, 224],
+              "style": { "backgroundColor": "#CC1177" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "start" },
+              "children": [
+                {
+                  "id": "text-7",
+                  "type": "Text",
+                  "bbox": [12, 208, 50, 222],
+                  "sourceRect": [12, 208, 50, 222],
+                  "text": "TIME",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "text-8",
+                  "type": "Text",
+                  "bbox": [56, 208, 100, 222],
+                  "sourceRect": [56, 208, 100, 222],
+                  "text": "REPS",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "container-9",
+              "type": "Container",
+              "bbox": [12, 228, 292, 256],
+              "sourceRect": [12, 228, 292, 256],
+              "style": { "backgroundColor": "#CC1177" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "center" },
+              "group": { "alignment": "center", "distribution": "around" },
+              "children": [
+                {
+                  "id": "iconbutton-6",
+                  "type": "IconButton",
+                  "bbox": [12, 230, 38, 254],
+                  "sourceRect": [12, 230, 38, 254],
+                  "iconName": "material.remove",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Diminuer temps étape 1" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#CC1177", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+                },
+                {
+                  "id": "text-9",
+                  "type": "Text",
+                  "bbox": [60, 230, 170, 254],
+                  "sourceRect": [60, 230, 170, 254],
+                  "text": "00 : 05",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 22,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "iconbutton-7",
+                  "type": "IconButton",
+                  "bbox": [252, 230, 278, 254],
+                  "sourceRect": [252, 230, 278, 254],
+                  "iconName": "material.add",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Augmenter temps étape 1" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#CC1177", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+                }
+              ]
+            },
+            {
+              "id": "container-10",
+              "type": "Container",
+              "bbox": [12, 258, 292, 282],
+              "sourceRect": [12, 258, 292, 282],
+              "style": { "backgroundColor": "#CC1177" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "button-2",
+                  "type": "Button",
+                  "bbox": [12, 260, 100, 280],
+                  "sourceRect": [12, 260, 100, 280],
+                  "text": "COLOR",
+                  "leadingIcon": { "type": "Icon", "iconName": "material.edit", "style": { "color": "#FFFFFF" } },
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Choisir couleur étape 1" },
+                  "placement": "start",
+                  "widthMode": "intrinsic",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#CC1177",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "iconbutton-8",
+                  "type": "IconButton",
+                  "bbox": [200, 260, 222, 280],
+                  "sourceRect": [200, 260, 222, 280],
+                  "iconName": "material.content_copy",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Dupliquer étape 1" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#CC1177" }
+                },
+                {
+                  "id": "iconbutton-9",
+                  "type": "IconButton",
+                  "bbox": [232, 260, 254, 280],
+                  "sourceRect": [232, 260, 254, 280],
+                  "iconName": "material.delete",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Supprimer étape 1" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#CC1177" }
+                },
+                {
+                  "id": "iconbutton-10",
+                  "type": "IconButton",
+                  "bbox": [264, 260, 286, 280],
+                  "sourceRect": [264, 260, 286, 280],
+                  "iconName": "material.settings",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Paramètres étape 1" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#CC1177" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "card-2",
+          "type": "Card",
+          "bbox": [0, 294, 304, 468],
+          "sourceRect": [0, 294, 304, 468],
+          "style": {
+            "backgroundColor": "#B39DDB",
+            "paddingX": 12,
+            "paddingY": 8,
+            "radius": "sm"
+          },
+          "layout": { "type": "flex", "direction": "column", "gap": "sm", "align": "start", "justify": "start" },
+          "group": { "alignment": "start", "distribution": "start" },
+          "children": [
+            {
+              "id": "container-11",
+              "type": "Container",
+              "bbox": [0, 296, 304, 318],
+              "sourceRect": [0, 296, 304, 318],
+              "style": { "backgroundColor": "#B39DDB" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "text-10",
+                  "type": "Text",
+                  "bbox": [12, 300, 80, 314],
+                  "sourceRect": [12, 300, 80, 314],
+                  "text": "Étape 2",
+                  "style": {
+                    "color": "#000000",
+                    "fontSize": 14,
+                    "fontWeight": "regular",
+                    "typographyRef": "body"
+                  }
+                },
+                {
+                  "id": "iconbutton-11",
+                  "type": "IconButton",
+                  "bbox": [280, 298, 300, 318],
+                  "sourceRect": [280, 298, 300, 318],
+                  "iconName": "material.drag_handle",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Réorganiser étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB" }
+                }
+              ]
+            },
+            {
+              "id": "container-12",
+              "type": "Container",
+              "bbox": [12, 320, 200, 336],
+              "sourceRect": [12, 320, 200, 336],
+              "style": { "backgroundColor": "#B39DDB" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "start" },
+              "children": [
+                {
+                  "id": "text-11",
+                  "type": "Text",
+                  "bbox": [12, 322, 50, 334],
+                  "sourceRect": [12, 322, 50, 334],
+                  "text": "TIME",
+                  "style": {
+                    "color": "#888888",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "text-12",
+                  "type": "Text",
+                  "bbox": [56, 322, 100, 334],
+                  "sourceRect": [56, 322, 100, 334],
+                  "text": "REPS",
+                  "style": {
+                    "color": "#000000",
+                    "fontSize": 12,
+                    "fontWeight": "bold",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "container-13",
+              "type": "Container",
+              "bbox": [12, 340, 292, 370],
+              "sourceRect": [12, 340, 292, 370],
+              "style": { "backgroundColor": "#B39DDB" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "center" },
+              "group": { "alignment": "center", "distribution": "around" },
+              "children": [
+                {
+                  "id": "iconbutton-12",
+                  "type": "IconButton",
+                  "bbox": [12, 342, 38, 366],
+                  "sourceRect": [12, 342, 38, 366],
+                  "iconName": "material.remove",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Diminuer répétitions étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB", "borderColor": "#000000", "borderWidth": 1, "radius": "sm" }
+                },
+                {
+                  "id": "text-13",
+                  "type": "Text",
+                  "bbox": [80, 342, 160, 366],
+                  "sourceRect": [80, 342, 160, 366],
+                  "text": "3",
+                  "style": {
+                    "color": "#000000",
+                    "fontSize": 28,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "text-14",
+                  "type": "Text",
+                  "bbox": [166, 348, 192, 364],
+                  "sourceRect": [166, 348, 192, 364],
+                  "text": "x",
+                  "style": {
+                    "color": "#000000",
+                    "fontSize": 18,
+                    "fontWeight": "regular",
+                    "typographyRef": "body"
+                  }
+                },
+                {
+                  "id": "iconbutton-13",
+                  "type": "IconButton",
+                  "bbox": [200, 342, 226, 366],
+                  "sourceRect": [200, 342, 226, 366],
+                  "iconName": "material.add",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Augmenter répétitions étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB", "borderColor": "#000000", "borderWidth": 1, "radius": "sm" }
+                }
+              ]
+            },
+            {
+              "id": "container-14",
+              "type": "Container",
+              "bbox": [12, 376, 292, 406],
+              "sourceRect": [12, 376, 292, 406],
+              "style": { "backgroundColor": "#B39DDB" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "center" },
+              "group": { "alignment": "center", "distribution": "around" },
+              "children": [
+                {
+                  "id": "iconbutton-14",
+                  "type": "IconButton",
+                  "bbox": [12, 378, 38, 402],
+                  "sourceRect": [12, 378, 38, 402],
+                  "iconName": "material.remove",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Diminuer durée étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB", "borderColor": "#000000", "borderWidth": 1, "radius": "sm" }
+                },
+                {
+                  "id": "text-15",
+                  "type": "Text",
+                  "bbox": [60, 378, 200, 402],
+                  "sourceRect": [60, 378, 200, 402],
+                  "text": "10.0s",
+                  "style": {
+                    "color": "#000000",
+                    "fontSize": 22,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "iconbutton-15",
+                  "type": "IconButton",
+                  "bbox": [252, 378, 278, 402],
+                  "sourceRect": [252, 378, 278, 402],
+                  "iconName": "material.add",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Augmenter durée étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB", "borderColor": "#000000", "borderWidth": 1, "radius": "sm" }
+                }
+              ]
+            },
+            {
+              "id": "container-15",
+              "type": "Container",
+              "bbox": [12, 410, 292, 434],
+              "sourceRect": [12, 410, 292, 434],
+              "style": { "backgroundColor": "#B39DDB" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "button-3",
+                  "type": "Button",
+                  "bbox": [12, 412, 100, 432],
+                  "sourceRect": [12, 412, 100, 432],
+                  "text": "COLOR",
+                  "leadingIcon": { "type": "Icon", "iconName": "material.edit", "style": { "color": "#000000" } },
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Choisir couleur étape 2" },
+                  "placement": "start",
+                  "widthMode": "intrinsic",
+                  "style": {
+                    "color": "#000000",
+                    "backgroundColor": "#B39DDB",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "iconbutton-16",
+                  "type": "IconButton",
+                  "bbox": [200, 412, 222, 432],
+                  "sourceRect": [200, 412, 222, 432],
+                  "iconName": "material.content_copy",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Dupliquer étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB" }
+                },
+                {
+                  "id": "iconbutton-17",
+                  "type": "IconButton",
+                  "bbox": [232, 412, 254, 432],
+                  "sourceRect": [232, 412, 254, 432],
+                  "iconName": "material.delete",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Supprimer étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB" }
+                },
+                {
+                  "id": "iconbutton-18",
+                  "type": "IconButton",
+                  "bbox": [264, 412, 286, 432],
+                  "sourceRect": [264, 412, 286, 432],
+                  "iconName": "material.settings",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Paramètres étape 2" },
+                  "style": { "color": "#000000", "backgroundColor": "#B39DDB" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "container-16",
+          "type": "Container",
+          "bbox": [0, 470, 304, 506],
+          "sourceRect": [0, 470, 304, 506],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+          "children": [
+            {
+              "id": "iconbutton-19",
+              "type": "IconButton",
+              "bbox": [120, 472, 184, 500],
+              "sourceRect": [120, 472, 184, 500],
+              "iconName": "material.add_circle_outline",
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Ajouter étape au groupe 1" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#FFFFFF", "radius": "xl" }
+            },
+            {
+              "id": "text-16",
+              "type": "Text",
+              "bbox": [230, 488, 290, 504],
+              "sourceRect": [230, 488, 290, 504],
+              "text": "00:35",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 14,
+                "fontWeight": "regular",
+                "typographyRef": "value"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "card-3",
+      "type": "Card",
+      "bbox": [0, 512, 304, 668],
+      "sourceRect": [0, 512, 304, 668],
+      "style": {
+        "backgroundColor": "#1C1C1C",
+        "paddingX": 12,
+        "paddingY": 10,
+        "radius": "sm"
+      },
+      "layout": { "type": "flex", "direction": "column", "gap": "sm", "align": "center", "justify": "start" },
+      "group": { "alignment": "center", "distribution": "start" },
+      "children": [
+        {
+          "id": "container-17",
+          "type": "Container",
+          "bbox": [0, 514, 304, 542],
+          "sourceRect": [0, 514, 304, 542],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+          "children": [
+            {
+              "id": "container-18",
+              "type": "Container",
+              "bbox": [12, 516, 200, 540],
+              "sourceRect": [12, 516, 200, 540],
+              "style": { "backgroundColor": "#1C1C1C" },
+              "layout": { "type": "flex", "direction": "row", "gap": "xs", "align": "center", "justify": "start" },
+              "children": [
+                {
+                  "id": "text-17",
+                  "type": "Text",
+                  "bbox": [12, 520, 110, 534],
+                  "sourceRect": [12, 520, 110, 534],
+                  "text": "RÉPÉTITIONS",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "icon-3",
+                  "type": "Icon",
+                  "bbox": [116, 520, 136, 534],
+                  "sourceRect": [116, 520, 136, 534],
+                  "iconName": "material.trending_down",
+                  "style": { "color": "#FFFFFF" }
+                }
+              ]
+            },
+            {
+              "id": "iconbutton-20",
+              "type": "IconButton",
+              "bbox": [278, 516, 298, 540],
+              "sourceRect": [278, 516, 298, 540],
+              "iconName": "material.more_vert",
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Plus d'options groupe 2" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C" }
+            }
+          ]
+        },
+        {
+          "id": "container-19",
+          "type": "Container",
+          "bbox": [40, 546, 264, 574],
+          "sourceRect": [40, 546, 264, 574],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "lg", "align": "center", "justify": "center" },
+          "group": { "alignment": "center", "distribution": "around" },
+          "children": [
+            {
+              "id": "iconbutton-21",
+              "type": "IconButton",
+              "bbox": [40, 548, 68, 572],
+              "sourceRect": [40, 548, 68, 572],
+              "iconName": "material.remove",
+              "variant": "secondary",
+              "a11y": { "ariaLabel": "Diminuer répétitions groupe 2" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+            },
+            {
+              "id": "text-18",
+              "type": "Text",
+              "bbox": [120, 548, 184, 572],
+              "sourceRect": [120, 548, 184, 572],
+              "text": "3",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 28,
+                "fontWeight": "bold",
+                "typographyRef": "value"
+              }
+            },
+            {
+              "id": "iconbutton-22",
+              "type": "IconButton",
+              "bbox": [236, 548, 264, 572],
+              "sourceRect": [236, 548, 264, 572],
+              "iconName": "material.add",
+              "variant": "secondary",
+              "a11y": { "ariaLabel": "Augmenter répétitions groupe 2" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+            }
+          ]
+        },
+        {
+          "id": "container-20",
+          "type": "Container",
+          "bbox": [0, 580, 304, 616],
+          "sourceRect": [0, 580, 304, 616],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+          "children": [
+            {
+              "id": "iconbutton-23",
+              "type": "IconButton",
+              "bbox": [120, 582, 184, 610],
+              "sourceRect": [120, 582, 184, 610],
+              "iconName": "material.add_circle_outline",
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Ajouter étape au groupe 2" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#FFFFFF", "radius": "xl" }
+            },
+            {
+              "id": "text-19",
+              "type": "Text",
+              "bbox": [230, 598, 290, 614],
+              "sourceRect": [230, 598, 290, 614],
+              "text": "00:00",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 14,
+                "fontWeight": "regular",
+                "typographyRef": "value"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "card-4",
+      "type": "Card",
+      "bbox": [0, 672, 304, 930],
+      "sourceRect": [0, 672, 304, 930],
+      "style": {
+        "backgroundColor": "#1C1C1C",
+        "paddingX": 12,
+        "paddingY": 10,
+        "radius": "sm"
+      },
+      "layout": { "type": "flex", "direction": "column", "gap": "sm", "align": "center", "justify": "start" },
+      "group": { "alignment": "center", "distribution": "start" },
+      "children": [
+        {
+          "id": "container-21",
+          "type": "Container",
+          "bbox": [0, 674, 304, 702],
+          "sourceRect": [0, 674, 304, 702],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+          "children": [
+            {
+              "id": "text-20",
+              "type": "Text",
+              "bbox": [12, 680, 120, 696],
+              "sourceRect": [12, 680, 120, 696],
+              "text": "RÉPÉTITIONS",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 12,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase"
+              }
+            },
+            {
+              "id": "iconbutton-24",
+              "type": "IconButton",
+              "bbox": [278, 678, 298, 700],
+              "sourceRect": [278, 678, 298, 700],
+              "iconName": "material.more_vert",
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Plus d'options groupe 3" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C" }
+            }
+          ]
+        },
+        {
+          "id": "container-22",
+          "type": "Container",
+          "bbox": [40, 706, 264, 734],
+          "sourceRect": [40, 706, 264, 734],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "lg", "align": "center", "justify": "center" },
+          "group": { "alignment": "center", "distribution": "around" },
+          "children": [
+            {
+              "id": "iconbutton-25",
+              "type": "IconButton",
+              "bbox": [40, 708, 68, 732],
+              "sourceRect": [40, 708, 68, 732],
+              "iconName": "material.remove",
+              "variant": "secondary",
+              "a11y": { "ariaLabel": "Diminuer répétitions groupe 3" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+            },
+            {
+              "id": "text-21",
+              "type": "Text",
+              "bbox": [120, 708, 184, 732],
+              "sourceRect": [120, 708, 184, 732],
+              "text": "1",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 28,
+                "fontWeight": "bold",
+                "typographyRef": "value"
+              }
+            },
+            {
+              "id": "iconbutton-26",
+              "type": "IconButton",
+              "bbox": [236, 708, 264, 732],
+              "sourceRect": [236, 708, 264, 732],
+              "iconName": "material.add",
+              "variant": "secondary",
+              "a11y": { "ariaLabel": "Augmenter répétitions groupe 3" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#1C1C1C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+            }
+          ]
+        },
+        {
+          "id": "card-5",
+          "type": "Card",
+          "bbox": [0, 738, 304, 844],
+          "sourceRect": [0, 738, 304, 844],
+          "style": {
+            "backgroundColor": "#388E3C",
+            "paddingX": 12,
+            "paddingY": 8,
+            "radius": "sm"
+          },
+          "layout": { "type": "flex", "direction": "column", "gap": "sm", "align": "start", "justify": "start" },
+          "children": [
+            {
+              "id": "container-23",
+              "type": "Container",
+              "bbox": [0, 740, 304, 762],
+              "sourceRect": [0, 740, 304, 762],
+              "style": { "backgroundColor": "#388E3C" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "text-22",
+                  "type": "Text",
+                  "bbox": [12, 744, 80, 758],
+                  "sourceRect": [12, 744, 80, 758],
+                  "text": "Étape 3",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 14,
+                    "fontWeight": "regular",
+                    "typographyRef": "body"
+                  }
+                },
+                {
+                  "id": "iconbutton-27",
+                  "type": "IconButton",
+                  "bbox": [280, 742, 300, 762],
+                  "sourceRect": [280, 742, 300, 762],
+                  "iconName": "material.drag_handle",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Réorganiser étape 3" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#388E3C" }
+                }
+              ]
+            },
+            {
+              "id": "container-24",
+              "type": "Container",
+              "bbox": [12, 764, 200, 778],
+              "sourceRect": [12, 764, 200, 778],
+              "style": { "backgroundColor": "#388E3C" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "start" },
+              "children": [
+                {
+                  "id": "text-23",
+                  "type": "Text",
+                  "bbox": [12, 766, 50, 778],
+                  "sourceRect": [12, 766, 50, 778],
+                  "text": "TIME",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 12,
+                    "fontWeight": "bold",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "text-24",
+                  "type": "Text",
+                  "bbox": [56, 766, 100, 778],
+                  "sourceRect": [56, 766, 100, 778],
+                  "text": "REPS",
+                  "style": {
+                    "color": "#AAAAAA",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "container-25",
+              "type": "Container",
+              "bbox": [12, 784, 292, 812],
+              "sourceRect": [12, 784, 292, 812],
+              "style": { "backgroundColor": "#388E3C" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "center" },
+              "group": { "alignment": "center", "distribution": "around" },
+              "children": [
+                {
+                  "id": "iconbutton-28",
+                  "type": "IconButton",
+                  "bbox": [12, 786, 38, 810],
+                  "sourceRect": [12, 786, 38, 810],
+                  "iconName": "material.remove",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Diminuer temps étape 3" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#388E3C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+                },
+                {
+                  "id": "text-25",
+                  "type": "Text",
+                  "bbox": [60, 786, 200, 810],
+                  "sourceRect": [60, 786, 200, 810],
+                  "text": "01 : 30",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 22,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "iconbutton-29",
+                  "type": "IconButton",
+                  "bbox": [252, 786, 278, 810],
+                  "sourceRect": [252, 786, 278, 810],
+                  "iconName": "material.add",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Augmenter temps étape 3" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#388E3C", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+                }
+              ]
+            },
+            {
+              "id": "container-26",
+              "type": "Container",
+              "bbox": [12, 816, 292, 840],
+              "sourceRect": [12, 816, 292, 840],
+              "style": { "backgroundColor": "#388E3C" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "button-4",
+                  "type": "Button",
+                  "bbox": [12, 818, 100, 838],
+                  "sourceRect": [12, 818, 100, 838],
+                  "text": "COLOR",
+                  "leadingIcon": { "type": "Icon", "iconName": "material.edit", "style": { "color": "#FFFFFF" } },
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Choisir couleur étape 3" },
+                  "placement": "start",
+                  "widthMode": "intrinsic",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#388E3C",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "iconbutton-30",
+                  "type": "IconButton",
+                  "bbox": [200, 818, 222, 838],
+                  "sourceRect": [200, 818, 222, 838],
+                  "iconName": "material.content_copy",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Dupliquer étape 3" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#388E3C" }
+                },
+                {
+                  "id": "iconbutton-31",
+                  "type": "IconButton",
+                  "bbox": [232, 818, 254, 838],
+                  "sourceRect": [232, 818, 254, 838],
+                  "iconName": "material.delete",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Supprimer étape 3" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#388E3C" }
+                },
+                {
+                  "id": "iconbutton-32",
+                  "type": "IconButton",
+                  "bbox": [264, 818, 286, 838],
+                  "sourceRect": [264, 818, 286, 838],
+                  "iconName": "material.settings",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Paramètres étape 3" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#388E3C" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "card-6",
+          "type": "Card",
+          "bbox": [0, 848, 304, 954],
+          "sourceRect": [0, 848, 304, 954],
+          "style": {
+            "backgroundColor": "#D32F2F",
+            "paddingX": 12,
+            "paddingY": 8,
+            "radius": "sm"
+          },
+          "layout": { "type": "flex", "direction": "column", "gap": "sm", "align": "start", "justify": "start" },
+          "children": [
+            {
+              "id": "container-27",
+              "type": "Container",
+              "bbox": [0, 850, 304, 872],
+              "sourceRect": [0, 850, 304, 872],
+              "style": { "backgroundColor": "#D32F2F" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "text-26",
+                  "type": "Text",
+                  "bbox": [12, 854, 100, 868],
+                  "sourceRect": [12, 854, 100, 868],
+                  "text": "Étape 3 bis",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 14,
+                    "fontWeight": "regular",
+                    "typographyRef": "body"
+                  }
+                },
+                {
+                  "id": "iconbutton-33",
+                  "type": "IconButton",
+                  "bbox": [280, 852, 300, 872],
+                  "sourceRect": [280, 852, 300, 872],
+                  "iconName": "material.drag_handle",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Réorganiser étape 3 bis" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#D32F2F" }
+                }
+              ]
+            },
+            {
+              "id": "container-28",
+              "type": "Container",
+              "bbox": [12, 874, 200, 888],
+              "sourceRect": [12, 874, 200, 888],
+              "style": { "backgroundColor": "#D32F2F" },
+              "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "start" },
+              "children": [
+                {
+                  "id": "text-27",
+                  "type": "Text",
+                  "bbox": [12, 876, 50, 888],
+                  "sourceRect": [12, 876, 50, 888],
+                  "text": "TIME",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 12,
+                    "fontWeight": "bold",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "text-28",
+                  "type": "Text",
+                  "bbox": [56, 876, 100, 888],
+                  "sourceRect": [56, 876, 100, 888],
+                  "text": "REPS",
+                  "style": {
+                    "color": "#AAAAAA",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "container-29",
+              "type": "Container",
+              "bbox": [12, 894, 292, 922],
+              "sourceRect": [12, 894, 292, 922],
+              "style": { "backgroundColor": "#D32F2F" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "center" },
+              "group": { "alignment": "center", "distribution": "around" },
+              "children": [
+                {
+                  "id": "iconbutton-34",
+                  "type": "IconButton",
+                  "bbox": [12, 896, 38, 920],
+                  "sourceRect": [12, 896, 38, 920],
+                  "iconName": "material.remove",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Diminuer temps étape 3 bis" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#D32F2F", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+                },
+                {
+                  "id": "text-29",
+                  "type": "Text",
+                  "bbox": [60, 896, 200, 920],
+                  "sourceRect": [60, 896, 200, 920],
+                  "text": "01 : 30",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "fontSize": 22,
+                    "fontWeight": "bold",
+                    "typographyRef": "value"
+                  }
+                },
+                {
+                  "id": "iconbutton-35",
+                  "type": "IconButton",
+                  "bbox": [252, 896, 278, 920],
+                  "sourceRect": [252, 896, 278, 920],
+                  "iconName": "material.add",
+                  "variant": "secondary",
+                  "a11y": { "ariaLabel": "Augmenter temps étape 3 bis" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#D32F2F", "borderColor": "#FFFFFF", "borderWidth": 1, "radius": "sm" }
+                }
+              ]
+            },
+            {
+              "id": "container-30",
+              "type": "Container",
+              "bbox": [12, 926, 292, 950],
+              "sourceRect": [12, 926, 292, 950],
+              "style": { "backgroundColor": "#D32F2F" },
+              "layout": { "type": "flex", "direction": "row", "gap": "md", "align": "center", "justify": "between" },
+              "children": [
+                {
+                  "id": "button-5",
+                  "type": "Button",
+                  "bbox": [12, 928, 100, 948],
+                  "sourceRect": [12, 928, 100, 948],
+                  "text": "COLOR",
+                  "leadingIcon": { "type": "Icon", "iconName": "material.edit", "style": { "color": "#FFFFFF" } },
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Choisir couleur étape 3 bis" },
+                  "placement": "start",
+                  "widthMode": "intrinsic",
+                  "style": {
+                    "color": "#FFFFFF",
+                    "backgroundColor": "#D32F2F",
+                    "fontSize": 12,
+                    "fontWeight": "medium",
+                    "typographyRef": "label",
+                    "transform": "uppercase"
+                  }
+                },
+                {
+                  "id": "iconbutton-36",
+                  "type": "IconButton",
+                  "bbox": [200, 928, 222, 948],
+                  "sourceRect": [200, 928, 222, 948],
+                  "iconName": "material.content_copy",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Dupliquer étape 3 bis" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#D32F2F" }
+                },
+                {
+                  "id": "iconbutton-37",
+                  "type": "IconButton",
+                  "bbox": [232, 928, 254, 948],
+                  "sourceRect": [232, 928, 254, 948],
+                  "iconName": "material.delete",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Supprimer étape 3 bis" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#D32F2F" }
+                },
+                {
+                  "id": "iconbutton-38",
+                  "type": "IconButton",
+                  "bbox": [264, 928, 286, 948],
+                  "sourceRect": [264, 928, 286, 948],
+                  "iconName": "material.settings",
+                  "variant": "ghost",
+                  "a11y": { "ariaLabel": "Paramètres étape 3 bis" },
+                  "style": { "color": "#FFFFFF", "backgroundColor": "#D32F2F" }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "container-31",
+          "type": "Container",
+          "bbox": [0, 958, 304, 994],
+          "sourceRect": [0, 958, 304, 994],
+          "style": { "backgroundColor": "#1C1C1C" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+          "children": [
+            {
+              "id": "iconbutton-39",
+              "type": "IconButton",
+              "bbox": [120, 960, 184, 988],
+              "sourceRect": [120, 960, 184, 988],
+              "iconName": "material.add_circle_outline",
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Ajouter étape au groupe 3" },
+              "style": { "color": "#FFFFFF", "backgroundColor": "#FFFFFF", "radius": "xl" }
+            },
+            {
+              "id": "text-30",
+              "type": "Text",
+              "bbox": [230, 976, 290, 990],
+              "sourceRect": [230, 976, 290, 990],
+              "text": "3:00",
+              "style": {
+                "color": "#FFFFFF",
+                "fontSize": 14,
+                "fontWeight": "regular",
+                "typographyRef": "value"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "container-32",
+      "type": "Container",
+      "bbox": [0, 998, 304, 1052],
+      "sourceRect": [0, 998, 304, 1052],
+      "style": { "backgroundColor": "#000000" },
+      "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "between" },
+      "children": [
+        {
+          "id": "iconbutton-40",
+          "type": "IconButton",
+          "bbox": [120, 1006, 184, 1044],
+          "sourceRect": [120, 1006, 184, 1044],
+          "iconName": "material.add_circle_outline",
+          "variant": "ghost",
+          "a11y": { "ariaLabel": "Ajouter un nouveau groupe" },
+          "style": { "color": "#FFFFFF", "backgroundColor": "#FFFFFF", "radius": "xl" }
+        },
+        {
+          "id": "text-31",
+          "type": "Text",
+          "bbox": [180, 1038, 290, 1052],
+          "sourceRect": [180, 1038, 290, 1052],
+          "text": "TOTAL 03:35",
+          "style": {
+            "color": "#FFFFFF",
+            "fontSize": 14,
+            "fontWeight": "medium",
+            "typographyRef": "label",
+            "transform": "uppercase"
+          }
+        }
+      ]
+    },
+    {
+      "id": "card-7",
+      "type": "Card",
+      "bbox": [0, 1056, 304, 1230],
+      "sourceRect": [0, 1056, 304, 1230],
+      "style": {
+        "backgroundColor": "#CDDC39",
+        "paddingX": 12,
+        "paddingY": 12,
+        "radius": "sm"
+      },
+      "layout": { "type": "flex", "direction": "column", "gap": "md", "align": "start", "justify": "start" },
+      "group": { "alignment": "start", "distribution": "start" },
+      "children": [
+        {
+          "id": "text-32",
+          "type": "Text",
+          "bbox": [12, 1062, 100, 1090],
+          "sourceRect": [12, 1062, 100, 1090],
+          "text": "FINISH",
+          "style": {
+            "color": "#000000",
+            "fontSize": 22,
+            "fontWeight": "bold",
+            "typographyRef": "titleLarge",
+            "transform": "uppercase"
+          }
+        },
+        {
+          "id": "container-33",
+          "type": "Container",
+          "bbox": [12, 1096, 200, 1120],
+          "sourceRect": [12, 1096, 200, 1120],
+          "style": { "backgroundColor": "#CDDC39" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "start" },
+          "children": [
+            {
+              "id": "button-6",
+              "type": "Button",
+              "bbox": [12, 1098, 120, 1118],
+              "sourceRect": [12, 1098, 120, 1118],
+              "text": "COLOR",
+              "leadingIcon": { "type": "Icon", "iconName": "material.edit", "style": { "color": "#000000" } },
+              "variant": "ghost",
+              "a11y": { "ariaLabel": "Choisir couleur finish" },
+              "placement": "start",
+              "widthMode": "intrinsic",
+              "style": {
+                "color": "#000000",
+                "backgroundColor": "#CDDC39",
+                "fontSize": 14,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase"
+              }
+            }
+          ]
+        },
+        {
+          "id": "container-34",
+          "type": "Container",
+          "bbox": [12, 1140, 280, 1166],
+          "sourceRect": [12, 1140, 280, 1166],
+          "style": { "backgroundColor": "#CDDC39" },
+          "layout": { "type": "flex", "direction": "row", "gap": "sm", "align": "center", "justify": "start" },
+          "children": [
+            {
+              "id": "text-33",
+              "type": "Text",
+              "bbox": [12, 1144, 70, 1160],
+              "sourceRect": [12, 1144, 70, 1160],
+              "text": "ALARM",
+              "style": {
+                "color": "#000000",
+                "fontSize": 14,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase"
+              }
+            },
+            {
+              "id": "icon-4",
+              "type": "Icon",
+              "bbox": [76, 1144, 96, 1160],
+              "sourceRect": [76, 1144, 96, 1160],
+              "iconName": "material.notifications_active",
+              "style": { "color": "#000000" }
+            },
+            {
+              "id": "text-34",
+              "type": "Text",
+              "bbox": [100, 1144, 200, 1160],
+              "sourceRect": [100, 1144, 200, 1160],
+              "text": "BEEP X3",
+              "style": {
+                "color": "#000000",
+                "fontSize": 14,
+                "fontWeight": "medium",
+                "typographyRef": "label",
+                "transform": "uppercase"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "qa": {
+    "inventory": [
+      { "idx": 1, "roughType": "Container", "roughText": "status bar (11:01, signal, wifi, 74%, battery)" },
+      { "idx": 2, "roughType": "Container", "roughText": "top nav (close, SIMPLE, ADVANCED, save)" },
+      { "idx": 3, "roughType": "Text", "roughText": "11:01" },
+      { "idx": 4, "roughType": "Icon", "roughText": "signal" },
+      { "idx": 5, "roughType": "Icon", "roughText": "wifi" },
+      { "idx": 6, "roughType": "Text", "roughText": "74%" },
+      { "idx": 7, "roughType": "Icon", "roughText": "battery" },
+      { "idx": 8, "roughType": "IconButton", "roughText": "close X" },
+      { "idx": 9, "roughType": "Button", "roughText": "SIMPLE" },
+      { "idx": 10, "roughType": "Button", "roughText": "ADVANCED" },
+      { "idx": 11, "roughType": "IconButton", "roughText": "save" },
+      { "idx": 12, "roughType": "Container", "roughText": "Nom prédéfini / Programme spécifique input" },
+      { "idx": 13, "roughType": "Text", "roughText": "Nom prédéfini" },
+      { "idx": 14, "roughType": "Text", "roughText": "Programme spécifique" },
+      { "idx": 15, "roughType": "Card", "roughText": "Groupe 1 – RÉPÉTITIONS + Étape 1 + Étape 2" },
+      { "idx": 16, "roughType": "Text", "roughText": "RÉPÉTITIONS" },
+      { "idx": 17, "roughType": "IconButton", "roughText": "more_vert groupe 1" },
+      { "idx": 18, "roughType": "IconButton", "roughText": "minus répétitions groupe 1" },
+      { "idx": 19, "roughType": "Text", "roughText": "1" },
+      { "idx": 20, "roughType": "IconButton", "roughText": "plus répétitions groupe 1" },
+      { "idx": 21, "roughType": "Card", "roughText": "Étape 1 (magenta)" },
+      { "idx": 22, "roughType": "Text", "roughText": "Étape 1" },
+      { "idx": 23, "roughType": "IconButton", "roughText": "drag handle étape 1" },
+      { "idx": 24, "roughType": "Text", "roughText": "TIME" },
+      { "idx": 25, "roughType": "Text", "roughText": "REPS" },
+      { "idx": 26, "roughType": "IconButton", "roughText": "minus temps étape 1" },
+      { "idx": 27, "roughType": "Text", "roughText": "00 : 05" },
+      { "idx": 28, "roughType": "IconButton", "roughText": "plus temps étape 1" },
+      { "idx": 29, "roughType": "Button", "roughText": "COLOR (edit icon) étape 1" },
+      { "idx": 30, "roughType": "IconButton", "roughText": "copy étape 1" },
+      { "idx": 31, "roughType": "IconButton", "roughText": "delete étape 1" },
+      { "idx": 32, "roughType": "IconButton", "roughText": "settings étape 1" },
+      { "idx": 33, "roughType": "Card", "roughText": "Étape 2 (lavender)" },
+      { "idx": 34, "roughType": "Text", "roughText": "Étape 2" },
+      { "idx": 35, "roughType": "IconButton", "roughText": "drag handle étape 2" },
+      { "idx": 36, "roughType": "Text", "roughText": "TIME (muted)" },
+      { "idx": 37, "roughType": "Text", "roughText": "REPS (bold)" },
+      { "idx": 38, "roughType": "IconButton", "roughText": "minus reps étape 2" },
+      { "idx": 39, "roughType": "Text", "roughText": "3" },
+      { "idx": 40, "roughType": "Text", "roughText": "x" },
+      { "idx": 41, "roughType": "IconButton", "roughText": "plus reps étape 2" },
+      { "idx": 42, "roughType": "IconButton", "roughText": "minus durée étape 2" },
+      { "idx": 43, "roughType": "Text", "roughText": "10.0s" },
+      { "idx": 44, "roughType": "IconButton", "roughText": "plus durée étape 2" },
+      { "idx": 45, "roughType": "Button", "roughText": "COLOR (edit icon) étape 2" },
+      { "idx": 46, "roughType": "IconButton", "roughText": "copy étape 2" },
+      { "idx": 47, "roughType": "IconButton", "roughText": "delete étape 2" },
+      { "idx": 48, "roughType": "IconButton", "roughText": "settings étape 2" },
+      { "idx": 49, "roughType": "IconButton", "roughText": "add étape groupe 1 / 00:35" },
+      { "idx": 50, "roughType": "Text", "roughText": "00:35" },
+      { "idx": 51, "roughType": "Card", "roughText": "Groupe 2 – RÉPÉTITIONS avec trending_down" },
+      { "idx": 52, "roughType": "Text", "roughText": "RÉPÉTITIONS (avec flèche)" },
+      { "idx": 53, "roughType": "Icon", "roughText": "trending_down" },
+      { "idx": 54, "roughType": "IconButton", "roughText": "more_vert groupe 2" },
+      { "idx": 55, "roughType": "IconButton", "roughText": "minus répétitions groupe 2" },
+      { "idx": 56, "roughType": "Text", "roughText": "3" },
+      { "idx": 57, "roughType": "IconButton", "roughText": "plus répétitions groupe 2" },
+      { "idx": 58, "roughType": "IconButton", "roughText": "add étape groupe 2 / 00:00" },
+      { "idx": 59, "roughType": "Text", "roughText": "00:00" },
+      { "idx": 60, "roughType": "Card", "roughText": "Groupe 3 – RÉPÉTITIONS + Étape 3 + Étape 3 bis" },
+      { "idx": 61, "roughType": "Text", "roughText": "RÉPÉTITIONS groupe 3" },
+      { "idx": 62, "roughType": "IconButton", "roughText": "more_vert groupe 3" },
+      { "idx": 63, "roughType": "IconButton", "roughText": "minus répétitions groupe 3" },
+      { "idx": 64, "roughType": "Text", "roughText": "1" },
+      { "idx": 65, "roughType": "IconButton", "roughText": "plus répétitions groupe 3" },
+      { "idx": 66, "roughType": "Card", "roughText": "Étape 3 (vert)" },
+      { "idx": 67, "roughType": "Text", "roughText": "Étape 3" },
+      { "idx": 68, "roughType": "IconButton", "roughText": "drag handle étape 3" },
+      { "idx": 69, "roughType": "Text", "roughText": "TIME étape 3" },
+      { "idx": 70, "roughType": "Text", "roughText": "REPS étape 3" },
+      { "idx": 71, "roughType": "IconButton", "roughText": "minus temps étape 3" },
+      { "idx": 72, "roughType": "Text", "roughText": "01 : 30 étape 3" },
+      { "idx": 73, "roughType": "IconButton", "roughText": "plus temps étape 3" },
+      { "idx": 74, "roughType": "Button", "roughText": "COLOR étape 3" },
+      { "idx": 75, "roughType": "IconButton", "roughText": "copy étape 3" },
+      { "idx": 76, "roughType": "IconButton", "roughText": "delete étape 3" },
+      { "idx": 77, "roughType": "IconButton", "roughText": "settings étape 3" },
+      { "idx": 78, "roughType": "Card", "roughText": "Étape 3 bis (rouge)" },
+      { "idx": 79, "roughType": "Text", "roughText": "Étape 3 bis" },
+      { "idx": 80, "roughType": "IconButton", "roughText": "drag handle étape 3 bis" },
+      { "idx": 81, "roughType": "Text", "roughText": "TIME étape 3 bis" },
+      { "idx": 82, "roughType": "Text", "roughText": "REPS étape 3 bis" },
+      { "idx": 83, "roughType": "IconButton", "roughText": "minus temps étape 3 bis" },
+      { "idx": 84, "roughType": "Text", "roughText": "01 : 30 étape 3 bis" },
+      { "idx": 85, "roughType": "IconButton", "roughText": "plus temps étape 3 bis" },
+      { "idx": 86, "roughType": "Button", "roughText": "COLOR étape 3 bis" },
+      { "idx": 87, "roughType": "IconButton", "roughText": "copy étape 3 bis" },
+      { "idx": 88, "roughType": "IconButton", "roughText": "delete étape 3 bis" },
+      { "idx": 89, "roughType": "IconButton", "roughText": "settings étape 3 bis" },
+      { "idx": 90, "roughType": "IconButton", "roughText": "add étape groupe 3 / 3:00" },
+      { "idx": 91, "roughType": "Text", "roughText": "3:00" },
+      { "idx": 92, "roughType": "IconButton", "roughText": "add nouveau groupe" },
+      { "idx": 93, "roughType": "Text", "roughText": "TOTAL 03:35" },
+      { "idx": 94, "roughType": "Card", "roughText": "FINISH (jaune-vert)" },
+      { "idx": 95, "roughType": "Text", "roughText": "FINISH" },
+      { "idx": 96, "roughType": "Button", "roughText": "COLOR finish" },
+      { "idx": 97, "roughType": "Text", "roughText": "ALARM" },
+      { "idx": 98, "roughType": "Icon", "roughText": "bell/notifications_active" },
+      { "idx": 99, "roughType": "Text", "roughText": "BEEP X3" }
+    ],
+    "countsByType": {
+      "Text": 35,
+      "Button": 7,
+      "Icon": 5,
+      "IconButton": 41,
+      "Slider": 0,
+      "Container": 35,
+      "Card": 8,
+      "Placeholder": 0
+    },
+    "textCoverage": {
+      "found": [
+        "11:01", "74%", "SIMPLE", "ADVANCED", "Nom prédéfini", "Programme spécifique",
+        "RÉPÉTITIONS", "1", "Étape 1", "TIME", "REPS", "00 : 05", "COLOR",
+        "Étape 2", "3", "x", "10.0s", "00:35", "RÉPÉTITIONS", "3", "00:00",
+        "RÉPÉTITIONS", "1", "Étape 3", "01 : 30", "Étape 3 bis", "01 : 30",
+        "3:00", "TOTAL 03:35", "FINISH", "COLOR", "ALARM", "BEEP X3"
+      ],
+      "missing": []
+    },
+    "colorsUsed": [
+      { "hex": "#000000", "token": "background" },
+      { "hex": "#111111", "token": "headerBackgroundDark" },
+      { "hex": "#1C1C1C", "token": "cardBackground" },
+      { "hex": "#FFFFFF", "token": "onPrimary" },
+      { "hex": "#AAAAAA", "token": "textSecondary" },
+      { "hex": "#CC1177", "token": "stepMagenta" },
+      { "hex": "#B39DDB", "token": "stepLavender" },
+      { "hex": "#388E3C", "token": "stepGreen" },
+      { "hex": "#D32F2F", "token": "stepRed" },
+      { "hex": "#CDDC39", "token": "finishYellow" },
+      { "hex": "#555555", "token": "inputBorder" },
+      { "hex": "#888888", "token": "textSecondary" },
+      { "hex": "#E91E8C", "token": "primary" }
+    ],
+    "missingAtoms": [],
+    "coverageRatio": 1.0,
+    "checklist": [
+      "every visual element in snapshot has a component with bbox",
+      "all texts copied verbatim",
+      "colors extracted as hex",
+      "interactive elements have a11y.ariaLabel",
+      "no invented components",
+      "units are px integers",
+      "all groups represented as Container/Card with styles",
+      "all groups include explicit layout"
+    ],
+    "semanticChecklist": [
+      "group alignment encoded when visually centered",
+      "non-fullwidth actions have placement and widthMode",
+      "icon+label actions encoded as composed buttons (leadingIcon+text)",
+      "uppercase labels use style.transform",
+      "variants map to semantic color tokens (no stray hex)"
+    ],
+    "assumptions": [
+      {
+        "id": "a1",
+        "field": "screen.size",
+        "value": "304x1404",
+        "note": "Dimensions estimated from image aspect ratio; natural image pixel dimensions used as-is.",
+        "confidence": 0.75
+      },
+      {
+        "id": "a2",
+        "field": "tokens.colors.stepMagenta",
+        "value": "#CC1177",
+        "note": "Étape 1 background. Saturated pink-magenta, estimated from visual inspection.",
+        "confidence": 0.72
+      },
+      {
+        "id": "a3",
+        "field": "tokens.colors.stepLavender",
+        "value": "#B39DDB",
+        "note": "Étape 2 background. Light purple/lavender, estimated.",
+        "confidence": 0.70
+      },
+      {
+        "id": "a4",
+        "field": "tokens.colors.stepGreen",
+        "value": "#388E3C",
+        "note": "Étape 3 background. Material green 700 approximation.",
+        "confidence": 0.78
+      },
+      {
+        "id": "a5",
+        "field": "tokens.colors.stepRed",
+        "value": "#D32F2F",
+        "note": "Étape 3 bis background. Material red 700 approximation.",
+        "confidence": 0.78
+      },
+      {
+        "id": "a6",
+        "field": "tokens.colors.finishYellow",
+        "value": "#CDDC39",
+        "note": "FINISH card background. Material lime 400 approximation.",
+        "confidence": 0.80
+      },
+      {
+        "id": "a7",
+        "field": "all bbox values",
+        "value": "estimated",
+        "note": "All bounding boxes are estimated by visual inspection from the screenshot. Not pixel-measured programmatically.",
+        "confidence": 0.65
+      },
+      {
+        "id": "a8",
+        "field": "icon-3.iconName",
+        "value": "material.trending_down",
+        "note": "Arrow icon next to RÉPÉTITIONS in group 2. Appears to indicate decreasing reps over sets.",
+        "confidence": 0.73
+      },
+      {
+        "id": "a9",
+        "field": "typographyRef.value for time displays",
+        "value": "value",
+        "note": "Large numeric/duration text (00:05, 01:30, 10.0s) assigned typographyRef:value as per schema.",
+        "confidence": 0.90
+      }
+    ],
+    "openQuestions": [
+      "Exact pixel dimensions of the source image (naturalWidth/naturalHeight) should be confirmed.",
+      "The trailing icon in group 2's RÉPÉTITIONS header (trending_down vs a custom icon) should be verified against app source."
+    ],
+    "confidenceGlobal": 0.74
+  }
+}
