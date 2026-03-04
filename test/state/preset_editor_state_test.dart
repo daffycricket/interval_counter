@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:interval_counter/domain/view_mode.dart';
 import 'package:interval_counter/state/preset_editor_state.dart';
 import 'package:interval_counter/state/home_state.dart';
 import 'package:interval_counter/models/preset.dart';
@@ -22,7 +23,7 @@ void main() {
         expect(state.workSeconds, 40);
         expect(state.restSeconds, 20);
         expect(state.cooldownSeconds, 30);
-        expect(state.viewMode, 'simple');
+        expect(state.viewMode, ViewMode.simple);
         expect(state.editMode, false);
         expect(state.presetId, null);
       });
@@ -44,6 +45,22 @@ void main() {
         expect(state.workSeconds, 50);
         expect(state.restSeconds, 25);
         expect(state.cooldownSeconds, 35);
+      });
+
+      test('falls back to defaults in edit mode with non-existent presetId', () {
+        final state = PresetEditorState(
+          homeState,
+          isEditMode: true,
+          presetId: 'non-existent-id',
+        );
+
+        expect(state.name, '');
+        expect(state.prepareSeconds, 5);
+        expect(state.repetitions, 10);
+        expect(state.workSeconds, 40);
+        expect(state.restSeconds, 20);
+        expect(state.cooldownSeconds, 30);
+        expect(state.editMode, true);
       });
 
       test('values from existing preset in edit mode', () {
@@ -303,7 +320,7 @@ void main() {
 
         state.switchToSimple();
 
-        expect(state.viewMode, 'simple');
+        expect(state.viewMode, ViewMode.simple);
         expect(notified, true);
       });
 
@@ -314,7 +331,7 @@ void main() {
 
         state.switchToAdvanced();
 
-        expect(state.viewMode, 'advanced');
+        expect(state.viewMode, ViewMode.advanced);
         expect(notified, true);
       });
     });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../domain/view_mode.dart';
 import '../../state/preset_editor_state.dart';
 import '../../theme/app_colors.dart';
 import 'package:interval_counter/l10n/app_localizations.dart';
@@ -53,7 +54,7 @@ class PresetEditorHeader extends StatelessWidget implements PreferredSizeWidget 
                 // Bouton SIMPLE
                 ModeToggleButton(
                   text: l10n.simpleModeButton,
-                  isSelected: state.viewMode == 'simple',
+                  isSelected: state.viewMode == ViewMode.simple,
                   onTap: state.switchToSimple,
                   semanticLabel: l10n.simpleModeLabel,
                   buttonKey: const Key('preset_editor__button-3'),
@@ -63,7 +64,7 @@ class PresetEditorHeader extends StatelessWidget implements PreferredSizeWidget 
                 // Bouton ADVANCED
                 ModeToggleButton(
                   text: l10n.advancedModeButton,
-                  isSelected: state.viewMode == 'advanced',
+                  isSelected: state.viewMode == ViewMode.advanced,
                   onTap: state.switchToAdvanced,
                   semanticLabel: l10n.advancedModeLabel,
                   buttonKey: const Key('preset_editor__button-4'),

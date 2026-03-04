@@ -68,6 +68,17 @@ Report folder: reports/{screen}_refactor_{label}
 If unclear, ask 2-5 questions before starting.
 ```
 
+Run 00_ORCHESTRATOR.prompt starting step 3 up to last step
+For plan, build and test: keep existing views, refactor state and business logic
+to match CODE_CONTRACT.md and TEST_CONTRACT.md.
+Inputs:
+  - design.json: sources/new_preset/new_preset_design.json
+  - spec.md: reports/new_preset/spec.md
+  - existing screen code in lib/screens/ and lib/widgets/new_preset/
+Refer to code in lib/ as reference.
+Report folder: reports/new_preset_refactor_it1
+If unclear, ask 2-5 questions before starting.
+
 ---
 
 ## Execution History
